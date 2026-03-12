@@ -1,0 +1,25 @@
+Package: bw05
+Type: Package
+Title: Ramsey Optimal Taxation Using a Monte Carlo Linear-Quadratic Approach (Benigno and Woodford, 2005)
+Version: 0.1
+Authors@R: c(
+    person(
+        given = "Mauricio",
+        family = "Vargas Sepulveda",
+        role = c("aut", "cre"),
+        email = "m.vargas.sepulveda@gmail.com",
+        comment = c(ORCID = "0000-0003-1017-7574"))
+    )
+Suggests:
+    knitr,
+    rmarkdown
+Depends: R(>= 3.5.0)
+Description: Replication of Chari, Christiano and Kehoe (1994) Table 2 using the approach from Benigno and Woodford
+    (2005) to solve the Ramsey optimal taxation problem. The code is structured in a way that allows for full replication of
+    Table 5 in BW05, which matches CCK94 results.
+License: Apache License (>= 2)
+RoxygenNote: 7.3.3
+Encoding: UTF-8
+NeedsCompilation: yes
+LinkingTo: cpp4r, armadillo4r
+LazyData: true
