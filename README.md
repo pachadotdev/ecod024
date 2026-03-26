@@ -1,88 +1,167 @@
-# Replication of 'Optimal Fiscal Policy in a Business Cycle Model' by Chari, Christiano and Kehoe (1994)
+# Replication of 'Optimal Fiscal Policy in a Business Cycle Model' by Chari, Christiano, and Kehoe (1994)
 
-I used the Monte Carlo approach described in "Optimal Taxation in an RBC Model: A Linear-Quadratic Approach" by Benigno and
-Woodford (2005), and hence the package's name "bw05".
+Replication of Chari et al. (1994) using projections (original method), time iteration, the Endogenous Grid Method (ECM) by Maliar and Maliar (2013), and separate validation by using Ramsey Optimal Taxation Using a Monte Carlo 1st-order Linear Quadratic (LQ) approximation and a 2nd-order perturbation (Benigno and Woodford, 2005).
 
 I do not have a MATLAB license, so I looked at Grohe-Uribe solvers to adapt a bit an write a small program using Armadillo.
 
-Replication result:
+## Replication result (following BW05 presentation)
 
-```
-=== BW Table 5 - Statistics on optimal tax rates from Monte Carlo simulation of log-linearized optimal policy rules ===
- Scenario                 Variable Statistic Published Replicated   DiffPct
- baseline   tax_rate_labour_income         E    23.870    23.8701    0.0003
- baseline   tax_rate_labour_income        sd     0.095     0.0947   -0.2850
- baseline   tax_rate_labour_income  autocorr     0.776     0.7665   -1.2282
- baseline   tax_rate_labour_income    corr_g     0.620     0.6228    0.4548
- baseline   tax_rate_labour_income    corr_z     0.496     0.4927   -0.6583
- baseline ex_ante_tax_rate_capital         E     0.000     0.0000       Inf
- baseline ex_ante_tax_rate_capital        sd     0.000     0.0000       Inf
- baseline ex_ante_tax_rate_capital  autocorr        NA     0.8790        NA
- baseline ex_ante_tax_rate_capital    corr_g        NA     0.9713        NA
- baseline ex_ante_tax_rate_capital    corr_z        NA     0.1495        NA
- baseline ex_post_tax_rate_capital         E     0.000     0.0100       Inf
- baseline ex_post_tax_rate_capital        sd    36.155    36.1640    0.0248
- baseline ex_post_tax_rate_capital  autocorr     0.000     0.0011       Inf
- baseline ex_post_tax_rate_capital    corr_g     0.410     0.4095   -0.1232
- baseline ex_post_tax_rate_capital    corr_z    -0.255    -0.2589    1.5117
-  high_ra   tax_rate_labour_income         E    20.690    20.6900   -0.0001
-  high_ra   tax_rate_labour_income        sd     0.034     0.0342    0.5147
-  high_ra   tax_rate_labour_income  autocorr     0.811     0.8125    0.1809
-  high_ra   tax_rate_labour_income    corr_g    -0.550    -0.5637    2.4991
-  high_ra   tax_rate_labour_income    corr_z    -0.802    -0.7905   -1.4359
-  high_ra ex_ante_tax_rate_capital         E     0.002    -0.0008 -139.5311
-  high_ra ex_ante_tax_rate_capital        sd     3.289     3.2901    0.0346
-  high_ra ex_ante_tax_rate_capital  autocorr     0.804     0.8042    0.0229
-  high_ra ex_ante_tax_rate_capital    corr_g     0.252     0.2564    1.7401
-  high_ra ex_ante_tax_rate_capital    corr_z     0.965     0.9637   -0.1372
-  high_ra ex_post_tax_rate_capital         E     0.000     0.0069       Inf
-  high_ra ex_post_tax_rate_capital        sd    30.581    29.4181   -3.8027
-  high_ra ex_post_tax_rate_capital  autocorr    -0.003     0.0030 -199.3927
-  high_ra ex_post_tax_rate_capital    corr_g     0.444     0.4567    2.8569
-  high_ra ex_post_tax_rate_capital    corr_z    -0.132    -0.0928  -29.6865
-   only_z   tax_rate_labour_income         E    23.870    23.8700    0.0001
-   only_z   tax_rate_labour_income        sd     0.074     0.0741    0.1350
-   only_z   tax_rate_labour_income  autocorr     0.685     0.6854    0.0566
-   only_z   tax_rate_labour_income    corr_g        NA    -0.0004        NA
-   only_z   tax_rate_labour_income    corr_z     0.632     0.6313   -0.1184
-   only_z ex_ante_tax_rate_capital         E     0.000     0.0000      -Inf
-   only_z ex_ante_tax_rate_capital        sd     0.000     0.0000       Inf
-   only_z ex_ante_tax_rate_capital  autocorr        NA     0.6765        NA
-   only_z ex_ante_tax_rate_capital    corr_g        NA     0.0004        NA
-   only_z ex_ante_tax_rate_capital    corr_z        NA    -0.7499        NA
-   only_z ex_post_tax_rate_capital         E     0.000     0.0030       Inf
-   only_z ex_post_tax_rate_capital        sd    15.769    15.9500    1.1478
-   only_z ex_post_tax_rate_capital  autocorr    -0.002    -0.0015  -24.4298
-   only_z ex_post_tax_rate_capital    corr_g        NA    -0.0001        NA
-   only_z ex_post_tax_rate_capital    corr_z    -0.586    -0.5864    0.0727
-   only_g   tax_rate_labour_income         E    23.870    23.8701    0.0002
-   only_g   tax_rate_labour_income        sd     0.059     0.0591    0.1438
-   only_g   tax_rate_labour_income  autocorr     0.895     0.8947   -0.0384
-   only_g   tax_rate_labour_income    corr_g     0.999     0.9998    0.0781
-   only_g   tax_rate_labour_income    corr_z        NA    -0.0006        NA
-   only_g ex_ante_tax_rate_capital         E     0.000     0.0000       Inf
-   only_g ex_ante_tax_rate_capital        sd     0.000     0.0000       Inf
-   only_g ex_ante_tax_rate_capital  autocorr        NA     0.8907        NA
-   only_g ex_ante_tax_rate_capital    corr_g        NA     1.0000        NA
-   only_g ex_ante_tax_rate_capital    corr_z        NA    -0.0006        NA
-   only_g ex_post_tax_rate_capital         E     0.000     0.0069       Inf
-   only_g ex_post_tax_rate_capital        sd    32.512    32.4575   -0.1675
-   only_g ex_post_tax_rate_capital  autocorr     0.000     0.0009       Inf
-   only_g ex_post_tax_rate_capital    corr_g     0.456     0.4560   -0.0080
-   only_g ex_post_tax_rate_capital    corr_z        NA     0.0001        NA
-      iid   tax_rate_labour_income         E    23.870    23.8700    0.0001
-      iid   tax_rate_labour_income        sd     0.147     0.1473    0.2193
-      iid   tax_rate_labour_income  autocorr    -0.068    -0.0680   -0.0145
-      iid   tax_rate_labour_income    corr_g     0.099     0.1008    1.8259
-      iid   tax_rate_labour_income    corr_z     0.954     0.9536   -0.0419
-      iid ex_ante_tax_rate_capital         E     0.000     0.0000       Inf
-      iid ex_ante_tax_rate_capital        sd     0.000     0.0000       Inf
-      iid ex_ante_tax_rate_capital  autocorr        NA     0.8956        NA
-      iid ex_ante_tax_rate_capital    corr_g        NA     0.1055        NA
-      iid ex_ante_tax_rate_capital    corr_z        NA    -0.4242        NA
-      iid ex_post_tax_rate_capital         E     0.000     0.0030       Inf
-      iid ex_post_tax_rate_capital        sd    10.818    10.8806    0.5790
-      iid ex_post_tax_rate_capital  autocorr     0.000     0.0011       Inf
-      iid ex_post_tax_rate_capital    corr_g     0.913     0.9074   -0.6182
-      iid ex_post_tax_rate_capital    corr_z    -0.409    -0.4203    2.7650
-```
+### Table 4: Statistics on optimal tax rates reported by Chari et al. (1994, Table 2).
+
+|Scenario |Variable |Statistic | Published| Time.Iter|     ECM| Projection|
+|:--------|:--------|:---------|---------:|---------:|-------:|----------:|
+|baseline |tau_h    |E         |     23.87|   23.8661| 23.8659|    23.8661|
+|baseline |tau_h    |sd        |      0.10|    0.0934|  0.0934|     0.0934|
+|baseline |tau_h    |rho       |      0.80|    0.7580|  0.7580|     0.7580|
+|baseline |tau_h    |corr_g    |      0.65|    0.6069|  0.6069|     0.6069|
+|baseline |tau_h    |corr_z    |      0.55|    0.5076|  0.5077|     0.5076|
+|baseline |theta_e  |E         |      0.00|    0.0000|  0.0000|     0.0000|
+|baseline |theta_e  |sd        |      0.00|    0.0000|  0.0000|     0.0000|
+|baseline |theta_e  |rho       |        NA|    0.8773|  0.8773|     0.8773|
+|baseline |theta_e  |corr_g    |        NA|    0.9708|  0.9708|     0.9708|
+|baseline |theta_e  |corr_z    |        NA|    0.1512|  0.1512|     0.1512|
+|baseline |tau_k    |E         |      0.55|    0.0061|  0.0088|     0.0061|
+|baseline |tau_k    |sd        |     40.93|   36.2321| 36.2321|    36.2321|
+|baseline |tau_k    |rho       |     -0.01|    0.0000|  0.0000|     0.0000|
+|baseline |tau_k    |corr_g    |      0.40|    0.4109|  0.4109|     0.4109|
+|baseline |tau_k    |corr_z    |     -0.24|   -0.2609| -0.2609|    -0.2609|
+|high_ra  |tau_h    |E         |     20.69|   20.6914| 20.6914|    20.6914|
+|high_ra  |tau_h    |sd        |      0.04|    0.0339|  0.0339|     0.0339|
+|high_ra  |tau_h    |rho       |      0.85|    0.8094|  0.8094|     0.8094|
+|high_ra  |tau_h    |corr_g    |     -0.59|   -0.5568| -0.5568|    -0.5568|
+|high_ra  |tau_h    |corr_z    |     -0.84|   -0.7936| -0.7937|    -0.7936|
+|high_ra  |theta_e  |E         |     -0.06|   -0.0303| -0.0314|    -0.0303|
+|high_ra  |theta_e  |sd        |      4.06|    3.2808|  3.2808|     3.2808|
+|high_ra  |theta_e  |rho       |      0.83|    0.8033|  0.8033|     0.8033|
+|high_ra  |theta_e  |corr_g    |      0.33|    0.2521|  0.2521|     0.2521|
+|high_ra  |theta_e  |corr_z    |      0.95|    0.9643|  0.9643|     0.9643|
+|high_ra  |tau_k    |E         |     -0.42|    0.3883|  0.4010|     0.3883|
+|high_ra  |tau_k    |sd        |     30.35|   29.6167| 29.6165|    29.6167|
+|high_ra  |tau_k    |rho       |      0.02|    0.0048|  0.0048|     0.0048|
+|high_ra  |tau_k    |corr_g    |      0.47|    0.4660|  0.4660|     0.4660|
+|high_ra  |tau_k    |corr_z    |     -0.20|   -0.0913| -0.0913|    -0.0913|
+|only_z   |tau_h    |E         |     23.80|   23.8679| 23.8677|    23.8679|
+|only_z   |tau_h    |sd        |      0.08|    0.0742|  0.0742|     0.0742|
+|only_z   |tau_h    |rho       |      0.71|    0.6827|  0.6827|     0.6827|
+|only_z   |tau_h    |corr_g    |        NA|   -0.0015| -0.0015|    -0.0015|
+|only_z   |tau_h    |corr_z    |      0.64|    0.6414|  0.6415|     0.6414|
+|only_z   |theta_e  |E         |      0.00|    0.0000|  0.0000|     0.0000|
+|only_z   |theta_e  |sd        |      0.00|    0.0000|  0.0000|     0.0000|
+|only_z   |theta_e  |rho       |        NA|    0.6759|  0.6758|     0.6759|
+|only_z   |theta_e  |corr_g    |        NA|    0.0018|  0.0018|     0.0018|
+|only_z   |theta_e  |corr_z    |        NA|   -0.7569| -0.7570|    -0.7569|
+|only_z   |tau_k    |E         |      1.19|    0.0099|  0.0126|     0.0099|
+|only_z   |tau_k    |sd        |     17.67|   15.9630| 15.9630|    15.9630|
+|only_z   |tau_k    |rho       |      0.01|   -0.0009| -0.0009|    -0.0009|
+|only_z   |tau_k    |corr_g    |        NA|    0.0043|  0.0043|     0.0043|
+|only_z   |tau_k    |corr_z    |     -0.56|   -0.5875| -0.5875|    -0.5875|
+|only_g   |tau_h    |E         |     23.87|   23.8682| 23.8681|    23.8682|
+|only_g   |tau_h    |sd        |      0.06|    0.0566|  0.0566|     0.0566|
+|only_g   |tau_h    |rho       |      0.90|    0.8845|  0.8845|     0.8845|
+|only_g   |tau_h    |corr_g    |      1.00|    0.9997|  0.9997|     0.9997|
+|only_g   |tau_h    |corr_z    |        NA|   -0.0019| -0.0019|    -0.0019|
+|only_g   |theta_e  |E         |      0.00|    0.0000|  0.0000|     0.0000|
+|only_g   |theta_e  |sd        |      0.00|    0.0000|  0.0000|     0.0000|
+|only_g   |theta_e  |rho       |        NA|    0.8887|  0.8887|     0.8887|
+|only_g   |theta_e  |corr_g    |        NA|    1.0000|  1.0000|     1.0000|
+|only_g   |theta_e  |corr_z    |        NA|   -0.0019| -0.0019|    -0.0019|
+|only_g   |tau_k    |E         |     -0.59|   -0.0036| -0.0026|    -0.0036|
+|only_g   |tau_k    |sd        |     36.22|   32.4576| 32.4576|    32.4576|
+|only_g   |tau_k    |rho       |      0.01|    0.0016|  0.0016|     0.0016|
+|only_g   |tau_k    |corr_g    |      0.46|    0.4578|  0.4578|     0.4578|
+|only_g   |tau_k    |corr_z    |        NA|   -0.0042| -0.0042|    -0.0042|
+|iid      |tau_h    |E         |     23.84|   23.8662| 23.8660|    23.8662|
+|iid      |tau_h    |sd        |      0.15|    0.1545|  0.1545|     0.1545|
+|iid      |tau_h    |rho       |     -0.04|   -0.0445| -0.0445|    -0.0445|
+|iid      |tau_h    |corr_g    |      0.10|    0.0923|  0.0923|     0.0923|
+|iid      |tau_h    |corr_z    |      0.95|    0.9091|  0.9091|     0.9091|
+|iid      |theta_e  |E         |      0.00|    0.0000|  0.0000|     0.0000|
+|iid      |theta_e  |sd        |      0.00|    0.0000|  0.0000|     0.0000|
+|iid      |theta_e  |rho       |        NA|    0.9251|  0.9251|     0.9251|
+|iid      |theta_e  |corr_g    |        NA|    0.0758|  0.0758|     0.0758|
+|iid      |theta_e  |corr_z    |        NA|   -0.2992| -0.2992|    -0.2992|
+|iid      |tau_k    |E         |      0.23|    0.0395|  0.0423|     0.0395|
+|iid      |tau_k    |sd        |     12.03|   10.9509| 10.9509|    10.9509|
+|iid      |tau_k    |rho       |     -0.02|   -0.0596| -0.0596|    -0.0596|
+|iid      |tau_k    |corr_g    |      0.94|    0.9034|  0.9034|     0.9034|
+|iid      |tau_k    |corr_z    |      0.33|   -0.4216| -0.4216|    -0.4216|
+
+### Table 5: Statistics on optimal tax rates from Monte Carlo simulation of log-linearized optimal policy rules
+
+|Scenario |Variable |Statistic | Published| 1st Order LQ | 2nd.Order |
+|:--------|:--------|:---------|---------:|-------------:|----------:|
+|baseline |tau_h    |E         |    23.870|       23.8697|    23.8697|
+|baseline |tau_h    |sd        |     0.095|        0.0948|     0.0948|
+|baseline |tau_h    |rho       |     0.776|        0.7677|     0.7677|
+|baseline |tau_h    |corr_g    |     0.620|        0.6243|     0.6243|
+|baseline |tau_h    |corr_z    |     0.496|        0.4913|     0.4913|
+|baseline |theta_e  |E         |     0.000|        0.0000|     0.0000|
+|baseline |theta_e  |sd        |     0.000|        0.0000|     0.0000|
+|baseline |theta_e  |rho       |        NA|        0.8795|     0.8795|
+|baseline |theta_e  |corr_g    |        NA|        0.9714|     0.9714|
+|baseline |theta_e  |corr_z    |        NA|        0.1474|     0.1474|
+|baseline |tau_k    |E         |     0.000|       -0.0458|    -0.0458|
+|baseline |tau_k    |sd        |    36.155|       36.2248|    36.2248|
+|baseline |tau_k    |rho       |     0.000|       -0.0008|    -0.0008|
+|baseline |tau_k    |corr_g    |     0.410|        0.4094|     0.4094|
+|baseline |tau_k    |corr_z    |    -0.255|       -0.2603|    -0.2603|
+|high_ra  |tau_h    |E         |    20.690|       20.6900|    20.6900|
+|high_ra  |tau_h    |sd        |     0.034|        0.0341|     0.0341|
+|high_ra  |tau_h    |rho       |     0.811|        0.8127|     0.8127|
+|high_ra  |tau_h    |corr_g    |    -0.550|       -0.5638|    -0.5638|
+|high_ra  |tau_h    |corr_z    |    -0.802|       -0.7892|    -0.7892|
+|high_ra  |theta_e  |E         |     0.002|        0.0073|     0.0074|
+|high_ra  |theta_e  |sd        |     3.289|        3.2855|     3.2855|
+|high_ra  |theta_e  |rho       |     0.804|        0.8039|     0.8039|
+|high_ra  |theta_e  |corr_g    |     0.252|        0.2551|     0.2551|
+|high_ra  |theta_e  |corr_z    |     0.965|        0.9635|     0.9635|
+|high_ra  |tau_k    |E         |     0.000|       -0.0263|    -0.0288|
+|high_ra  |tau_k    |sd        |    30.581|       29.4564|    29.4564|
+|high_ra  |tau_k    |rho       |    -0.003|        0.0012|     0.0012|
+|high_ra  |tau_k    |corr_g    |     0.444|        0.4564|     0.4564|
+|high_ra  |tau_k    |corr_z    |    -0.132|       -0.0948|    -0.0948|
+|only_z   |tau_h    |E         |    23.870|       23.8699|    23.8699|
+|only_z   |tau_h    |sd        |     0.074|        0.0741|     0.0741|
+|only_z   |tau_h    |rho       |     0.685|        0.6850|     0.6850|
+|only_z   |tau_h    |corr_g    |        NA|       -0.0011|    -0.0011|
+|only_z   |tau_h    |corr_z    |     0.632|        0.6320|     0.6320|
+|only_z   |theta_e  |E         |     0.000|        0.0000|     0.0000|
+|only_z   |theta_e  |sd        |     0.000|        0.0000|     0.0000|
+|only_z   |theta_e  |rho       |        NA|        0.6761|     0.6761|
+|only_z   |theta_e  |corr_g    |        NA|        0.0014|     0.0014|
+|only_z   |theta_e  |corr_z    |        NA|       -0.7504|    -0.7504|
+|only_z   |tau_k    |E         |     0.000|       -0.0195|    -0.0195|
+|only_z   |tau_k    |sd        |    15.769|       15.9500|    15.9500|
+|only_z   |tau_k    |rho       |    -0.002|       -0.0016|    -0.0016|
+|only_z   |tau_k    |corr_g    |        NA|        0.0042|     0.0042|
+|only_z   |tau_k    |corr_z    |    -0.586|       -0.5864|    -0.5864|
+|only_g   |tau_h    |E         |    23.870|       23.8698|    23.8698|
+|only_g   |tau_h    |sd        |     0.059|        0.0591|     0.0591|
+|only_g   |tau_h    |rho       |     0.895|        0.8947|     0.8947|
+|only_g   |tau_h    |corr_g    |     0.999|        0.9998|     0.9998|
+|only_g   |tau_h    |corr_z    |        NA|       -0.0019|    -0.0019|
+|only_g   |theta_e  |E         |     0.000|        0.0000|     0.0000|
+|only_g   |theta_e  |sd        |     0.000|        0.0000|     0.0000|
+|only_g   |theta_e  |rho       |        NA|        0.8907|     0.8907|
+|only_g   |theta_e  |corr_g    |        NA|        1.0000|     1.0000|
+|only_g   |theta_e  |corr_z    |        NA|       -0.0019|    -0.0019|
+|only_g   |tau_k    |E         |     0.000|       -0.0263|    -0.0263|
+|only_g   |tau_k    |sd        |    32.512|       32.4576|    32.4576|
+|only_g   |tau_k    |rho       |     0.000|        0.0006|     0.0006|
+|only_g   |tau_k    |corr_g    |     0.456|        0.4560|     0.4560|
+|only_g   |tau_k    |corr_z    |        NA|       -0.0042|    -0.0042|
+|iid      |tau_h    |E         |    23.870|       23.8700|    23.8700|
+|iid      |tau_h    |sd        |     0.147|        0.1473|     0.1473|
+|iid      |tau_h    |rho       |    -0.068|       -0.0674|    -0.0674|
+|iid      |tau_h    |corr_g    |     0.099|        0.0968|     0.0968|
+|iid      |tau_h    |corr_z    |     0.954|        0.9536|     0.9536|
+|iid      |theta_e  |E         |     0.000|        0.0000|     0.0000|
+|iid      |theta_e  |sd        |     0.000|        0.0000|     0.0000|
+|iid      |theta_e  |rho       |        NA|        0.8953|     0.8953|
+|iid      |theta_e  |corr_g    |        NA|        0.1074|     0.1074|
+|iid      |theta_e  |corr_z    |        NA|       -0.4241|    -0.4241|
+|iid      |tau_k    |E         |     0.000|       -0.0136|    -0.0136|
+|iid      |tau_k    |sd        |    10.818|       10.8983|    10.8983|
+|iid      |tau_k    |rho       |     0.000|       -0.0008|    -0.0008|
+|iid      |tau_k    |corr_g    |     0.913|        0.9077|     0.9077|
+|iid      |tau_k    |corr_z    |    -0.409|       -0.4235|    -0.4235|

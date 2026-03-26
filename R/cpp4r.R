@@ -23,3 +23,82 @@ bw05_params <- function(args) {
 bw05_diag <- function(args) {
 	.Call(`_bw05_bw05_diag`, args)
 }
+
+#' @title BW Table 6: 2nd-order Monte Carlo statistics
+#' @description Simulates second-order Ramsey policy rules using SGU (2004)
+#'   perturbation and returns the same statistics as Table 6 of Benigno &
+#'   Woodford (2005).
+#' @export
+bw05_stats_2nd <- function(args, n_k, T_total, T_burn, seed) {
+	.Call(`_bw05_bw05_stats_2nd`, args, n_k, T_total, T_burn, seed)
+}
+
+#' @title Solve using Time Iteration
+#' @description Solves the CCK94/BW Ramsey taxation model using time iteration
+#'   (policy function iteration) on the Euler equation.
+#' @param args Model parameters (same as bw05_stats)
+#' @param n_k Number of capital grid points (default 50)
+#' @param n_z Number of technology shock states (default 5)
+#' @param n_g Number of govt spending shock states (default 5)
+#' @param max_iter Maximum iterations (default 500)
+#' @param tol Convergence tolerance (default 1e-6)
+#' @param T_total Simulation periods for statistics (default 500000)
+#' @param T_burn Burn-in periods (default 60000)
+#' @param seed Random seed (default 42)
+#' @export
+bw05_solve_ti <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
+	.Call(`_bw05_bw05_solve_ti`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
+}
+
+#' @title Solve using Endogenous Grid Method
+#' @description Solves the CCK94/BW Ramsey taxation model using Carroll's (2005)
+#'   endogenous grid method.
+#' @param args Model parameters (same as bw05_stats)
+#' @param n_k Number of capital grid points (default 50)
+#' @param n_z Number of technology shock states (default 5)
+#' @param n_g Number of govt spending shock states (default 5)
+#' @param max_iter Maximum iterations (default 500)
+#' @param tol Convergence tolerance (default 1e-6)
+#' @param T_total Simulation periods for statistics (default 500000)
+#' @param T_burn Burn-in periods (default 60000)
+#' @param seed Random seed (default 42)
+#' @export
+bw05_solve_egm <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
+	.Call(`_bw05_bw05_solve_egm`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
+}
+
+#' @title Solve using Envelope Condition Method
+#' @description Solves the CCK94/BW Ramsey taxation model using Maliar & Maliar's
+#'   (2013) envelope condition method.
+#' @param args Model parameters (same as bw05_stats)
+#' @param n_k Number of capital grid points (default 50)
+#' @param n_z Number of technology shock states (default 5)
+#' @param n_g Number of govt spending shock states (default 5)
+#' @param max_iter Maximum iterations (default 500)
+#' @param tol Convergence tolerance (default 1e-6)
+#' @param T_total Simulation periods for statistics (default 500000)
+#' @param T_burn Burn-in periods (default 60000)
+#' @param seed Random seed (default 42)
+#' @export
+bw05_solve_ecm <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
+	.Call(`_bw05_bw05_solve_ecm`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
+}
+
+#' @title Solve using Projection Method
+#' @description Solves the CCK94/BW Ramsey taxation model using polynomial
+#'   projection (Chebyshev collocation), similar to CCK94's minimum-weighted
+#'   residual method.
+#' @param args Model parameters (same as bw05_stats)
+#' @param n_k Number of capital grid points (default 50)
+#' @param n_z Number of technology shock states (default 5)
+#' @param n_g Number of govt spending shock states (default 5)
+#' @param poly_degree Chebyshev polynomial degree (default 5)
+#' @param max_iter Maximum iterations (default 500)
+#' @param tol Convergence tolerance (default 1e-6)
+#' @param T_total Simulation periods for statistics (default 500000)
+#' @param T_burn Burn-in periods (default 60000)
+#' @param seed Random seed (default 42)
+#' @export
+bw05_solve_proj <- function(args, n_k, n_z, n_g, poly_degree, max_iter, tol, T_total, T_burn, seed) {
+	.Call(`_bw05_bw05_solve_proj`, args, n_k, n_z, n_g, poly_degree, max_iter, tol, T_total, T_burn, seed)
+}
