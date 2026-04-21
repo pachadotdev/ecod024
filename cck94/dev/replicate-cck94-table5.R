@@ -3,18 +3,18 @@
 # ==========================================================================
 # Compares package solvers against the published BW Table 5 values
 # stored in bw5 package data:
-#   - 1st-Order LQ (ecod024_stats)
-#   - 2nd-Order Perturbation (ecod024_stats_2nd)
+#   - 1st-Order LQ (cck94_stats)
+#   - 2nd-Order Perturbation (cck94_stats_2nd)
 # ==========================================================================
 
-pkgpath <- "~/Documents/ecod024/ecod024"
+pkgpath <- "~/Documents/cck94/cck94"
 
 devtools::clean_dll(pkgpath)
 cpp4r::register(pkgpath)
 devtools::document(pkgpath)
 devtools::install(pkgpath)
 
-library(ecod024)
+library(cck94)
 
 # ==========================================================================
 # Setup
@@ -52,7 +52,7 @@ stat_labels <- c("E", "sd", "rho", "corr_g", "corr_z")
 # Reference Data: BW Table 5 (from package data)
 # ==========================================================================
 
-data(bw5, package = "ecod024")
+data(bw5, package = "cck94")
 
 # ==========================================================================
 # Run All Solvers
@@ -64,7 +64,7 @@ results <- list()
 cat("\n=== Running 1st-Order LQ ===\n")
 results[["1st-Order LQ"]] <- lapply(names(scenarios), function(sc_name) {
   cat(sprintf("  %s...\n", sc_name))
-  ecod024_stats(scenarios[[sc_name]], n_k = N_K, T_total = T_TOTAL, 
+  cck94_stats(scenarios[[sc_name]], n_k = N_K, T_total = T_TOTAL, 
              T_burn = T_BURN, seed = SEED)
 })
 names(results[["1st-Order LQ"]]) <- names(scenarios)
@@ -73,7 +73,7 @@ names(results[["1st-Order LQ"]]) <- names(scenarios)
 cat("\n=== Running 2nd-Order Perturbation ===\n")
 results[["2nd-Order"]] <- lapply(names(scenarios), function(sc_name) {
   cat(sprintf("  %s...\n", sc_name))
-  ecod024_stats_2nd(scenarios[[sc_name]], n_k = N_K, T_total = T_TOTAL, 
+  cck94_stats_2nd(scenarios[[sc_name]], n_k = N_K, T_total = T_TOTAL, 
                  T_burn = T_BURN, seed = SEED)
 })
 names(results[["2nd-Order"]]) <- names(scenarios)

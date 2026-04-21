@@ -180,7 +180,7 @@ inline DecisionRules compute_decision_rules(const Params &p) {
 //  simulate - BW Table 5 Monte Carlo (first-order, continuous AR(1))
 //
 //  BW footnote 18: epsilon^x_t ∈ {+delta_x, -delta_x} with equal probability,
-//  delta_x = sigma_x √(1-rho²_x), giving unconditional Var(x) = sigma²_x.
+//  delta_x = sigma_x sqrt(1-rho^2_x), giving unconditional Var(x) = sigma^2_x.
 //
 //  BW footnote 31: T_total = 500,000; T_burn = 60,000.
 //

@@ -12,13 +12,13 @@ using namespace arma;
 //  SecondOrderRules - Schmitt-Grohé & Uribe (2004) second-order terms
 //
 //  Second-order policy expansion:
-//    u_t  = gx * v_t + 0.5 * gxx * (v_t ⊗ v_t) + 0.5 * gss * σ²
-//    v_{t+1} = hx * v_t + 0.5 * hxx * (v_{t+1} ⊗ v_t) + 0.5 * hss * σ² + η
+//    u_t  = gx * v_t + 0.5 * gxx * (v_t x v_t) + 0.5 * gss * σ^2
+//    v_{t+1} = hx * v_t + 0.5 * hxx * (v_{t+1} x v_t) + 0.5 * hss * σ^2 + η
 //    ε_{t+1}
 //
 //  For tax rules:
-//    τ̂^h_t = Γ^h v_t + 0.5 * Γ^h_xx (v_t ⊗ v_t) + 0.5 * Γ^h_ss σ²
-//    τ^k_t = Γ^k_0 v_t + Γ^k_1 v_{t-1} + second-order terms
+//    taû^h_t = gamma^h v_t + 0.5 * gamma^h_xx (v_t x v_t) + 0.5 * gamma^h_ss σ^2
+//    tau^k_t = gamma^k_0 v_t + gamma^k_1 v_{t-1} + second-order terms
 //
 //  BW Table 6: Monte Carlo with quadratic approximations
 // =====================================================================
@@ -32,20 +32,20 @@ struct SecondOrderRules {
   rowvec gamma_theta_e; // 1x3: ex-ante capital tax
 
   // Second-order tensors (nx=3 states, nu=2 controls)
-  // gxx(i,j,k) = ∂²g^i / ∂v_j ∂v_k  -> cube(2, 3, 3)
-  // hxx(i,j,k) = ∂²h^i / ∂v_j ∂v_k  -> cube(3, 3, 3)
+  // gxx(i,j,k) = ∂^2g^i / ∂v_j ∂v_k  -> cube(2, 3, 3)
+  // hxx(i,j,k) = ∂^2h^i / ∂v_j ∂v_k  -> cube(3, 3, 3)
   cube gxx; // 2x3x3: control Hessians
   cube hxx; // 3x3x3: state Hessians
 
   // Variance correction terms
-  vec gss; // 2x1: control constant (σ² correction)
-  vec hss; // 3x1: state constant (σ² correction)
+  vec gss; // 2x1: control constant (σ^2 correction)
+  vec hss; // 3x1: state constant (σ^2 correction)
 
   // Tax rule second-order terms
   mat tau_h_xx;      // 3x3: Hessian for labor tax
   double tau_h_ss;   // variance correction for labor tax
-  cube tau_k_xx;     // 3x3x2: [Γ^k_0_xx(:,:,0); Γ^k_1_xx(:,:,1)]
-  vec tau_k_ss;      // 2x1: [τ^k_0_ss; τ^k_1_ss]
+  cube tau_k_xx;     // 3x3x2: [gamma^k_0_xx(:,:,0); gamma^k_1_xx(:,:,1)]
+  vec tau_k_ss;      // 2x1: [tau^k_0_ss; tau^k_1_ss]
   mat theta_e_xx;    // 3x3: Hessian for ex-ante capital tax
   double theta_e_ss; // variance correction for ex-ante tax
 };
@@ -58,7 +58,7 @@ struct SecondOrderRules {
 //    E_t[f(y', y, x', x)] = 0  where y = controls, x = states
 //
 //  Key insight from BW: differences between Table 5 and Table 6 are small,
-//  mainly affecting means via the σ² correction terms.
+//  mainly affecting means via the σ^2 correction terms.
 // =====================================================================
 inline SecondOrderRules compute_second_order_rules(const Params &p,
                                                    const DecisionRules &r1) {
@@ -96,8 +96,8 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
   // and Table 6 (second-order) are very small - typically < 0.01 percentage
   // points for means. This tells us:
   //
-  // 1. For log utility (φ=0): corrections are analytically zero
-  // 2. For φ≠0: corrections are very small
+  // 1. For log utility (phi=0): corrections are analytically zero
+  // 2. For phi!=0: corrections are very small
   //
   // Following SGU (2004), the second-order solution involves:
   //   - hss: state variance correction (precautionary savings)
@@ -110,18 +110,18 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
   // ----------------------------------------------------------------
 
   // Variance of innovations (BW footnote 18)
-  // Unconditional variance: Var(z) = σ²_z, Var(g) = σ²_g
-  // Innovation variance: σ²_ε_z = σ²_z(1-ρ²_z), etc.
+  // Unconditional variance: Var(z) = σ^2_z, Var(g) = σ^2_g
+  // Innovation variance: σ^2_ε_z = σ^2_z(1-ρ^2_z), etc.
   const double var_eps_z = p.sigma_z * p.sigma_z * (1.0 - p.rho_z * p.rho_z);
   const double var_eps_g = p.sigma_g * p.sigma_g * (1.0 - p.rho_g * p.rho_g);
 
-  // For log utility (φ=0), all second-order corrections are zero.
+  // For log utility (phi=0), all second-order corrections are zero.
   // This is because the utility function is separable and log-linear
   // in the relevant sense, making the LQ approximation exact.
   //
-  // For φ≠0, there's curvature that creates small corrections.
-  // From BW's Table 5 vs Table 6, the mean shift in τ^h is about
-  // +0.004 for baseline (φ=0) and -0.002 for high r.a. (φ=-8).
+  // For phi!=0, there's curvature that creates small corrections.
+  // From BW's Table 5 vs Table 6, the mean shift in tau^h is about
+  // +0.004 for baseline (phi=0) and -0.002 for high r.a. (phi=-8).
   // These are SO small that they're likely just MC noise.
 
   if (std::abs(p.psi_u) > 1e-10) {
@@ -135,7 +135,7 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
     // very conservative estimates based on their observed differences.
 
     // Curvature coefficient: controls the magnitude of risk adjustments
-    // For φ=-8 (BW's high r.a. case), the mean τ^h shifts by about -0.002
+    // For phi=-8 (BW's high r.a. case), the mean tau^h shifts by about -0.002
     // This translates to a tiny capital adjustment.
     const double curvature = p.psi_u * (1.0 - p.gamma_bw);
 
@@ -195,12 +195,12 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
 //
 //  Uses the SGU (2004) simulation formula:
 //    x^f_{t+1} = hx * x^f_t + σ η ε_{t+1}
-//    x^s_{t+1} = hx * x^s_t + 0.5 * (x^f_t)' hxx (x^f_t) + 0.5 * hss * σ²
+//    x^s_{t+1} = hx * x^s_t + 0.5 * (x^f_t)' hxx (x^f_t) + 0.5 * hss * σ^2
 //    x_{t+1} = x^f_{t+1} + x^s_{t+1}
-//    y_t = gx * x_t + 0.5 * (x^f_t)' gxx (x^f_t) + 0.5 * gss * σ²
+//    y_t = gx * x_t + 0.5 * (x^f_t)' gxx (x^f_t) + 0.5 * gss * σ^2
 //
 //  Returns (T_keep x 6) matrix:
-//    col 0: τ^h   col 1: θ^e   col 2: τ^k
+//    col 0: tau^h   col 1: θ^e   col 2: tau^k
 //    col 3: θ^{nc} (non-contingent debt)
 //    col 4: ẑ_t   col 5: ĝ_t
 // =====================================================================
@@ -240,20 +240,20 @@ inline mat simulate_second_order(const Params &p, const SecondOrderRules &r2,
         return 0.5 * as_scalar(xf.t() * M * xf);
       };
 
-      // col 0: τ^h with second-order correction
-      //   τ̂^h = Γ^h * x + 0.5 * xf' * Γ^h_xx * xf + 0.5 * Γ^h_ss * σ²
+      // col 0: tau^h with second-order correction
+      //   taû^h = gamma^h * x + 0.5 * xf' * gamma^h_xx * xf + 0.5 * gamma^h_ss * σ^2
       double tau_hat_h = as_scalar(r2.gamma_tau_h * x) +
                          quad_form(r2.tau_h_xx) + 0.5 * r2.tau_h_ss * sigma_sq;
       out(row, 0) = p.tau_h_ss + (1.0 - p.tau_h_ss) * tau_hat_h;
 
       // col 1: θ^e with second-order correction
-      //   θ^e_t = (Γ^k_0 hx + Γ^k_1) * x + quadratic terms
+      //   θ^e_t = (gamma^k_0 hx + gamma^k_1) * x + quadratic terms
       double theta_e = as_scalar(r2.gamma_theta_e * x) +
                        quad_form(r2.theta_e_xx) +
                        0.5 * r2.theta_e_ss * sigma_sq;
       out(row, 1) = theta_e;
 
-      // col 2: τ^k with lagged state
+      // col 2: tau^k with lagged state
       vec x_lag = xf_lag + xs_lag;
       double tau_k =
           as_scalar(r2.Gamma_k_0 * x) + as_scalar(r2.Gamma_k_1 * x_lag) +
@@ -286,7 +286,7 @@ inline mat simulate_second_order(const Params &p, const SecondOrderRules &r2,
     xf_new(1) = p.rho_z * xf(1) + eps_z;
     xf_new(2) = p.rho_g * xf(2) + eps_g;
 
-    // x^s_{t+1} = hx * x^s_t + 0.5 * hxx(xf,xf) + 0.5 * hss * σ²
+    // x^s_{t+1} = hx * x^s_t + 0.5 * hxx(xf,xf) + 0.5 * hss * σ^2
     vec xs_new(3);
 
     // Compute hxx quadratic forms

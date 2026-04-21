@@ -1,4 +1,4 @@
-// ecod024/src/main.cpp
+// cck94/src/main.cpp
 //
 // Replication of Benigno & Woodford (2005), NBER WP 11029,
 // "Optimal Taxation in an RBC Model: A Linear-Quadratic Approach"
@@ -16,12 +16,12 @@
 //   - Projection/Collocation method - CCK94 style
 //
 // Exported:
-//   ecod024_stats       -> BW Table 5 (1st-order Monte Carlo)
-//   ecod024_stats_2nd   -> BW Table 6 (2nd-order Monte Carlo)
-//   ecod024_solve_ti    -> Time Iteration solver
-//   ecod024_solve_egm   -> EGM solver
-//   ecod024_solve_ecm   -> ECM solver
-//   ecod024_solve_proj  -> Projection method solver
+//   cck94_stats       -> BW Table 5 (1st-order Monte Carlo)
+//   cck94_stats_2nd   -> BW Table 6 (2nd-order Monte Carlo)
+//   cck94_solve_ti    -> Time Iteration solver
+//   cck94_solve_egm   -> EGM solver
+//   cck94_solve_ecm   -> ECM solver
+//   cck94_solve_proj  -> Projection method solver
 
 #include <armadillo4r.hpp>
 #include <cpp4r.hpp>
@@ -40,7 +40,7 @@ using namespace arma;
 #include "08_projection.h"
 
 // -----------------------------------------------------------------------
-//  ecod024_stats
+//  cck94_stats
 //
 //  Monte Carlo of first-order LQ optimal policy rules.
 //  BW footnote 31: T_total = 500,000; T_burn = 60,000.
@@ -57,7 +57,7 @@ using namespace arma;
 @export
 */
 [[cpp4r::register]]
-writable::doubles_matrix<> ecod024_stats(list args, int n_k, int T_total,
+writable::doubles_matrix<> cck94_stats(list args, int n_k, int T_total,
                                          int T_burn, int seed) {
   Params p(args);
   DecisionRules rules = compute_decision_rules(p);
@@ -75,7 +75,7 @@ writable::doubles_matrix<> ecod024_stats(list args, int n_k, int T_total,
 }
 
 // -----------------------------------------------------------------------
-//  ecod024_params — NSSS + LQ diagnostics
+//  cck94_params — NSSS + LQ diagnostics
 //
 //  Returns (1 × 10):
 //    sk | sc | sb | h_ss | phi_bw | qc | qh | qk | theta_lq | theta_z
@@ -87,7 +87,7 @@ writable::doubles_matrix<> ecod024_stats(list args, int n_k, int T_total,
 @export
 */
 [[cpp4r::register]]
-writable::doubles_matrix<> ecod024_params(list args) {
+writable::doubles_matrix<> cck94_params(list args) {
   Params p(args);
 
   writable::doubles_matrix<> out(1, 10);
@@ -105,7 +105,7 @@ writable::doubles_matrix<> ecod024_params(list args) {
 }
 
 // -----------------------------------------------------------------------
-//  ecod024_diag — Full decision rule diagnostics
+//  cck94_diag — Full decision rule diagnostics
 //
 //  Returns a flat matrix with all coefficients for debugging.
 //  Row layout (29 rows × 3 cols, padded with zeros):
@@ -127,7 +127,7 @@ writable::doubles_matrix<> ecod024_params(list args) {
 @export
 */
 [[cpp4r::register]]
-writable::doubles_matrix<> ecod024_diag(list args) {
+writable::doubles_matrix<> cck94_diag(list args) {
   Params p(args);
   DecisionRules rules = compute_decision_rules(p);
 
@@ -182,7 +182,7 @@ writable::doubles_matrix<> ecod024_diag(list args) {
 }
 
 // -----------------------------------------------------------------------
-//  ecod024_stats_2nd
+//  cck94_stats_2nd
 //
 //  Monte Carlo of SECOND-ORDER optimal policy rules (BW Table 6).
 //  Uses Schmitt-Grohé & Uribe (2004) perturbation approximation.
@@ -199,7 +199,7 @@ writable::doubles_matrix<> ecod024_diag(list args) {
 @export
 */
 [[cpp4r::register]]
-writable::doubles_matrix<> ecod024_stats_2nd(list args, int n_k, int T_total,
+writable::doubles_matrix<> cck94_stats_2nd(list args, int n_k, int T_total,
                                              int T_burn, int seed) {
   Params p(args);
   DecisionRules r1 = compute_decision_rules(p);
@@ -329,17 +329,17 @@ static mat simulate_nonlinear(const Params &p, const GridSpec &grid,
 }
 
 // -----------------------------------------------------------------------
-//  ecod024_solve_ti - Time Iteration solver
+//  cck94_solve_ti - Time Iteration solver
 //
 //  Returns list with:
-//    stats: (5 × 3) statistics matrix (same format as ecod024_stats)
+//    stats: (5 × 3) statistics matrix (same format as cck94_stats)
 //    info: convergence info (iterations, error, converged, elapsed_ms)
 
 /* roxygen
 @title Solve using Time Iteration
 @description Solves the CCK94/BW Ramsey taxation model using time iteration
   (policy function iteration) on the Euler equation.
-@param args Model parameters (same as ecod024_stats)
+@param args Model parameters (same as cck94_stats)
 @param n_k Number of capital grid points (default 50)
 @param n_z Number of technology shock states (default 5)
 @param n_g Number of govt spending shock states (default 5)
@@ -351,7 +351,7 @@ static mat simulate_nonlinear(const Params &p, const GridSpec &grid,
 @export
 */
 [[cpp4r::register]]
-writable::list ecod024_solve_ti(list args, int n_k, int n_z, int n_g,
+writable::list cck94_solve_ti(list args, int n_k, int n_z, int n_g,
                                 int max_iter, double tol, int T_total,
                                 int T_burn, int seed) {
   Params p(args);
@@ -389,13 +389,13 @@ writable::list ecod024_solve_ti(list args, int n_k, int n_z, int n_g,
 }
 
 // -----------------------------------------------------------------------
-//  ecod024_solve_egm - Endogenous Grid Method solver
+//  cck94_solve_egm - Endogenous Grid Method solver
 
 /* roxygen
 @title Solve using Endogenous Grid Method
 @description Solves the CCK94/BW Ramsey taxation model using Carroll's (2005)
   endogenous grid method.
-@param args Model parameters (same as ecod024_stats)
+@param args Model parameters (same as cck94_stats)
 @param n_k Number of capital grid points (default 50)
 @param n_z Number of technology shock states (default 5)
 @param n_g Number of govt spending shock states (default 5)
@@ -407,7 +407,7 @@ writable::list ecod024_solve_ti(list args, int n_k, int n_z, int n_g,
 @export
 */
 [[cpp4r::register]]
-writable::list ecod024_solve_egm(list args, int n_k, int n_z, int n_g,
+writable::list cck94_solve_egm(list args, int n_k, int n_z, int n_g,
                                  int max_iter, double tol, int T_total,
                                  int T_burn, int seed) {
   Params p(args);
@@ -443,13 +443,13 @@ writable::list ecod024_solve_egm(list args, int n_k, int n_z, int n_g,
 }
 
 // -----------------------------------------------------------------------
-//  ecod024_solve_ecm - Envelope Condition Method solver
+//  cck94_solve_ecm - Envelope Condition Method solver
 
 /* roxygen
 @title Solve using Envelope Condition Method
 @description Solves the CCK94/BW Ramsey taxation model using Maliar & Maliar's
   (2013) envelope condition method.
-@param args Model parameters (same as ecod024_stats)
+@param args Model parameters (same as cck94_stats)
 @param n_k Number of capital grid points (default 50)
 @param n_z Number of technology shock states (default 5)
 @param n_g Number of govt spending shock states (default 5)
@@ -461,7 +461,7 @@ writable::list ecod024_solve_egm(list args, int n_k, int n_z, int n_g,
 @export
 */
 [[cpp4r::register]]
-writable::list ecod024_solve_ecm(list args, int n_k, int n_z, int n_g,
+writable::list cck94_solve_ecm(list args, int n_k, int n_z, int n_g,
                                  int max_iter, double tol, int T_total,
                                  int T_burn, int seed) {
   Params p(args);
@@ -497,14 +497,14 @@ writable::list ecod024_solve_ecm(list args, int n_k, int n_z, int n_g,
 }
 
 // -----------------------------------------------------------------------
-//  ecod024_solve_proj - Projection method solver (CCK94 style)
+//  cck94_solve_proj - Projection method solver (CCK94 style)
 
 /* roxygen
 @title Solve using Projection Method
 @description Solves the CCK94/BW Ramsey taxation model using polynomial
   projection (Chebyshev collocation), similar to CCK94's minimum-weighted
   residual method.
-@param args Model parameters (same as ecod024_stats)
+@param args Model parameters (same as cck94_stats)
 @param n_k Number of capital grid points (default 50)
 @param n_z Number of technology shock states (default 5)
 @param n_g Number of govt spending shock states (default 5)
@@ -517,7 +517,7 @@ writable::list ecod024_solve_ecm(list args, int n_k, int n_z, int n_g,
 @export
 */
 [[cpp4r::register]]
-writable::list ecod024_solve_proj(list args, int n_k, int n_z, int n_g,
+writable::list cck94_solve_proj(list args, int n_k, int n_z, int n_g,
                                   int poly_degree, int max_iter, double tol,
                                   int T_total, int T_burn, int seed) {
   Params p(args);

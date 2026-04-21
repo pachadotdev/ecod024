@@ -12,7 +12,7 @@ using namespace arma;
 //  Time Iteration (Policy Function Iteration) Solver
 //
 //  Iterates on the Euler equation:
-//    u_c(c,h) = β E[u_c(c',h') × (1 + (1-τ^k')(f_k' - δ))]
+//    u_c(c,h) = β E[u_c(c',h') * (1 + (1-tau^k')(f_k' - δ))]
 //
 //  For the CCK94/BW Ramsey problem, we solve for optimal allocations
 //  {c, h, k'} and then back out tax rates from FOCs.
@@ -20,16 +20,16 @@ using namespace arma;
 //  Algorithm:
 //    1. Initialize policy functions (c, h, k') on grid
 //    2. For each (k, z, g):
-//       a. Compute E[u_c' × (1 + R_k')] using current policies
+//       a. Compute E[u_c' * (1 + R_k')] using current policies
 //       b. Solve for (c, h) from Euler + labor FOC
 //       c. Update k' from resource constraint
 //    3. Repeat until ||k'_new - k'_old|| < tol
 // =====================================================================
 
 // Helper: solve for hours given consumption, capital, and productivity
-// From labor FOC: -u_h/u_c = (1-τ^h) × w where w = f_h
-// For log utility: γ/(1-h) / [(1-γ)/c] = (1-τ^h) × f_h
-// Simplifies to: γc / [(1-γ)(1-h)] = (1-τ^h) × f_h
+// From labor FOC: -u_h/u_c = (1-tau^h) * w where w = f_h
+// For log utility: gamma/(1-h) / [(1-gamma)/c] = (1-tau^h) * f_h
+// Simplifies to: gammac / [(1-gamma)(1-h)] = (1-tau^h) * f_h
 //
 // For the Ramsey planner, set tau_h = 0 to get efficient allocation
 inline double solve_hours(const NonlinearModel &m, double c, double k, double z,
@@ -41,8 +41,8 @@ inline double solve_hours(const NonlinearModel &m, double c, double k, double z,
   for (int iter = 0; iter < max_iter; ++iter) {
     double fh = m.f_h(k, z, h);
 
-    // Residual: -u_h/u_c - (1-τ^h) × f_h = 0
-    // For log utility: γc/[(1-γ)(1-h)] - (1-τ^h)f_h = 0
+    // Residual: -u_h/u_c - (1-tau^h) * f_h = 0
+    // For log utility: gammac/[(1-gamma)(1-h)] - (1-tau^h)f_h = 0
     double lhs = m.gamma * c / ((1.0 - m.gamma) * (1.0 - h));
     double rhs = (1.0 - tau_h) * fh;
     double res = lhs - rhs;
@@ -51,8 +51,8 @@ inline double solve_hours(const NonlinearModel &m, double c, double k, double z,
       break;
 
     // Derivative w.r.t. h
-    // d(lhs)/dh = γc/[(1-γ)(1-h)^2]
-    // d(rhs)/dh = (1-τ^h) d(f_h)/dh (complicated, use finite diff)
+    // d(lhs)/dh = gammac/[(1-gamma)(1-h)^2]
+    // d(rhs)/dh = (1-tau^h) d(f_h)/dh (complicated, use finite diff)
     const double dh = 1e-6;
     double fh_p = m.f_h(k, z, h + dh);
     double lhs_p = m.gamma * c / ((1.0 - m.gamma) * (1.0 - h - dh));
@@ -118,7 +118,7 @@ inline double time_iteration_step(const NonlinearModel &model,
         double tau_h = tau_h_ss + (1.0 - tau_h_ss) * tau_h_hat;
         tau_h_new(i_k, i_z, i_g) = tau_h;
 
-        // Compute expectation E[u_c' × (1 + (1-τ^k')(f_k' - δ))]
+        // Compute expectation E[u_c' * (1 + (1-tau^k')(f_k' - δ))]
         double E_term = 0.0;
 
         for (int j_g = 0; j_g < n_g; ++j_g) {
@@ -142,7 +142,7 @@ inline double time_iteration_step(const NonlinearModel &model,
             if (h_p <= 0 || h_p >= 1)
               h_p = model.h_ss;
 
-            // For Ramsey problem, assume τ^k' = 0 in expectation
+            // For Ramsey problem, assume tau^k' = 0 in expectation
             // (this is the "ex ante zero" result from BW)
             double tau_k_p = 0.0;
 
@@ -154,7 +154,7 @@ inline double time_iteration_step(const NonlinearModel &model,
           }
         }
 
-        // Euler equation: u_c(c,h) = β × E_term
+        // Euler equation: u_c(c,h) = β * E_term
         double uc_target = model.beta * E_term;
 
         // Guess hours, solve system

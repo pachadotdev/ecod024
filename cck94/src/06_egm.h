@@ -20,8 +20,8 @@ using namespace arma;
 //  Algorithm:
 //    1. Create grid on k' (future endogenous state)
 //    2. For each (k', z, g):
-//       a. Compute E[u_c(k', z', g') × (1 + R_k')]
-//       b. From Euler: u_c(c,h) = β × E[...] => solve for c directly
+//       a. Compute E[u_c(k', z', g') * (1 + R_k')]
+//       b. From Euler: u_c(c,h) = β * E[...] => solve for c directly
 //       c. From resource: y = c + g + k' - (1-δ)k => solve for k
 //    3. Interpolate back to exogenous k grid
 //    4. Iterate until convergence
@@ -113,7 +113,7 @@ inline double egm_iteration_step(const NonlinearModel &model,
                            rules.gamma_tau_h(2) * g_hat;
         double tau_h = tau_h_ss + (1.0 - tau_h_ss) * tau_h_hat;
 
-        // Compute E[u_c' × (1 + R_k')]
+        // Compute E[u_c' * (1 + R_k')]
         double E_term = 0.0;
 
         for (int j_g = 0; j_g < n_g; ++j_g) {
@@ -144,7 +144,7 @@ inline double egm_iteration_step(const NonlinearModel &model,
           }
         }
 
-        // From Euler: u_c = β × E_term
+        // From Euler: u_c = β * E_term
         double uc_target = model.beta * E_term;
 
         // In EGM, k' is fixed and we solve for (k, c, h) simultaneously

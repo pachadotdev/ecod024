@@ -47,13 +47,13 @@ struct GridSpec {
 // =====================================================================
 //  NonlinearModel - Model equations for CCK94/BW Ramsey problem
 //
-//  Production: y = k^α (zh)^{1-α}
-//  Utility:    u(c,h) = [c^{1-γ}(1-h)^γ]^φ / φ  (or log if φ=0)
+//  Production: y = k^alpha (zh)^{1-alpha}
+//  Utility:    u(c,h) = [c^{1-gamma}(1-h)^gamma]^phi / phi  (or log if phi=0)
 //
 //  Key FOCs:
 //    1. Resource: y = c + g + k' - (1-δ)k
-//    2. Euler: u_c = βE[u_c'(1 + (1-τ^k')(f_k' - δ))]
-//    3. Labor: u_h/u_c = -(1-τ^h)zf_h
+//    2. Euler: u_c = βE[u_c'(1 + (1-tau^k')(f_k' - δ))]
+//    3. Labor: u_h/u_c = -(1-tau^h)zf_h
 //    4. Implementability (present-value budget constraint)
 // =====================================================================
 struct NonlinearModel {
@@ -87,34 +87,34 @@ struct NonlinearModel {
     c_ss = p.sc; // consumption-output ratio
     g_ss = p.sg; // govt spending-output ratio
 
-    // Compute TFP so that A × k^α × h^{1-α} = 1 at steady state
+    // Compute TFP so that A * k^alpha * h^{1-alpha} = 1 at steady state
     // This normalizes output to 1
     double y_raw = std::pow(k_ss, alpha) * std::pow(h_ss, 1.0 - alpha);
     A = 1.0 / y_raw;
 
-    // Compute Ramsey multiplier λ from steady-state tax rate
-    // For log utility: τ^h = λ/(1-h+λ) => λ = τ^h(1-h)/(1-τ^h)
+    // Compute Ramsey multiplier lambda from steady-state tax rate
+    // For log utility: tau^h = lambda/(1-h+lambda) => lambda = tau^h(1-h)/(1-tau^h)
     // This is derived from CCK94's primal approach to the Ramsey problem
     lambda_ramsey = tau_h_ss * (1.0 - h_ss) / (1.0 - tau_h_ss);
   }
 
-  // Production function: f(k, zh) = A × k^α (zh)^{1-α}
+  // Production function: f(k, zh) = A * k^alpha (zh)^{1-alpha}
   // With z=1 at steady state, f(k_ss, 1, h_ss) = 1
   double f(double k, double z, double h) const {
     return A * std::pow(k, alpha) * std::pow(z * h, 1.0 - alpha);
   }
 
-  // Marginal product of capital: f_k = A × α k^{α-1} (zh)^{1-α}
+  // Marginal product of capital: f_k = A * alpha k^{alpha-1} (zh)^{1-alpha}
   double f_k(double k, double z, double h) const {
     return A * alpha * std::pow(k, alpha - 1.0) * std::pow(z * h, 1.0 - alpha);
   }
 
-  // Marginal product of labor: f_h = A × (1-α) k^α z (zh)^{-α} = (1-α)y/h
+  // Marginal product of labor: f_h = A * (1-alpha) k^alpha z (zh)^{-alpha} = (1-alpha)y/h
   double f_h(double k, double z, double h) const {
     return A * (1.0 - alpha) * std::pow(k, alpha) * z * std::pow(z * h, -alpha);
   }
 
-  // Utility: u(c,h) = [c^{1-γ}(1-h)^γ]^φ / φ  (log utility if φ≈0)
+  // Utility: u(c,h) = [c^{1-gamma}(1-h)^gamma]^phi / phi  (log utility if phi≈0)
   double u(double c, double h) const {
     if (std::abs(phi) < 1e-10) {
       // Log utility
@@ -151,17 +151,17 @@ struct NonlinearModel {
     if (std::abs(phi) < 1e-10) {
       return (1.0 - gamma) / uc_val;
     } else {
-      // u_c = (1-γ) c^{(1-γ)φ-1} (1-h)^{γφ}
-      // c = [(u_c / (1-γ)) (1-h)^{-γφ}]^{1/((1-γ)φ-1)}
+      // u_c = (1-gamma) c^{(1-gamma)phi-1} (1-h)^{gammaphi}
+      // c = [(u_c / (1-gamma)) (1-h)^{-gammaphi}]^{1/((1-gamma)phi-1)}
       double leisure_pow = std::pow(1.0 - h, gamma * phi);
       double exponent = 1.0 / ((1.0 - gamma) * phi - 1.0);
       return std::pow((uc_val / (1.0 - gamma)) / leisure_pow, exponent);
     }
   }
 
-  // Labor tax from intratemporal FOC: τ^h = 1 - γ(c/y)h/[(1-γ)(1-h)(1-α)]
+  // Labor tax from intratemporal FOC: tau^h = 1 - gamma(c/y)h/[(1-gamma)(1-h)(1-alpha)]
   // This uses the ratio-based formulation consistent with BW's normalization
-  // Household FOC: (1-τ^h) w = -u_h/u_c where w = (1-α)y/h
+  // Household FOC: (1-tau^h) w = -u_h/u_c where w = (1-alpha)y/h
   double tau_h_from_foc(double c, double h, double k, double z) const {
     double y = f(k, z, h);
     if (y <= 0.0 || h <= 0.0 || h >= 1.0)
@@ -172,7 +172,7 @@ struct NonlinearModel {
   }
 
   // Ramsey labor tax from the implementability constraint
-  // For log utility: τ^h = λ/(1-h+λ) where λ is the constant Ramsey multiplier
+  // For log utility: tau^h = lambda/(1-h+lambda) where lambda is the constant Ramsey multiplier
   // This formula comes from the CCK94 primal Ramsey FOCs
   double tau_h_ramsey(double h) const {
     return lambda_ramsey / (1.0 - h + lambda_ramsey);
@@ -180,8 +180,8 @@ struct NonlinearModel {
 
   // Solve for hours from Ramsey planner's intratemporal FOC
   // The Ramsey FOC (for log utility) is:
-  //   (1-γ)/c × z f_h = γ(1-h+λ)/[(1-h)²]
-  // This differs from competitive equilibrium by the term involving λ
+  //   (1-gamma)/c * z f_h = gamma(1-h+lambda)/[(1-h)^2]
+  // This differs from competitive equilibrium by the term involving lambda
   double solve_hours_ramsey(double c, double k, double z, double tol = 1e-10,
                             int max_iter = 100) const {
     double h = h_ss; // initial guess
@@ -190,7 +190,7 @@ struct NonlinearModel {
       double fh = f_h(k, z, h);
 
       // Ramsey FOC residual:
-      // (1-γ)/c × z × f_h - γ(1-h+λ)/(1-h)² = 0
+      // (1-gamma)/c * z * f_h - gamma(1-h+lambda)/(1-h)^2 = 0
       double lhs = (1.0 - gamma) / c * z * fh;
       double rhs = gamma * (1.0 - h + lambda_ramsey) / ((1.0 - h) * (1.0 - h));
       double res = lhs - rhs;
@@ -218,9 +218,9 @@ struct NonlinearModel {
     return h;
   }
 
-  // Capital tax from Euler: given R_k = E[u_c'(f_k' - δ)], compute τ^k
-  // Euler: u_c = β E[u_c'(1 + (1-τ^k)(f_k - δ))]
-  // => τ^k = 1 - (u_c/β - E[u_c']) / E[u_c'(f_k - δ)]
+  // Capital tax from Euler: given R_k = E[u_c'(f_k' - δ)], compute tau^k
+  // Euler: u_c = β E[u_c'(1 + (1-tau^k)(f_k - δ))]
+  // => tau^k = 1 - (u_c/β - E[u_c']) / E[u_c'(f_k - δ)]
   double tau_k_from_euler(double uc, double E_uc_prime, double E_uc_fk_prime,
                           double E_uc_prime_delta) const {
     double E_uc_Rk = E_uc_fk_prime - E_uc_prime_delta;
@@ -233,7 +233,7 @@ struct NonlinearModel {
 // =====================================================================
 //  Tauchen (1986) discretization for AR(1) processes
 //
-//  z' = ρ z + ε, ε ~ N(0, σ²(1-ρ²))
+//  z' = ρ z + ε, ε ~ N(0, σ^2(1-ρ^2))
 //  Returns grid values and transition matrix
 // =====================================================================
 inline void tauchen(int n, double rho, double sigma, double m, vec &grid,
@@ -318,17 +318,17 @@ inline GridSpec setup_grid(const Params &p, int n_k, int n_z, int n_g,
 //    k'(k,z,g)  - capital
 //    c(k,z,g)   - consumption
 //    h(k,z,g)   - hours
-//    τ^h(k,z,g) - labor tax
-//    τ^k(k,z,g) - capital tax
+//    tau^h(k,z,g) - labor tax
+//    tau^k(k,z,g) - capital tax
 // =====================================================================
 struct PolicyFunctions {
-  cube k_prime; // n_k × n_z × n_g: capital policy
-  cube c;       // n_k × n_z × n_g: consumption
-  cube h;       // n_k × n_z × n_g: hours
-  cube tau_h;   // n_k × n_z × n_g: labor tax
-  cube tau_k;   // n_k × n_z × n_g: capital tax
-  cube V;       // n_k × n_z × n_g: value function (for VFI)
-  cube V_k;     // n_k × n_z × n_g: marginal value (for ECM)
+  cube k_prime; // n_k * n_z * n_g: capital policy
+  cube c;       // n_k * n_z * n_g: consumption
+  cube h;       // n_k * n_z * n_g: hours
+  cube tau_h;   // n_k * n_z * n_g: labor tax
+  cube tau_k;   // n_k * n_z * n_g: capital tax
+  cube V;       // n_k * n_z * n_g: value function (for VFI)
+  cube V_k;     // n_k * n_z * n_g: marginal value (for ECM)
 
   void initialize(int n_k, int n_z, int n_g) {
     k_prime.zeros(n_k, n_z, n_g);

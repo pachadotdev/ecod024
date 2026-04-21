@@ -3,19 +3,19 @@
 # ==========================================================================
 # Compares package solvers against the published BW Table 4 values
 # stored in bw4 package data:
-#   - Time Iteration (ecod024_solve_ti)
-#   - Envelope Condition Method (ecod024_solve_ecm)
-#   - Projection Method (ecod024_solve_proj)
+#   - Time Iteration (cck94_solve_ti)
+#   - Envelope Condition Method (cck94_solve_ecm)
+#   - Projection Method (cck94_solve_proj)
 # ==========================================================================
 
-pkgpath <- "~/Documents/ecod024/ecod024"
+pkgpath <- "~/Documents/cck94/cck94"
 
 devtools::clean_dll(pkgpath)
 cpp4r::register(pkgpath)
 devtools::document(pkgpath)
 devtools::install(pkgpath)
 
-library(ecod024)
+library(cck94)
 
 # ==========================================================================
 # Setup
@@ -53,7 +53,7 @@ stat_labels <- c("E", "sd", "rho", "corr_g", "corr_z")
 # Reference Data: BW Table 5 (from package data)
 # ==========================================================================
 
-data(bw4, package = "ecod024")
+data(bw4, package = "cck94")
 
 # ==========================================================================
 # Run All Solvers
@@ -65,7 +65,7 @@ results <- list()
 cat("\n=== Running Time Iteration ===\n")
 results[["Time Iter"]] <- lapply(names(scenarios), function(sc_name) {
   cat(sprintf("  %s...\n", sc_name))
-  ecod024_solve_ti(scenarios[[sc_name]], n_k = N_K, n_z = N_Z, n_g = N_G,
+  cck94_solve_ti(scenarios[[sc_name]], n_k = N_K, n_z = N_Z, n_g = N_G,
                 max_iter = MAX_ITER, tol = TOL, T_total = T_TOTAL, 
                 T_burn = T_BURN, seed = SEED)
 })
@@ -75,7 +75,7 @@ names(results[["Time Iter"]]) <- names(scenarios)
 cat("\n=== Running Envelope Condition Method ===\n")
 results[["ECM"]] <- lapply(names(scenarios), function(sc_name) {
   cat(sprintf("  %s...\n", sc_name))
-  ecod024_solve_ecm(scenarios[[sc_name]], n_k = N_K, n_z = N_Z, n_g = N_G,
+  cck94_solve_ecm(scenarios[[sc_name]], n_k = N_K, n_z = N_Z, n_g = N_G,
                  max_iter = MAX_ITER, tol = TOL, T_total = T_TOTAL, 
                  T_burn = T_BURN, seed = SEED)
 })
@@ -85,7 +85,7 @@ names(results[["ECM"]]) <- names(scenarios)
 cat("\n=== Running Projection Method ===\n")
 results[["Projection"]] <- lapply(names(scenarios), function(sc_name) {
   cat(sprintf("  %s...\n", sc_name))
-  ecod024_solve_proj(scenarios[[sc_name]], n_k = N_K, n_z = N_Z, n_g = N_G,
+  cck94_solve_proj(scenarios[[sc_name]], n_k = N_K, n_z = N_Z, n_g = N_G,
                   poly_degree = POLY_DEG, max_iter = MAX_ITER, tol = TOL, 
                   T_total = T_TOTAL, T_burn = T_BURN, seed = SEED)
 })
