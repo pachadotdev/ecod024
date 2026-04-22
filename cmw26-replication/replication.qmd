@@ -32,17 +32,14 @@ computations equivalent to the original MATLAB code.
 #| message: false
 #| warning: false
 
-cpp4r::register("../cmw26")
-install("../cmw26", upgrade = "never")
-
 library(cmw26)
 library(ggplot2)
 library(dplyr)
 library(tidyr)
 
 # Paths - relative to workspace root
-data_path <- "var_inputs/_data/main"
-suff_stats_path <- "suff_stats"
+data_path <- "./cmw26-replication/var_inputs/_data/main"
+suff_stats_path <- "./cmw26-replication/suff_stats"
 
 # Display settings
 theme_set(theme_minimal(base_size = 12))
@@ -57,11 +54,6 @@ The CMW data contains quarterly macroeconomic series from 1954Q3 onwards.
 ```{r load-raw-data}
 # Load raw data (same data used by MATLAB code)
 data_raw <- read.csv(file.path(data_path, "_data_cmw.csv"))
-
-# Inspect structure
-cat("Data dimensions:", nrow(data_raw), "x", ncol(data_raw), "\n")
-cat("Date range:", min(data_raw$date), "to", max(data_raw$date), "\n")
-cat("Variables:", paste(names(data_raw)[-1], collapse = ", "), "\n")
 ```
 
 ### 1.2 Transform Variables
@@ -118,9 +110,6 @@ vardata <- vardata_full[startdate:enddate, ]
 # const_type = 2 matches MATLAB: remove constant AND linear trend
 vardata_dt <- detrend(vardata, const_type = 2)$Res
 colnames(vardata_dt) <- series_names  # Preserve column names
-
-cat("VAR data dimensions:", nrow(vardata_dt), "x", ncol(vardata_dt), "\n")
-cat("Sample:", date[startdate], "to", date[enddate], "\n")
 ```
 
 ## 2. Load Sufficient Statistics
@@ -154,17 +143,9 @@ all_models <- readRDS(file.path(suff_stats_path, "mix/all_models_draws.rds"))
 T_model <- dim(rank_draws$Pi.m.collector)[1]
 n_draws <- dim(rank_draws$Pi.m.collector)[3]
 
-cat("Model IRF horizon:", T_model, "\n")
-cat("Number of posterior draws:", n_draws, "\n")
-
 # Model posterior probabilities
 if ("model.posteriors.all.models" %in% names(all_models)) {
   model_probs <- all_models$model.posteriors.all.models
-  cat("\nPosterior model probabilities:\n")
-  cat("  RE RANK:", round(model_probs[1], 3), "\n")
-  cat("  RE HANK:", round(model_probs[2], 3), "\n")
-  cat("  Behav. RANK:", round(model_probs[3], 3), "\n")
-  cat("  Behav. HANK:", round(model_probs[4], 3), "\n")
 }
 ```
 
@@ -200,11 +181,6 @@ n_var_draws <- 1000   # Number of posterior draws
 # Estimate BVAR with flat prior (essentially OLS)
 bvar_result <- estimate_bvar(vardata_dt, n_lags = n_lags, 
                               constant = constant, n_draws = n_var_draws)
-
-cat("VAR estimation complete\n")
-cat("  Number of variables:", ncol(vardata_dt), "\n")
-cat("  Number of lags:", n_lags, "\n")
-cat("  Effective sample size:", nrow(vardata_dt) - n_lags, "\n")
 ```
 
 ### 4.2 Compute Wold IRFs
@@ -237,9 +213,6 @@ IRF_OLS <- array(0, dim = c(n_y, n_y, IRF_hor))
 for (h in 1:IRF_hor) {
   IRF_OLS[, , h] <- Theta_OLS[, , h] %*% bench_rot
 }
-
-cat("Wold IRFs computed\n")
-cat("  Dimensions:", paste(dim(IRF_OLS), collapse = " x "), "\n")
 ```
 
 ### 4.3 Visualize Key IRFs
@@ -301,8 +274,6 @@ params_bhank <- readRDS(file.path(suff_stats_path, "behavioral/params_hank_mode_
 # Columns of m.fit: [1] Aruoba-Drechsel, [2] Romer-Romer
 
 T_model_full <- nrow(params_rank$Pi.m.rank)
-cat("Model IRF dimensions:", T_model_full, "x", T_model_full, "\n")
-cat("Matching weights dimensions:", paste(dim(params_rank$m.fit.rank), collapse = " x "), "\n")
 ```
 
 ### 5.2 Compute Matched Model IRFs
@@ -341,8 +312,6 @@ R_n_m_brank_match <- params_brank$R.n.m.rank %*% m_fit_brank
 Pi_m_bhank_match <- params_bhank$Pi.m.hank %*% m_fit_bhank
 Y_m_bhank_match <- params_bhank$Y.m.hank %*% m_fit_bhank
 R_n_m_bhank_match <- params_bhank$R.n.m.hank %*% m_fit_bhank
-
-cat("Matched model IRFs computed\n")
 ```
 
 ### 5.3 Figures 3-4: Model IRFs vs Empirical (AD and RR Shocks)
@@ -453,9 +422,6 @@ Pi_m_lb_emp <- apply(irf_draws_fig34[, 3, , ], c(1, 2), quantile, 0.16)
 Pi_m_ub_emp <- apply(irf_draws_fig34[, 3, , ], c(1, 2), quantile, 0.84)
 R_n_m_lb_emp <- apply(irf_draws_fig34[, 5, , ], c(1, 2), quantile, 0.16)
 R_n_m_ub_emp <- apply(irf_draws_fig34[, 5, , ], c(1, 2), quantile, 0.84)
-
-cat("Empirical IRFs computed\n")
-cat("  Dimensions:", nrow(R_n_m_emp), "horizons x", ncol(R_n_m_emp), "shocks\n")
 ```
 
 ```{r figures-3-4}
@@ -558,7 +524,7 @@ for (i_shock in 1:2) {
       guide = "none"  # Hide linetype legend, use color only
     ) +
     labs(
-      title = paste0("Figure ", i_shock + 2, ": Model IRFs - ", shock_names[i_shock], " Shock"),
+      title = paste0("Figure 3-", i_shock, ": Model IRFs - ", shock_names[i_shock], " Shock"),
       subtitle = "Shaded band = Empirical VAR (68% CI)",
       x = "Quarters",
       y = "% Deviation (normalized)",
@@ -570,9 +536,9 @@ for (i_shock in 1:2) {
   plot_list[[i_shock]] <- p
 }
 
-# Print plots
-plot_list[[1]]
+# Print plots (the article starts with Romer)
 plot_list[[2]]
+plot_list[[1]]
 ```
 
 ### 5.4 Figure 5: News Shock IRFs
@@ -656,7 +622,7 @@ for (model_name in c("rank", "hank", "brank", "bhank")) {
 #| fig-width: 12
 #| fig-height: 5
 
-# Figure 5a: RANK vs HANK
+# Figure 4: RANK vs HANK
 df_news_rankhank <- data.frame(
   horizon = rep(0:(IRF_hor_news - 1), 6),
   value = c(
@@ -681,7 +647,7 @@ df_news_rankhank <- data.frame(
 df_news_rankhank$variable <- factor(df_news_rankhank$variable,
                                      levels = c("Output", "Inflation", "Interest Rate"))
 
-p5a <- ggplot(df_news_rankhank, aes(x = horizon, y = value, color = model, fill = model)) +
+p4 <- ggplot(df_news_rankhank, aes(x = horizon, y = value, color = model, fill = model)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2, color = NA) +
   geom_line(linewidth = 1) +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
@@ -690,7 +656,7 @@ p5a <- ggplot(df_news_rankhank, aes(x = horizon, y = value, color = model, fill 
   scale_color_manual(values = c("RANK" = "#C4AE78", "HANK" = "#CC0000")) +
   scale_fill_manual(values = c("RANK" = "#C4AE78", "HANK" = "#CC0000")) +
   labs(
-    title = "Figure 5a: News Shock IRFs - RANK vs HANK",
+    title = "Figure 4: News Shock IRFs - RANK vs HANK",
     subtitle = paste0("Response to monetary policy shock anticipated ", news_horizon, 
                        " quarters ahead (68% bands)"),
     x = "Quarters",
@@ -701,7 +667,7 @@ p5a <- ggplot(df_news_rankhank, aes(x = horizon, y = value, color = model, fill 
   theme_minimal() +
   theme(legend.position = "bottom")
 
-# Figure 5b: RANK vs B-RANK
+# Figure 5: RANK vs B-RANK
 df_news_rankbrank <- data.frame(
   horizon = rep(0:(IRF_hor_news - 1), 6),
   value = c(
@@ -726,7 +692,7 @@ df_news_rankbrank <- data.frame(
 df_news_rankbrank$variable <- factor(df_news_rankbrank$variable,
                                       levels = c("Output", "Inflation", "Interest Rate"))
 
-p5b <- ggplot(df_news_rankbrank, aes(x = horizon, y = value, color = model, fill = model)) +
+p5 <- ggplot(df_news_rankbrank, aes(x = horizon, y = value, color = model, fill = model)) +
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.2, color = NA) +
   geom_line(linewidth = 1) +
   geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
@@ -735,7 +701,7 @@ p5b <- ggplot(df_news_rankbrank, aes(x = horizon, y = value, color = model, fill
   scale_color_manual(values = c("RANK" = "#C4AE78", "B-RANK" = "#66B2FF")) +
   scale_fill_manual(values = c("RANK" = "#C4AE78", "B-RANK" = "#66B2FF")) +
   labs(
-    title = "Figure 5b: News Shock IRFs - RANK vs B-RANK",
+    title = "Figure 5: News Shock IRFs - RANK vs B-RANK",
     subtitle = paste0("Response to monetary policy shock anticipated ", news_horizon, 
                        " quarters ahead (68% bands)"),
     x = "Quarters",
@@ -746,8 +712,8 @@ p5b <- ggplot(df_news_rankbrank, aes(x = horizon, y = value, color = model, fill
   theme_minimal() +
   theme(legend.position = "bottom")
 
-p5a
-p5b
+p4
+p5
 ```
 
 ## 6. Table 5.1: Counterfactual Second Moments
@@ -801,11 +767,6 @@ n_shocks <- dim(IRF_OLS)[2]
 # Extract relevant variables: inflation (9), output (2), interest rate (10)
 # MATLAB: wold_base = IS_wold.Theta_OLS([9 2 10],:,1:T)
 wold_base <- IRF_OLS[c(9, 2, 10), , 1:T_hor]
-
-cat("Baseline Wold IRFs dimensions:", paste(dim(wold_base), collapse = " x "), "\n")
-cat("  Rows: Inflation, Output, Interest Rate\n")
-cat("  Columns:", n_shocks, "structural shocks\n")
-cat("  Horizon:", T_hor, "quarters (from model sufficient statistics)\n")
 ```
 
 ### 6.3 Baseline Business Cycle Statistics
@@ -822,15 +783,9 @@ for (h in 1:T_hor) {
 std_base <- sqrt(diag(cov_base))
 corr_base <- cov_to_corr_r(cov_base)
 
-var_names_short <- c("Inflation", "Output", "Rate")
+var_names_short <- c("Output", "Inflation", "Rate")
 names(std_base) <- var_names_short
 dimnames(corr_base) <- list(var_names_short, var_names_short)
-
-cat("Baseline Standard Deviations:\n")
-print(round(std_base, 3))
-
-cat("\nBaseline Correlations:\n")
-print(round(corr_base, 3))
 ```
 
 ### 6.4 Set Up Policy Rule
@@ -847,11 +802,6 @@ weights <- set_optpol_weights(
   lambda_di = 1,    # Penalty on interest rate changes
   beta = 1          # Discount factor
 )
-
-cat("Optimal policy weight matrices created\n")
-cat("  W_pi dimensions:", paste(dim(weights$W_pi), collapse = " x "), "\n")
-cat("  W_y dimensions:", paste(dim(weights$W_y), collapse = " x "), "\n")
-cat("  W_i dimensions:", paste(dim(weights$W_i), collapse = " x "), "\n")
 ```
 
 ### 6.5 Compute Counterfactual Wold IRFs for Each Model
@@ -874,12 +824,7 @@ n_models <- 4
 # Dimensions: (variable, variable, draw, model)
 cov_cnfctl_models <- array(NA, dim = c(3, 3, n_draws_use, n_models))
 
-cat("Computing counterfactual Wold IRFs for each model...\n")
-cat("  Using", n_draws_use, "posterior draws\n")
-cat("  Horizon T =", T_hor, "\n\n")
-
 for (m in seq_len(n_models)) {
-  cat("Processing", model_names[m], "...\n")
   irfs_m <- model_irfs_list[[m]]
   
   for (d in seq_len(n_draws_use)) {
@@ -912,10 +857,7 @@ for (m in seq_len(n_models)) {
     # Store full covariance (not just diagonal)
     cov_cnfctl_models[, , d, m] <- cov_d
   }
-  cat("  Done!\n")
 }
-
-cat("\nAll models processed!\n")
 ```
 
 ### 6.6 Load Empirical Sufficient Statistics (Semi-structural)
@@ -944,12 +886,6 @@ I_m_emp_draws <- drop(emp_irfs$R.n.m.draws.emp)  # Interest Rate
 T_emp_use <- dim(Pi_m_emp_draws)[1]
 n_shocks_emp <- dim(Pi_m_emp_draws)[2]
 n_draws_emp <- dim(Pi_m_emp_draws)[3]
-
-cat("Empirical sufficient statistics loaded from MATLAB\n")
-cat("  T:", T_emp_use, "\n")
-cat("  n_shocks:", n_shocks_emp, "\n")
-cat("  n_draws:", n_draws_emp, "\n")
-cat("  Note: No scaling needed - empirical IRFs are already annualized\n")
 ```
 
 ```{r compute-semi-structural-counterfactuals}
@@ -966,16 +902,9 @@ stopifnot("T_emp_use must equal T_hor for semi-structural to work. Check model s
 # the weights created earlier with T = model_T
 weights_emp <- weights
 
-cat("Empirical computation setup:\n")
-cat("  T_emp_use:", T_emp_use, "\n")
-cat("  T_hor:", T_hor, "\n")
-cat("  Using same weights as model:", T_emp_use == T_hor, "\n")
-
 # Storage for empirical counterfactual COVARIANCES (not std devs)
 # MATLAB: takes quantile of covariance FIRST, then sqrt
 cov_cnfctl_emp <- array(NA, dim = c(3, 3, n_draws_emp_use))
-
-cat("Computing semi-structural counterfactuals...\n")
 
 for (d in seq_len(n_draws_emp_use)) {
   # Get empirical IRFs for this draw
@@ -1010,12 +939,8 @@ for (d in seq_len(n_draws_emp_use)) {
   }
   
   # Store full covariance (not just diagonal)
-  cov_cnfctl_emp[, , d] <- cov_d
-  
-  if (d %% 250 == 0) cat("  Completed", d, "/", n_draws_emp_use, "draws\n")
+  cov_cnfctl_emp[, , d] <- cov_d  
 }
-
-cat("Done!\n")
 ```
 
 ### 6.7 Compute Summary Statistics
@@ -1061,48 +986,59 @@ std_emp_summary <- list(
 ### 6.8 Table 5.1 Output
 
 ```{r table-5-1-output}
-# Create Table 5.1 equivalent output
-cat("\n")
-cat(strrep("=", 70), "\n")
-cat("TABLE 5.1: Business Cycle Statistics Under Optimal Policy\n")
-cat(strrep("=", 70), "\n\n")
+# Create Table 5.1 as a data frame
 
-# Header
-cat(sprintf("%-20s %12s %12s %12s\n", "", "Inflation", "Output", "Interest Rate"))
-cat(strrep("-", 70), "\n")
-
-# Actual (baseline)
-cat(sprintf("%-20s %12.3f %12.3f %12.3f\n", "Actual", 
-            std_base[1], std_base[2], std_base[3]))
-cat("\n")
-
-# Counterfactual section
-cat("Counterfactual\n")
-cat("  Hybrid\n")
-
-# Each model
-for (m_name in model_names) {
-  s <- std_model_summary[[m_name]]
-  cat(sprintf("    %-16s %12.3f %12.3f %12.3f\n", m_name,
-              s$med[1], s$med[2], s$med[3]))
-  cat(sprintf("    %-16s (%5.3f, %5.3f) (%5.3f, %5.3f) (%5.3f, %5.3f)\n", "",
-              s$lb[1], s$ub[1], s$lb[2], s$ub[2], s$lb[3], s$ub[3]))
+# Helper to format median with CI
+fmt_ci <- function(med, lb, ub) {
+ sprintf("%.3f (%.3f, %.3f)", med, lb, ub)
 }
 
-cat("\n  Semi-structural\n")
-cat(sprintf("    %-16s %12.3f %12.3f %12.3f\n", "",
-            std_emp_summary$med[1], std_emp_summary$med[2], std_emp_summary$med[3]))
-cat(sprintf("    %-16s (%5.3f, %5.3f) (%5.3f, %5.3f) (%5.3f, %5.3f)\n", "",
-            std_emp_summary$lb[1], std_emp_summary$ub[1],
-            std_emp_summary$lb[2], std_emp_summary$ub[2],
-            std_emp_summary$lb[3], std_emp_summary$ub[3]))
+# Build rows for each model
+table_rows <- list()
 
-cat("\n")
-cat(strrep("-", 70), "\n")
-cat("Note: Posterior median with 16th and 84th percentiles in parentheses.\n")
-cat("Policy rule minimizes loss function with equal weight on inflation,\n")
-cat("output gap, and interest rate smoothing.\n")
+# Baseline (actual)
+table_rows[[1]] <- data.frame(
+  Approach = "Actual",
+  Model = "",
+  Inflation = sprintf("%.3f", std_base[1]),
+  Output = sprintf("%.3f", std_base[2]),
+  `Interest Rate` = sprintf("%.3f", std_base[3]),
+  check.names = FALSE
+)
+
+# Hybrid models
+for (m_name in model_names) {
+  s <- std_model_summary[[m_name]]
+  table_rows[[length(table_rows) + 1]] <- data.frame(
+    Approach = "Hybrid",
+    Model = m_name,
+    Inflation = fmt_ci(s$med[1], s$lb[1], s$ub[1]),
+    Output = fmt_ci(s$med[2], s$lb[2], s$ub[2]),
+    `Interest Rate` = fmt_ci(s$med[3], s$lb[3], s$ub[3]),
+    check.names = FALSE
+  )
+}
+
+# Semi-structural
+table_rows[[length(table_rows) + 1]] <- data.frame(
+  Approach = "Semi-structural",
+  Model = "",
+  Inflation = fmt_ci(std_emp_summary$med[1], std_emp_summary$lb[1], std_emp_summary$ub[1]),
+  Output = fmt_ci(std_emp_summary$med[2], std_emp_summary$lb[2], std_emp_summary$ub[2]),
+  `Interest Rate` = fmt_ci(std_emp_summary$med[3], std_emp_summary$lb[3], std_emp_summary$ub[3]),
+  check.names = FALSE
+)
+
+# Combine into single data frame
+table_5_1 <- do.call(rbind, table_rows)
+rownames(table_5_1) <- NULL
+
+knitr::kable(table_5_1, 
+             caption = "Table 5.1: Business Cycle Statistics Under Optimal Policy",
+             align = c("l", "l", "r", "r", "r"))
 ```
+
+Note: Posterior median with 16th and 84th percentiles in parentheses. Policy rule minimizes loss function with equal weight on inflation, output gap, and interest rate smoothing.
 
 ### 6.9 Visualize Distribution of Standard Deviations (Figure D.1)
 
@@ -1119,61 +1055,66 @@ for (m in seq_len(n_models)) {
   }
 }
 
-# For empirical: sqrt(diag(cov)) for each draw
-std_cnfctl_emp_plot <- matrix(NA, 3, n_draws_emp_use)
-for (d in seq_len(n_draws_emp_use)) {
-  std_cnfctl_emp_plot[, d] <- sqrt(diag(cov_cnfctl_emp[, , d]))
-}
-
-# Prepare data for plotting - use RANK model for the density plot
-df_std <- data.frame(
+# Prepare data for plotting - only RANK model for kernel density (blue)
+# Variable order in wold_base: [1]=Inflation, [2]=Output, [3]=Rate
+# But var_names_short is ["Output", "Inflation", "Rate"] for display
+# Need to reorder: Output=row2, Inflation=row1, Rate=row3
+df_rank_density <- data.frame(
   variable = rep(var_names_short, each = n_draws_use),
-  std_cnfctl = c(std_cnfctl_models_plot[1, , 1], 
-                 std_cnfctl_models_plot[2, , 1], 
-                 std_cnfctl_models_plot[3, , 1]),
-  model = "RANK"
+  std_cnfctl = c(std_cnfctl_models_plot[2, , 1],  # Output (row 2)
+                 std_cnfctl_models_plot[1, , 1],  # Inflation (row 1)
+                 std_cnfctl_models_plot[3, , 1])  # Rate (row 3)
+)
+df_rank_density$variable <- factor(df_rank_density$variable, levels = var_names_short)
+
+# Use std_model_summary which correctly computes sqrt(median(cov))
+# MATLAB: sqrt(cnfctl_models.cov_med(i_y,i_y,i_model))
+# Reorder to match var_names_short: [Output, Inflation, Rate]
+# std_model_summary has order [Inflation, Output, Rate] from wold_base
+mode_rank <- std_model_summary[["RANK"]]$med[c(2, 1, 3)]    # RANK
+mode_hank <- std_model_summary[["HANK"]]$med[c(2, 1, 3)]    # HANK
+mode_brank <- std_model_summary[["B-RANK"]]$med[c(2, 1, 3)] # B-RANK
+mode_bhank <- std_model_summary[["B-HANK"]]$med[c(2, 1, 3)] # B-HANK
+
+# Create data frame for vertical lines (posterior medians)
+# MATLAB order: i_model 1=RANK, 2=HANK, 3=B-RANK, 4=B-HANK
+df_modes <- data.frame(
+  variable = factor(rep(var_names_short, 4), levels = var_names_short),
+  mode_val = c(mode_rank, mode_hank, mode_brank, mode_bhank),
+  model_type = rep(c("RANK", "HANK", "B-RANK", "B-HANK"), each = 3)
 )
 
-# Add other models
-for (m in 2:n_models) {
-  df_std <- rbind(df_std, data.frame(
-    variable = rep(var_names_short, each = n_draws_use),
-    std_cnfctl = c(std_cnfctl_models_plot[1, , m], 
-                   std_cnfctl_models_plot[2, , m], 
-                   std_cnfctl_models_plot[3, , m]),
-    model = model_names[m]
-  ))
-}
-
-# Add empirical
-df_std <- rbind(df_std, data.frame(
-  variable = rep(var_names_short, each = n_draws_emp_use),
-  std_cnfctl = c(std_cnfctl_emp_plot[1, ], std_cnfctl_emp_plot[2, ], std_cnfctl_emp_plot[3, ]),
-  model = "Semi-structural"
-))
-
-df_std$variable <- factor(df_std$variable, levels = var_names_short)
-df_std$model <- factor(df_std$model, levels = c(model_names, "Semi-structural"))
-
-# Add baseline values
+# Baseline values (black dashed)
+# std_base has order [Inflation, Output, Rate], reorder to [Output, Inflation, Rate]
 df_base <- data.frame(
   variable = factor(var_names_short, levels = var_names_short),
-  std_base = std_base
+  std_base = std_base[c(2, 1, 3)]
 )
 
-ggplot(df_std, aes(x = std_cnfctl, fill = model)) +
-  geom_density(alpha = 0.3) +
+ggplot() +
+  # Blue kernel density for baseline RANK
+  geom_density(data = df_rank_density, aes(x = std_cnfctl), 
+               fill = "#4A90D9", color = "#4A90D9", alpha = 0.4) +
+  # Black dashed: baseline (actual data)
   geom_vline(data = df_base, aes(xintercept = std_base), 
              color = "black", linetype = "dashed", linewidth = 1) +
+  # Beige: RANK models posterior modes
+  geom_vline(data = df_modes[df_modes$model_type == "RANK", ], 
+             aes(xintercept = mode_val), color = "#C4AE78", linewidth = 1) +
+  geom_vline(data = df_modes[df_modes$model_type == "B-RANK", ], 
+             aes(xintercept = mode_val), color = "#C4AE78", linewidth = 1, linetype = "dotted") +
+  # Red: HANK models posterior modes
+  geom_vline(data = df_modes[df_modes$model_type == "HANK", ], 
+             aes(xintercept = mode_val), color = "#CC0000", linewidth = 1) +
+  geom_vline(data = df_modes[df_modes$model_type == "B-HANK", ], 
+             aes(xintercept = mode_val), color = "#CC0000", linewidth = 1, linetype = "dotted") +
   facet_wrap(~variable, scales = "free", ncol = 3) +
-  scale_fill_brewer(palette = "Set2") +
   labs(
-    title = "Figure D.1: Posterior Distribution of Counterfactual Standard Deviations",
-    subtitle = "Dashed black line = baseline (actual), colored densities = counterfactual by model",
+    title = "Figure D.1: Counterfactual Unconditional Volatilities",
+    subtitle = "Black dashed = observed policy; Blue density = RANK posterior; Beige = RANK modes; Red = HANK modes",
     x = "Standard Deviation",
-    y = "Density",
-    fill = "Approach"
+    y = "Density"
   ) +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position = "none")
 ```
