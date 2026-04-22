@@ -9,15 +9,15 @@
 using namespace arma;
 
 // =====================================================================
-//  SecondOrderRules - Schmitt-Grohé & Uribe (2004) second-order terms
+//  SecondOrderRules - Schmitt-Grohe & Uribe (2004) second-order terms
 //
 //  Second-order policy expansion:
-//    u_t  = gx * v_t + 0.5 * gxx * (v_t x v_t) + 0.5 * gss * σ^2
-//    v_{t+1} = hx * v_t + 0.5 * hxx * (v_{t+1} x v_t) + 0.5 * hss * σ^2 + η
-//    ε_{t+1}
+//    u_t  = gx * v_t + 0.5 * gxx * (v_t x v_t) + 0.5 * gss * sigma^2
+//    v_{t+1} = hx * v_t + 0.5 * hxx * (v_{t+1} x v_t) + 0.5 * hss * sigma^2 + eta
+//    eps_{t+1}
 //
 //  For tax rules:
-//    taû^h_t = gamma^h v_t + 0.5 * gamma^h_xx (v_t x v_t) + 0.5 * gamma^h_ss σ^2
+//    bartau^h_t = gamma^h v_t + 0.5 * gamma^h_xx (v_t x v_t) + 0.5 * gamma^h_ss sigma^2
 //    tau^k_t = gamma^k_0 v_t + gamma^k_1 v_{t-1} + second-order terms
 //
 //  BW Table 6: Monte Carlo with quadratic approximations
@@ -32,14 +32,14 @@ struct SecondOrderRules {
   rowvec gamma_theta_e; // 1x3: ex-ante capital tax
 
   // Second-order tensors (nx=3 states, nu=2 controls)
-  // gxx(i,j,k) = ∂^2g^i / ∂v_j ∂v_k  -> cube(2, 3, 3)
-  // hxx(i,j,k) = ∂^2h^i / ∂v_j ∂v_k  -> cube(3, 3, 3)
+  // gxx(i,j,k) = d^2g^i / dv_j dv_k  -> cube(2, 3, 3)
+  // hxx(i,j,k) = d^2h^i / dv_j dv_k  -> cube(3, 3, 3)
   cube gxx; // 2x3x3: control Hessians
   cube hxx; // 3x3x3: state Hessians
 
   // Variance correction terms
-  vec gss; // 2x1: control constant (σ^2 correction)
-  vec hss; // 3x1: state constant (σ^2 correction)
+  vec gss; // 2x1: control constant (sigma^2 correction)
+  vec hss; // 3x1: state constant (sigma^2 correction)
 
   // Tax rule second-order terms
   mat tau_h_xx;      // 3x3: Hessian for labor tax
@@ -58,7 +58,7 @@ struct SecondOrderRules {
 //    E_t[f(y', y, x', x)] = 0  where y = controls, x = states
 //
 //  Key insight from BW: differences between Table 5 and Table 6 are small,
-//  mainly affecting means via the σ^2 correction terms.
+//  mainly affecting means via the sigma^2 correction terms.
 // =====================================================================
 inline SecondOrderRules compute_second_order_rules(const Params &p,
                                                    const DecisionRules &r1) {
@@ -73,8 +73,8 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
   r2.gamma_theta_e = r1.gamma_theta_e;
 
   // Initialize second-order terms
-  const int nx = 3; // states: k̂, ẑ, ĝ
-  const int nu = 2; // controls: ĉ, ĥ
+  const int nx = 3; // states: hatk, hatz, hatg
+  const int nu = 2; // controls: hatc, hath
 
   r2.gxx.zeros(nu, nx, nx);
   r2.hxx.zeros(nx, nx, nx);
@@ -110,8 +110,8 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
   // ----------------------------------------------------------------
 
   // Variance of innovations (BW footnote 18)
-  // Unconditional variance: Var(z) = σ^2_z, Var(g) = σ^2_g
-  // Innovation variance: σ^2_ε_z = σ^2_z(1-ρ^2_z), etc.
+  // Unconditional variance: Var(z) = sigma^2_z, Var(g) = sigma^2_g
+  // Innovation variance: sigma^2_eps_z = sigma^2_z(1-rho^2_z), etc.
   const double var_eps_z = p.sigma_z * p.sigma_z * (1.0 - p.rho_z * p.rho_z);
   const double var_eps_g = p.sigma_g * p.sigma_g * (1.0 - p.rho_g * p.rho_g);
 
@@ -128,7 +128,7 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
     // Non-log utility: apply small risk corrections
     //
     // The SGU certainty-equivalence correction is:
-    //   hss = -0.5 * (I - β*hx)^{-1} * Σ_i Σ_j hxx_{ij} Cov(ε_i, ε_j)
+    //   hss = -0.5 * (I - beta*hx)^{-1} * sigma_i sigma_j hxx_{ij} Cov(eps_i, eps_j)
     //
     // For this model with diagonal shock covariance, this simplifies.
     // However, since BW shows essentially identical results, we use
@@ -162,10 +162,10 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
   // Hessian terms (gxx, hxx)
   //
   // In the BW LQ framework, the constraint equation is LINEAR:
-  //   k̂' = A k̂ + B û (where û = [ĉ, ĥ])
+  //   hatk' = A hatk + B hatu (where hatu = [hatc, hath])
   //
-  // The first-order policy is û = gx * v̂, so:
-  //   k̂' = (A + B*gx) * v̂ = hx * v̂
+  // The first-order policy is hatu = gx * hatv, so:
+  //   hatk' = (A + B*gx) * hatv = hx * hatv
   //
   // For the TRUE nonlinear model, there would be Hessian terms from:
   // 1. Nonlinearity in utility function (risk aversion)
@@ -194,15 +194,15 @@ inline SecondOrderRules compute_second_order_rules(const Params &p,
 //  simulate_second_order - BW Table 6 Monte Carlo with quadratic rules
 //
 //  Uses the SGU (2004) simulation formula:
-//    x^f_{t+1} = hx * x^f_t + σ η ε_{t+1}
-//    x^s_{t+1} = hx * x^s_t + 0.5 * (x^f_t)' hxx (x^f_t) + 0.5 * hss * σ^2
+//    x^f_{t+1} = hx * x^f_t + sigma eta eps_{t+1}
+//    x^s_{t+1} = hx * x^s_t + 0.5 * (x^f_t)' hxx (x^f_t) + 0.5 * hss * sigma^2
 //    x_{t+1} = x^f_{t+1} + x^s_{t+1}
-//    y_t = gx * x_t + 0.5 * (x^f_t)' gxx (x^f_t) + 0.5 * gss * σ^2
+//    y_t = gx * x_t + 0.5 * (x^f_t)' gxx (x^f_t) + 0.5 * gss * sigma^2
 //
 //  Returns (T_keep x 6) matrix:
-//    col 0: tau^h   col 1: θ^e   col 2: tau^k
-//    col 3: θ^{nc} (non-contingent debt)
-//    col 4: ẑ_t   col 5: ĝ_t
+//    col 0: tau^h   col 1: theta^e   col 2: tau^k
+//    col 3: theta^{nc} (non-contingent debt)
+//    col 4: hatz_t   col 5: hatg_t
 // =====================================================================
 inline mat simulate_second_order(const Params &p, const SecondOrderRules &r2,
                                  int T_total, int T_burn, int seed) {
@@ -214,7 +214,7 @@ inline mat simulate_second_order(const Params &p, const SecondOrderRules &r2,
   const double delta_z = p.sigma_z * std::sqrt(1.0 - p.rho_z * p.rho_z);
   const double delta_g = p.sigma_g * std::sqrt(1.0 - p.rho_g * p.rho_g);
 
-  // Perturbation scale σ = 1 (shocks are already scaled)
+  // Perturbation scale sigma = 1 (shocks are already scaled)
   const double sigma = 1.0;
   const double sigma_sq = sigma * sigma;
 
@@ -222,7 +222,7 @@ inline mat simulate_second_order(const Params &p, const SecondOrderRules &r2,
   std::bernoulli_distribution flip(0.5);
 
   // State decomposition: x = x^f (first-order) + x^s (second-order correction)
-  vec xf(3, fill::zeros); // [k̂, ẑ, ĝ]
+  vec xf(3, fill::zeros); // [hatk, hatz, hatg]
   vec xs(3, fill::zeros); // second-order correction
   vec xf_lag(3, fill::zeros);
   vec xs_lag(3, fill::zeros);
@@ -241,13 +241,13 @@ inline mat simulate_second_order(const Params &p, const SecondOrderRules &r2,
       };
 
       // col 0: tau^h with second-order correction
-      //   taû^h = gamma^h * x + 0.5 * xf' * gamma^h_xx * xf + 0.5 * gamma^h_ss * σ^2
+      //   bartau^h = gamma^h * x + 0.5 * xf' * gamma^h_xx * xf + 0.5 * gamma^h_ss * sigma^2
       double tau_hat_h = as_scalar(r2.gamma_tau_h * x) +
                          quad_form(r2.tau_h_xx) + 0.5 * r2.tau_h_ss * sigma_sq;
       out(row, 0) = p.tau_h_ss + (1.0 - p.tau_h_ss) * tau_hat_h;
 
-      // col 1: θ^e with second-order correction
-      //   θ^e_t = (gamma^k_0 hx + gamma^k_1) * x + quadratic terms
+      // col 1: theta^e with second-order correction
+      //   theta^e_t = (gamma^k_0 hx + gamma^k_1) * x + quadratic terms
       double theta_e = as_scalar(r2.gamma_theta_e * x) +
                        quad_form(r2.theta_e_xx) +
                        0.5 * r2.theta_e_ss * sigma_sq;
@@ -262,13 +262,13 @@ inline mat simulate_second_order(const Params &p, const SecondOrderRules &r2,
           0.5 * (r2.tau_k_ss(0) + r2.tau_k_ss(1)) * sigma_sq;
       out(row, 2) = tau_k;
 
-      // col 3: θ^{nc} (non-contingent: drop lagged term)
+      // col 3: theta^{nc} (non-contingent: drop lagged term)
       out(row, 3) = as_scalar(r2.Gamma_k_0 * x) +
                     0.5 * as_scalar(xf.t() * r2.tau_k_xx.slice(0) * xf) +
                     0.5 * r2.tau_k_ss(0) * sigma_sq;
 
-      out(row, 4) = x(1); // ẑ_t
-      out(row, 5) = x(2); // ĝ_t
+      out(row, 4) = x(1); // hatz_t
+      out(row, 5) = x(2); // hatg_t
     }
 
     // Save lagged state
@@ -280,13 +280,13 @@ inline mat simulate_second_order(const Params &p, const SecondOrderRules &r2,
     const double eps_g = flip(rng) ? delta_g : -delta_g;
 
     // SGU simulation: separate first- and second-order evolution
-    // x^f_{t+1} = hx * x^f_t + η * ε
+    // x^f_{t+1} = hx * x^f_t + eta * eps
     vec xf_new(3);
     xf_new(0) = r2.hx(0, 0) * xf(0) + r2.hx(0, 1) * xf(1) + r2.hx(0, 2) * xf(2);
     xf_new(1) = p.rho_z * xf(1) + eps_z;
     xf_new(2) = p.rho_g * xf(2) + eps_g;
 
-    // x^s_{t+1} = hx * x^s_t + 0.5 * hxx(xf,xf) + 0.5 * hss * σ^2
+    // x^s_{t+1} = hx * x^s_t + 0.5 * hxx(xf,xf) + 0.5 * hss * sigma^2
     vec xs_new(3);
 
     // Compute hxx quadratic forms

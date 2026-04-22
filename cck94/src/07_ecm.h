@@ -14,10 +14,10 @@ using namespace arma;
 //  Uses the envelope condition instead of FOCs to identify policies.
 //
 //  Envelope condition:
-//    V_k(k, z) = u_c(c, h) * [1 - δ + z * f_k(k, h)]
+//    V_k(k, z) = u_c(c, h) * [1 - delta + z * f_k(k, h)]
 //
 //  Key relation (eq 8 in M&M 2013):
-//    V_k(k, z) = β * [1 - δ + z * f_k(k, h)] * E[V_k(k', z')]
+//    V_k(k, z) = beta * [1 - delta + z * f_k(k, h)] * E[V_k(k', z')]
 //
 //  This allows us to iterate on V_k directly, which is often simpler
 //  than solving the Euler equation.
@@ -26,8 +26,8 @@ using namespace arma;
 //    1. Initialize V_k on the grid
 //    2. For each (k, z, g):
 //       a. Compute E[V_k(k', z', g')]
-//       b. From envelope: V_k = β * [1-δ+fk] * E[V_k']
-//       c. Recover c from: u_c = V_k / [1-δ+fk]
+//       b. From envelope: V_k = beta * [1-delta+fk] * E[V_k']
+//       c. Recover c from: u_c = V_k / [1-delta+fk]
 //       d. Solve for h from labor FOC
 //       e. Update k' from resource constraint
 //    3. Update V_k from envelope condition
@@ -102,7 +102,7 @@ inline double ecm_iteration_step(const NonlinearModel &model,
         double fk = model.f_k(k, z, h);
         double Rk = 1.0 - model.delta + fk;
 
-        // ECM equation (8): V_k = β * Rk * E[V_k']
+        // ECM equation (8): V_k = beta * Rk * E[V_k']
         double Vk_new = model.beta * Rk * E_Vk;
 
         // Recover u_c from envelope: V_k = u_c * Rk

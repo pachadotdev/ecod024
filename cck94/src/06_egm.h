@@ -21,14 +21,14 @@ using namespace arma;
 //    1. Create grid on k' (future endogenous state)
 //    2. For each (k', z, g):
 //       a. Compute E[u_c(k', z', g') * (1 + R_k')]
-//       b. From Euler: u_c(c,h) = β * E[...] => solve for c directly
-//       c. From resource: y = c + g + k' - (1-δ)k => solve for k
+//       b. From Euler: u_c(c,h) = beta * E[...] => solve for c directly
+//       c. From resource: y = c + g + k' - (1-delta)k => solve for k
 //    3. Interpolate back to exogenous k grid
 //    4. Iterate until convergence
 // =====================================================================
 
 // Helper: Given k' and (c, h), solve for implied current k
-// From resource constraint: k^α(zh)^{1-α} = c + g + k' - (1-δ)k
+// From resource constraint: k^alpha(zh)^{1-alpha} = c + g + k' - (1-delta)k
 // This is nonlinear in k, use Newton or bisection
 inline double solve_k_from_kprime(const NonlinearModel &model, double k_prime,
                                   double c, double h, double z, double g,
@@ -137,14 +137,14 @@ inline double egm_iteration_step(const NonlinearModel &model,
             double uc_p = model.u_c(c_p, h_p);
             double fk_p = model.f_k(k_prime, z_p, h_p);
 
-            // For Ramsey: τ^k' = 0 (ex ante zero)
+            // For Ramsey: tau^k' = 0 (ex ante zero)
             double Rk_p = 1.0 + (fk_p - model.delta);
 
             E_term += prob * uc_p * Rk_p;
           }
         }
 
-        // From Euler: u_c = β * E_term
+        // From Euler: u_c = beta * E_term
         double uc_target = model.beta * E_term;
 
         // In EGM, k' is fixed and we solve for (k, c, h) simultaneously

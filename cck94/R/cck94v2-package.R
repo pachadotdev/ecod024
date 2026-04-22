@@ -1,3 +1,3 @@
-#' @useDynLib bw05, .registration = TRUE
+#' @useDynLib cck94, .registration = TRUE
 #' @keywords internal
 "_PACKAGE"

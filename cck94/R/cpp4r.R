@@ -5,23 +5,23 @@
 #'   LQ approach and returns the same statistics as Table 5 of Benigno &
 #'   Woodford (2005).
 #' @export
-bw05_stats <- function(args, n_k, T_total, T_burn, seed) {
-	.Call(`_bw05_bw05_stats`, args, n_k, T_total, T_burn, seed)
+cck94_stats <- function(args, n_k, T_total, T_burn, seed) {
+	.Call(`_cck94_cck94_stats`, args, n_k, T_total, T_burn, seed)
 }
 
 #' @title NSSS and LQ diagnostics
 #' @description Returns steady-state shares, BW utility coefficients, and
 #'   LQ loss function coefficients for diagnostic purposes.
 #' @export
-bw05_params <- function(args) {
-	.Call(`_bw05_bw05_params`, args)
+cck94_params <- function(args) {
+	.Call(`_cck94_cck94_params`, args)
 }
 
 #' @title Full decision rule diagnostics
 #' @description Returns gx, hx, and all BW tax formula coefficients.
 #' @export
-bw05_diag <- function(args) {
-	.Call(`_bw05_bw05_diag`, args)
+cck94_diag <- function(args) {
+	.Call(`_cck94_cck94_diag`, args)
 }
 
 #' @title BW Table 6: 2nd-order Monte Carlo statistics
@@ -29,14 +29,14 @@ bw05_diag <- function(args) {
 #'   perturbation and returns the same statistics as Table 6 of Benigno &
 #'   Woodford (2005).
 #' @export
-bw05_stats_2nd <- function(args, n_k, T_total, T_burn, seed) {
-	.Call(`_bw05_bw05_stats_2nd`, args, n_k, T_total, T_burn, seed)
+cck94_stats_2nd <- function(args, n_k, T_total, T_burn, seed) {
+	.Call(`_cck94_cck94_stats_2nd`, args, n_k, T_total, T_burn, seed)
 }
 
 #' @title Solve using Time Iteration
 #' @description Solves the CCK94/BW Ramsey taxation model using time iteration
 #'   (policy function iteration) on the Euler equation.
-#' @param args Model parameters (same as bw05_stats)
+#' @param args Model parameters (same as cck94_stats)
 #' @param n_k Number of capital grid points (default 50)
 #' @param n_z Number of technology shock states (default 5)
 #' @param n_g Number of govt spending shock states (default 5)
@@ -46,14 +46,14 @@ bw05_stats_2nd <- function(args, n_k, T_total, T_burn, seed) {
 #' @param T_burn Burn-in periods (default 60000)
 #' @param seed Random seed (default 42)
 #' @export
-bw05_solve_ti <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
-	.Call(`_bw05_bw05_solve_ti`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
+cck94_solve_ti <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
+	.Call(`_cck94_cck94_solve_ti`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
 }
 
 #' @title Solve using Endogenous Grid Method
 #' @description Solves the CCK94/BW Ramsey taxation model using Carroll's (2005)
 #'   endogenous grid method.
-#' @param args Model parameters (same as bw05_stats)
+#' @param args Model parameters (same as cck94_stats)
 #' @param n_k Number of capital grid points (default 50)
 #' @param n_z Number of technology shock states (default 5)
 #' @param n_g Number of govt spending shock states (default 5)
@@ -63,14 +63,14 @@ bw05_solve_ti <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, s
 #' @param T_burn Burn-in periods (default 60000)
 #' @param seed Random seed (default 42)
 #' @export
-bw05_solve_egm <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
-	.Call(`_bw05_bw05_solve_egm`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
+cck94_solve_egm <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
+	.Call(`_cck94_cck94_solve_egm`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
 }
 
 #' @title Solve using Envelope Condition Method
 #' @description Solves the CCK94/BW Ramsey taxation model using Maliar & Maliar's
 #'   (2013) envelope condition method.
-#' @param args Model parameters (same as bw05_stats)
+#' @param args Model parameters (same as cck94_stats)
 #' @param n_k Number of capital grid points (default 50)
 #' @param n_z Number of technology shock states (default 5)
 #' @param n_g Number of govt spending shock states (default 5)
@@ -80,15 +80,15 @@ bw05_solve_egm <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, 
 #' @param T_burn Burn-in periods (default 60000)
 #' @param seed Random seed (default 42)
 #' @export
-bw05_solve_ecm <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
-	.Call(`_bw05_bw05_solve_ecm`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
+cck94_solve_ecm <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed) {
+	.Call(`_cck94_cck94_solve_ecm`, args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, seed)
 }
 
 #' @title Solve using Projection Method
 #' @description Solves the CCK94/BW Ramsey taxation model using polynomial
 #'   projection (Chebyshev collocation), similar to CCK94's minimum-weighted
 #'   residual method.
-#' @param args Model parameters (same as bw05_stats)
+#' @param args Model parameters (same as cck94_stats)
 #' @param n_k Number of capital grid points (default 50)
 #' @param n_z Number of technology shock states (default 5)
 #' @param n_g Number of govt spending shock states (default 5)
@@ -99,6 +99,6 @@ bw05_solve_ecm <- function(args, n_k, n_z, n_g, max_iter, tol, T_total, T_burn, 
 #' @param T_burn Burn-in periods (default 60000)
 #' @param seed Random seed (default 42)
 #' @export
-bw05_solve_proj <- function(args, n_k, n_z, n_g, poly_degree, max_iter, tol, T_total, T_burn, seed) {
-	.Call(`_bw05_bw05_solve_proj`, args, n_k, n_z, n_g, poly_degree, max_iter, tol, T_total, T_burn, seed)
+cck94_solve_proj <- function(args, n_k, n_z, n_g, poly_degree, max_iter, tol, T_total, T_burn, seed) {
+	.Call(`_cck94_cck94_solve_proj`, args, n_k, n_z, n_g, poly_degree, max_iter, tol, T_total, T_burn, seed)
 }

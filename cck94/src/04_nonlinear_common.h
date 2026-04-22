@@ -51,8 +51,8 @@ struct GridSpec {
 //  Utility:    u(c,h) = [c^{1-gamma}(1-h)^gamma]^phi / phi  (or log if phi=0)
 //
 //  Key FOCs:
-//    1. Resource: y = c + g + k' - (1-δ)k
-//    2. Euler: u_c = βE[u_c'(1 + (1-tau^k')(f_k' - δ))]
+//    1. Resource: y = c + g + k' - (1-delta)k
+//    2. Euler: u_c = betaE[u_c'(1 + (1-tau^k')(f_k' - delta))]
 //    3. Labor: u_h/u_c = -(1-tau^h)zf_h
 //    4. Implementability (present-value budget constraint)
 // =====================================================================
@@ -114,7 +114,7 @@ struct NonlinearModel {
     return A * (1.0 - alpha) * std::pow(k, alpha) * z * std::pow(z * h, -alpha);
   }
 
-  // Utility: u(c,h) = [c^{1-gamma}(1-h)^gamma]^phi / phi  (log utility if phi≈0)
+  // Utility: u(c,h) = [c^{1-gamma}(1-h)^gamma]^phi / phi  (log utility if phi~=0)
   double u(double c, double h) const {
     if (std::abs(phi) < 1e-10) {
       // Log utility
@@ -218,9 +218,9 @@ struct NonlinearModel {
     return h;
   }
 
-  // Capital tax from Euler: given R_k = E[u_c'(f_k' - δ)], compute tau^k
-  // Euler: u_c = β E[u_c'(1 + (1-tau^k)(f_k - δ))]
-  // => tau^k = 1 - (u_c/β - E[u_c']) / E[u_c'(f_k - δ)]
+  // Capital tax from Euler: given R_k = E[u_c'(f_k' - delta)], compute tau^k
+  // Euler: u_c = beta E[u_c'(1 + (1-tau^k)(f_k - delta))]
+  // => tau^k = 1 - (u_c/beta - E[u_c']) / E[u_c'(f_k - delta)]
   double tau_k_from_euler(double uc, double E_uc_prime, double E_uc_fk_prime,
                           double E_uc_prime_delta) const {
     double E_uc_Rk = E_uc_fk_prime - E_uc_prime_delta;
@@ -233,7 +233,7 @@ struct NonlinearModel {
 // =====================================================================
 //  Tauchen (1986) discretization for AR(1) processes
 //
-//  z' = ρ z + ε, ε ~ N(0, σ^2(1-ρ^2))
+//  z' = rho z + eps, eps ~ N(0, sigma^2(1-rho^2))
 //  Returns grid values and transition matrix
 // =====================================================================
 inline void tauchen(int n, double rho, double sigma, double m, vec &grid,
@@ -250,7 +250,7 @@ inline void tauchen(int n, double rho, double sigma, double m, vec &grid,
   // Unconditional std dev of z
   const double sigma_z = sigma / std::sqrt(1.0 - rho * rho);
 
-  // Grid spans ±m std deviations
+  // Grid spans +-m std deviations
   const double z_max = m * sigma_z;
   const double z_min = -z_max;
   const double dz = (z_max - z_min) / (n - 1);

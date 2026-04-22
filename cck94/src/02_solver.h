@@ -80,7 +80,7 @@ static mat solve_dare(const Params &p, int max_iter = 5000,
 //
 //  1. Solve the DARE for the value matrix P
 //  2. Extract policy F -> gx = F, hx = A + BF
-//  3. Compute BW tax rule coefficients (eqs 2.14–2.17)
+//  3. Compute BW tax rule coefficients (eqs 2.14-2.17)
 // =====================================================================
 inline DecisionRules compute_decision_rules(const Params &p) {
   const mat &A = p.A_con;
@@ -102,7 +102,7 @@ inline DecisionRules compute_decision_rules(const Params &p) {
   rules.hx = A + B * F;
 
   // Step 3: BW eq (2.14) - present-value implementability ----
-  //  tildeW_t = [d_c, d_h] gx (I - tildebeta hx)^{-1} v_t ≡ Gamma_w * v_t
+  //  tildeW_t = [d_c, d_h] gx (I - tildebeta hx)^{-1} v_t := Gamma_w * v_t
   {
     rowvec dcdh = {p.dc, p.dh};
     const mat IminBH = eye<mat>(3, 3) - p.beta_tilde * rules.hx;
@@ -134,9 +134,9 @@ inline DecisionRules compute_decision_rules(const Params &p) {
   //         = [alpha, 1-alpha, 0] v + coefficients x gx v
   {
     const double phi_inv_psi = (p.phi_bw > 1e-14) ? p.psi_bw / p.phi_bw : 0.0;
-    // BW eq (2.17): hattau^h = hatz + alphak̃̂ - (sigma⁻¹ - phi⁻¹psi)hatc - (vee
-    // - psi)hath where k̃̂ = hatk - hatz - hath (eq 2.12, capital per effective
-    // labor) Expanding: alphahatk + (1-alpha)hatz - (sigma⁻¹ - phi⁻¹psi)hatc -
+    // BW eq (2.17): hattau^h = hatz + hatalpha_k - (sigma^-1 - phi^-1psi)hatc - (vee
+    // - psi)hath where hatalpha_k = hatk - hatz - hath (eq 2.12, capital per effective
+    // labor) Expanding: alphahatk + (1-alpha)hatz - (sigma^-1 - phi^-1psi)hatc -
     // (alpha + vee - psi)hath
     rowvec e_kz = {p.alpha, 1.0 - p.alpha, 0.0};
     rules.gamma_tau_h = e_kz - (p.sigma_inv - phi_inv_psi) * rules.gx.row(0) -
@@ -179,7 +179,7 @@ inline DecisionRules compute_decision_rules(const Params &p) {
 // =====================================================================
 //  simulate - BW Table 5 Monte Carlo (first-order, continuous AR(1))
 //
-//  BW footnote 18: epsilon^x_t ∈ {+delta_x, -delta_x} with equal probability,
+//  BW footnote 18: epsilon^x_t %in% {+delta_x, -delta_x} with equal probability,
 //  delta_x = sigma_x sqrt(1-rho^2_x), giving unconditional Var(x) = sigma^2_x.
 //
 //  BW footnote 31: T_total = 500,000; T_burn = 60,000.
@@ -190,7 +190,7 @@ inline DecisionRules compute_decision_rules(const Params &p) {
 //    col 4: hatz_t   col 5: hatg_t
 //
 //  At first order:
-//    E[tau^h] ≈ taū^h,  E[tau^k] = 0 analytically.
+//    E[tau^h] ~= bartau^h,  E[tau^k] = 0 analytically.
 // =====================================================================
 inline mat simulate(const Params &p, const DecisionRules &rules, int T_total,
                     int T_burn, int seed) {
@@ -216,7 +216,7 @@ inline mat simulate(const Params &p, const DecisionRules &rules, int T_total,
       const int row = t - T_burn;
 
       // col 0: tau^h - BW eq (2.17) + level conversion
-      //  hattau^h is a log-like deviation, tau^h = taū^h + (1-taū^h)hattau^h
+      //  hattau^h is a log-like deviation, tau^h = bartau^h + (1-bartau^h)hattau^h
       const double tau_hat_h = rules.gamma_tau_h(0) * k_hat +
                                rules.gamma_tau_h(1) * z +
                                rules.gamma_tau_h(2) * g_hat;
@@ -225,7 +225,7 @@ inline mat simulate(const Params &p, const DecisionRules &rules, int T_total,
       // col 1: theta^e - BW eq (3.9) at first order
       //  theta^e_t = E_t[tau^k_{t+1}] = (Gamma^k_0 hx + Gamma^k_1) v_t
       //  BW Table 3: analytically zero unconditional mean for all phi.
-      //  BW Table 5: MC of first-order rules gives E≈0 (0.002 is MC noise).
+      //  BW Table 5: MC of first-order rules gives E~=0 (0.002 is MC noise).
       out(row, 1) = rules.gamma_theta_e(0) * k_hat +
                     rules.gamma_theta_e(1) * z + rules.gamma_theta_e(2) * g_hat;
 
@@ -241,7 +241,7 @@ inline mat simulate(const Params &p, const DecisionRules &rules, int T_total,
                     rules.Gamma_k_0(2) * g_hat;
 
       out(row, 4) = z;     // hatz_t
-      out(row, 5) = g_hat; // hatg_t = log(g_t/ḡ)
+      out(row, 5) = g_hat; // hatg_t = log(g_t/barg)
     }
 
     // Save current state for next period's barb_{t-1}

@@ -23,7 +23,7 @@ using namespace arma;
 //  collocation is simpler and gives similar results.
 // =====================================================================
 
-// Chebyshev polynomial of first kind: T_n(x) for x ∈ [-1, 1]
+// Chebyshev polynomial of first kind: T_n(x) for x %in% [-1, 1]
 inline double chebyshev_T(int n, double x) {
   if (n == 0)
     return 1.0;

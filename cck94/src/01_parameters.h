@@ -16,12 +16,12 @@ static inline double get_scalar(const list &L, const char *key, double def) {
 }
 
 // =====================================================================
-//  Params — BW (2005) calibration, LQ loss, and constraint coefficients
+//  Params - BW (2005) calibration, LQ loss, and constraint coefficients
 //
 //  Implements BW NBER WP 11029 exactly:
 //    - Table 1 calibration
 //    - Eqs (2.4), (2.13) LQ problem formulation
-//    - Eqs (2.14)–(2.17) tax formula coefficients
+//    - Eqs (2.14)-(2.17) tax formula coefficients
 //
 //  Utility: u(c,h) = [c^{1-gamma}(1-h)^gamma]^phi / phi if phi > 0
 //           u(c,h) = (1-gamma) log c + gamma log(1-h) if phi = 0
@@ -30,7 +30,7 @@ static inline double get_scalar(const list &L, const char *key, double def) {
 // =====================================================================
 struct Params {
 
-  // ── BW Table 1: directly calibrated ──────────────────────────────
+  // ---- BW Table 1: directly calibrated ----
   double alpha;       // capital share
   double beta_tilde;  // detrended discount factor
   double gamma_bw;    // utility weight on leisure
@@ -40,33 +40,33 @@ struct Params {
   double tau_h_ss;    // bartau_h: steady-state labour tax (BW Table 1)
   double psi_u;       // psi = BW phi: utility curvature
 
-  // ── Shock parameters ─────────────────────────────────────────────
+  // ---- Shock parameters --------------------------------
   double rho_z, sigma_z;
   double rho_g, sigma_g;
 
-  // ── Derived NSSS quantities ──────────────────────────────────────
+  // ---- Derived NSSS quantities --------------------
   double sk;     // bark/bary
   double sc;     // barc/bary
   double h_ss;   // steady-state hours
-  double exp_mu; // ρ^{-1} = e^{-mu}
+  double exp_mu; // rho^{-1} = e^{-mu}
 
-  // ── BW utility coefficients (footnote 14) ────────────────────────
-  double sigma_inv; // sigma^{-1} = 1 − (1−gamma)phi
-  double nu;        // vee = (1−gammaphi) barh/(1−barh)
-  double psi_bw;    // psi_BW = −gammaphi barh/(1−barh)
-  double phi_bw;    // phi = (1−bartau^h)(1−alpha)/s_c
+  // ---- BW utility coefficients (footnote 14) ------------------------------------------------
+  double sigma_inv; // sigma^{-1} = 1 - (1-gamma)phi
+  double nu;        // vee = (1-gammaphi) barh/(1-barh)
+  double psi_bw;    // psi_BW = -gammaphi barh/(1-barh)
+  double phi_bw;    // phi = (1-bartau^h)(1-alpha)/s_c
 
-  // ── BW implementability coefficients (eq 2.5) ───────────────────
-  double dc, dh; // d_c = 1−sigma^{-1}+psi,  d_h = psi−phi(1+vee)
+  // ---- BW implementability coefficients (eq 2.5) ------------------------------------
+  double dc, dh; // d_c = 1-sigma^{-1}+psi,  d_h = psi-phi(1+vee)
 
-  // ── BW leverage coefficients (eq 2.16) ──────────────────────────
+  // ---- BW leverage coefficients (eq 2.16) ----------------------------------------------------
   double sb; // s_b = barb^s/bary
   double bc_bw, bh_bw, bk_bw, btau_bw;
 
-  // ── LQ loss function coefficients (BW eq 2.13) ──────────────────
+  // ---- LQ loss function coefficients (BW eq 2.13) ------------------------------------
   double qc, theta_lq, qh, theta_z, qk;
 
-  // ── LQ constraint and cost matrices ──────────────────────────────
+  // ---- LQ constraint and cost matrices ----
   mat A_con;  // 3x3 state transition
   mat B_con;  // 3x2 control input
   mat Q_cost; // 3x3 state cost
@@ -75,7 +75,7 @@ struct Params {
 
   // Constructor
   explicit Params(const list &args) {
-    // ── Step 1: Read BW Table 1 parameters ──────────────────────────
+    // ---- Step 1: Read BW Table 1 parameters ----------------------------------------------------
     alpha = 0.344;
     beta_tilde = 0.98;
     gamma_bw = get_scalar(args, "gamma", 0.75);
@@ -92,11 +92,11 @@ struct Params {
 
     exp_mu = std::exp(-mu);
 
-    // ── Step 2: NSSS shares (BW eqs 3.1–3.2) ───────────────────────
+    // ---- Step 2: NSSS shares (BW eqs 3.1-3.2) --------------------------------------------
     //  sk = alpha / (beta_inv - 1 + delta_tilde)  (same for all phi)
     //  sc + delta_tilde * sk + sg = 1  (resource constraint)
     //
-    //  BW Table 1: barg = 0.069 is a fixed level, so sg = barg/ȳ varies
+    //  BW Table 1: barg = 0.069 is a fixed level, so sg = barg/bary varies
     //  with the steady state.  Allow optional overrides for sc (via
     //  "sigma_c") and sg (via "sg") to match BW Table 1 exactly.
     const double bt_inv = 1.0 / beta_tilde;
@@ -113,7 +113,7 @@ struct Params {
     if (sc <= 0.0)
       throw std::runtime_error("Params: c/y ratio non-positive");
 
-    // ── Step 3: Steady-state hours (BW eqs 3.3–3.4) ────────────────
+    // ---- Step 3: Steady-state hours (BW eqs 3.3-3.4) --------------------------------
     //  Allow optional override via "h_bar" for direct Table 1 match.
     const double h_override = get_scalar(args, "h_bar", -1.0);
     if (h_override > 0.0) {
@@ -124,7 +124,7 @@ struct Params {
       h_ss = 1.0 / (1.0 + leis_ratio);
     }
 
-    // ── Step 4: BW utility coefficients (footnote 14) ───────────────
+    // ---- Step 4: BW utility coefficients (footnote 14) ----------------------------
     const double h_over_1mh = h_ss / (1.0 - h_ss);
 
     sigma_inv = 1.0 - (1.0 - gamma_bw) * psi_u;
@@ -135,17 +135,17 @@ struct Params {
     dc = 1.0 - sigma_inv + psi_bw;
     dh = psi_bw - phi_bw * (1.0 + nu);
 
-    // ── Step 5: Leverage coefficients (BW eq 2.16 definitions) ──────
+    // ---- Step 5: Leverage coefficients (BW eq 2.16 definitions) ------------
     sb = (tau_h_ss * (1.0 - alpha) - sg) / (bt_inv - 1.0);
     bc_bw = (sb + bt_inv * sk) * sigma_inv;
     bh_bw = (sb + bt_inv * sk) * psi_bw + alpha * (1.0 - alpha);
     bk_bw = bt_inv * sk - alpha * (1.0 - alpha);
     btau_bw = sk * (bt_inv - exp_mu);
 
-    // ── Step 6: BW LQ loss coefficients (eqs 2.7–2.13) ─────────────
+    // ---- Step 6: BW LQ loss coefficients (eqs 2.7-2.13) ------------------------
     compute_lq_coefficients();
 
-    // ── Step 7: Constraint and cost matrices ────────────────────────
+    // ---- Step 7: Constraint and cost matrices ------------------------------------------------
     build_lq_matrices();
   }
 

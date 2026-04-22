@@ -12,7 +12,7 @@ using namespace arma;
 //  Time Iteration (Policy Function Iteration) Solver
 //
 //  Iterates on the Euler equation:
-//    u_c(c,h) = β E[u_c(c',h') * (1 + (1-tau^k')(f_k' - δ))]
+//    u_c(c,h) = beta E[u_c(c',h') * (1 + (1-tau^k')(f_k' - delta))]
 //
 //  For the CCK94/BW Ramsey problem, we solve for optimal allocations
 //  {c, h, k'} and then back out tax rates from FOCs.
@@ -118,7 +118,7 @@ inline double time_iteration_step(const NonlinearModel &model,
         double tau_h = tau_h_ss + (1.0 - tau_h_ss) * tau_h_hat;
         tau_h_new(i_k, i_z, i_g) = tau_h;
 
-        // Compute expectation E[u_c' * (1 + (1-tau^k')(f_k' - δ))]
+        // Compute expectation E[u_c' * (1 + (1-tau^k')(f_k' - delta))]
         double E_term = 0.0;
 
         for (int j_g = 0; j_g < n_g; ++j_g) {
@@ -154,7 +154,7 @@ inline double time_iteration_step(const NonlinearModel &model,
           }
         }
 
-        // Euler equation: u_c(c,h) = β * E_term
+        // Euler equation: u_c(c,h) = beta * E_term
         double uc_target = model.beta * E_term;
 
         // Guess hours, solve system
@@ -178,7 +178,7 @@ inline double time_iteration_step(const NonlinearModel &model,
 
         // tau_h already computed from LQ formula above
 
-        // Resource constraint: k' = (1-δ)k + y - c - g
+        // Resource constraint: k' = (1-delta)k + y - c - g
         double y = model.f(k, z, h_val);
         double k_p_new = (1.0 - model.delta) * k + y - c_val - g;
 
