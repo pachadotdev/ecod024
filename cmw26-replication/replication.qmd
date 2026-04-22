@@ -32,8 +32,8 @@ computations equivalent to the original MATLAB code.
 #| message: false
 #| warning: false
 
-cpp4r::register("cmw26")
-install("cmw26", upgrade = "never")
+cpp4r::register("../cmw26")
+install("../cmw26", upgrade = "never")
 
 library(cmw26)
 library(ggplot2)
@@ -41,8 +41,8 @@ library(dplyr)
 library(tidyr)
 
 # Paths - relative to workspace root
-data_path <- "cmw26-replication/var_inputs/_data/main"
-suff_stats_path <- "cmw26-replication/suff_stats"
+data_path <- "var_inputs/_data/main"
+suff_stats_path <- "suff_stats"
 
 # Display settings
 theme_set(theme_minimal(base_size = 12))
