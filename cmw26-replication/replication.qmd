@@ -15,13 +15,13 @@ and Wolf (2026) using the R package `cmw26`.
 
 The original MATLAB code (`main_mp_modelcnfctls.m`) produces:
 
-- **Figure 2**: Monetary policy IRFs (Aruoba-Drechsel and Romer-Romer shocks)
-- **Figures 3-4**: Matched model IRFs vs empirical VAR estimates
-- **Figure 5**: News shock IRFs (anticipated monetary policy)
-- **Table 5.1 & Figures D.1-D.2**: Counterfactual second moments
-- **Figure 6**: Main business cycle shock counterfactuals
-- **Figure 7**: Historical evolution (Great Recession)
-- **Figure 8**: Historical scenario (post-COVID inflation)
+- Figure 2: Monetary policy IRFs (Aruoba-Drechsel and Romer-Romer shocks)
+- Figures 3-4: Matched model IRFs vs empirical VAR estimates
+- Figure 5: News shock IRFs (anticipated monetary policy)
+- Table 5.1 & Figures D.1-D.2: Counterfactual second moments
+- Figure 6: Main business cycle shock counterfactuals
+- Figure 7: Historical evolution (Great Recession)
+- Figure 8: Historical scenario (post-COVID inflation)
 
 This replication uses the R implementations in the `cmw26` package to perform
 computations equivalent to the original MATLAB code.
@@ -45,18 +45,18 @@ suff_stats_path <- "./cmw26-replication/suff_stats"
 theme_set(theme_minimal(base_size = 12))
 ```
 
-## 1. Load and Prepare Data
+## Load and Prepare Data
 
-### 1.1 Load Raw Data
+### Load Raw Data
 
 The CMW data contains quarterly macroeconomic series from 1954Q3 onwards.
 
 ```{r load-raw-data}
-# Load raw data (same data used by MATLAB code)
+# Load raw data
 data_raw <- read.csv(file.path(data_path, "_data_cmw.csv"))
 ```
 
-### 1.2 Transform Variables
+### Transform Variables
 
 Following the MATLAB code (`run_var_wold.m`), we transform the data:
 
@@ -98,7 +98,7 @@ series_names <- c("Unemployment", "Output", "Investment", "Consumption",
                    "Inflation", "Interest Rate")
 colnames(vardata_full) <- series_names
 
-# Sample selection (1960Q1 to 2019Q4, matches MATLAB)
+# Sample selection (1960Q1 to 2019Q4)
 date <- data_raw$date
 startdate <- which(date == 1960)
 enddate <- which(date == 2019.75)
@@ -112,15 +112,15 @@ vardata_dt <- detrend(vardata, const_type = 2)$Res
 colnames(vardata_dt) <- series_names  # Preserve column names
 ```
 
-## 2. Load Sufficient Statistics
+## Load Sufficient Statistics
 
 The sufficient statistics contain posterior draws of the monetary policy 
 causal effect matrices from four structural models:
 
-1. **RE RANK**: Rational Expectations Representative Agent New Keynesian
-2. **RE HANK**: Rational Expectations Heterogeneous Agent New Keynesian
-3. **Behav. RANK**: Behavioral RANK
-4. **Behav. HANK**: Behavioral HANK
+1. RE RANK: Rational Expectations Representative Agent New Keynesian
+2. RE HANK: Rational Expectations Heterogeneous Agent New Keynesian
+3. Behav. RANK: Behavioral RANK
+4. Behav. HANK: Behavioral HANK
 
 The key objects are:
 - `Pi.m.collector`: Inflation response to monetary policy (T x T x n_draws)
@@ -149,7 +149,7 @@ if ("model.posteriors.all.models" %in% names(all_models)) {
 }
 ```
 
-## 3. Application Settings
+## Application Settings
 
 ```{r settings}
 # Sample settings
@@ -164,26 +164,26 @@ cnfctl_rule <- "optpol"  # Options: "output_gap", "inflation", "rate_peg",
                           #          "taylor", "ngdp", "optpol"
 ```
 
-## 4. VAR Estimation and Wold IRFs
+## VAR Estimation and Wold IRFs
 
 Following the MATLAB code (`run_var_wold.m`), we estimate a Bayesian VAR 
 and compute Wold impulse response functions.
 
-### 4.1 Estimate Bayesian VAR
+### Estimate Bayesian VAR
 
 ```{r estimate-bvar}
-# VAR settings (same as MATLAB run_var_wold.m)
-n_lags <- 4           # Number of lags
+# VAR settings (same as run_var_wold.m)
+n_lags <- 4           # No. of lags
 constant <- 0         # No constant (data is detrended)
-IRF_hor <- 250        # IRF horizon (MATLAB uses 250)
-n_var_draws <- 1000   # Number of posterior draws
+IRF_hor <- 250        # IRF horizon
+n_var_draws <- 1000   # No. of posterior draws
 
 # Estimate BVAR with flat prior (essentially OLS)
 bvar_result <- estimate_bvar(vardata_dt, n_lags = n_lags, 
                               constant = constant, n_draws = n_var_draws)
 ```
 
-### 4.2 Compute Wold IRFs
+### Compute Wold IRFs
 
 The Wold decomposition provides orthogonalized impulse responses to 
 structural shocks (using Cholesky rotation for identification).
@@ -215,7 +215,7 @@ for (h in 1:IRF_hor) {
 }
 ```
 
-### 4.3 Visualize Key IRFs
+### Visualize Key IRFs
 
 ```{r plot-wold-irfs}
 #| fig-width: 10
@@ -253,13 +253,13 @@ ggplot(df_irf, aes(x = horizon, y = response)) +
   theme_minimal()
 ```
 
-## 5. Figures 3-5: Model IRFs and News Shocks
+## Figures 3-5: Model IRFs and News Shocks
 
 This section replicates Figures 3-5, which compare the estimated structural 
 model IRFs to monetary policy shocks with those from the VAR and examine 
 "news shock" responses (anticipated monetary policy changes).
 
-### 5.1 Load Model Mode Estimates
+### Load Model Mode Estimates
 
 ```{r load-model-modes}
 # Load modal posterior estimates for each model
@@ -276,7 +276,7 @@ params_bhank <- readRDS(file.path(suff_stats_path, "behavioral/params_hank_mode_
 T_model_full <- nrow(params_rank$Pi.m.rank)
 ```
 
-### 5.2 Compute Matched Model IRFs
+### Compute Matched Model IRFs
 
 ```{r compute-matched-irfs}
 # Pad m.fit to full dimension
@@ -314,11 +314,10 @@ Y_m_bhank_match <- params_bhank$Y.m.hank %*% m_fit_bhank
 R_n_m_bhank_match <- params_bhank$R.n.m.hank %*% m_fit_bhank
 ```
 
-### 5.3 Figures 3-4: Model IRFs vs Empirical (AD and RR Shocks)
+### Figures 3-4: Model IRFs vs Empirical (AD and RR Shocks)
 
 ```{r compute-empirical-irfs-fig34}
-# Compute empirical VAR IRFs for AD and RR shocks (same as MATLAB run_var_mp_adrr.m)
-# This is done independently rather than loading MATLAB outputs
+# Compute empirical VAR IRFs for AD and RR shocks (same as run_var_mp_adrr.m)
 
 # Load data with shock series
 data_emp_fig34 <- read.csv(file.path(data_path, "_data_cmw.csv"))
@@ -343,7 +342,7 @@ vardata_emp_fig34 <- cbind(ad_shock_fig34, gdp_emp_fig34, infl_emp_fig34,
 vardata_emp_fig34 <- vardata_emp_fig34[startdate_emp_fig34:enddate_emp_fig34, ]
 vardata_emp_fig34[is.na(vardata_emp_fig34)] <- 0
 
-# VAR settings (same as MATLAB)
+# VAR settings
 n_lags_fig34 <- 2
 constant_fig34 <- 2
 IRF_hor_fig34 <- 200
@@ -440,7 +439,7 @@ shock_names <- c("Aruoba-Drechsel", "Romer-Romer")
 plot_list <- list()
 
 for (i_shock in 1:2) {
-  # Scale by max empirical interest rate response (same as MATLAB)
+  # Scale by max empirical interest rate response
   # R_n_m_emp is already annualized from the VAR estimation
   scale_factor <- 1 / max(abs(R_n_m_emp[1:IRF_hor_plot, i_shock]))
   
@@ -541,7 +540,7 @@ plot_list[[2]]
 plot_list[[1]]
 ```
 
-### 5.4 Figure 5: News Shock IRFs
+### Figure 5: News Shock IRFs
 
 A "news shock" is an anticipated monetary policy change. Here we examine 
 the response to a monetary policy shock that is announced 16 quarters 
@@ -716,21 +715,20 @@ p4
 p5
 ```
 
-## 6. Table 5.1: Counterfactual Second Moments
+## Table 5.1: Counterfactual Second Moments
 
 This section replicates Table 5.1 and Figure D.1, which show how business cycle 
 statistics change under counterfactual policy rules.
 
-### 6.1 Helper Function: Extract Policy IRFs
+### Helper Function: Extract Policy IRFs
 
 ```{r helper-extract-irfs}
-#' Extract policy IRF matrices from loaded RDS data
-#' @param data RDS data loaded from MATLAB .mat file  
-#' @param T_use Horizon to use (if NULL, uses full model dimension)
-#' @return List with Pi_m, Y_m, I_m as lists of matrices
-#' @details Following MATLAB code (import_suffstats.m):
-#'   - Pi_m and I_m are scaled by 4 to annualize (quarterly to annual)
-#'   - Y_m is NOT scaled
+# Extract policy IRF matrices from loaded RDS data
+# data: RDS previously imported from .mat file  
+# T_use: Horizon to use (if NULL, uses full model dimension)
+# Follows import_suffstats.m with
+#  * Pi_m and I_m are scaled by 4 to annualize (quarterly to annual)
+#  * Y_m unscaled
 extract_model_irfs <- function(data, T_use = NULL) {
   # Data has Pi.m.collector, Y.m.collector, R.n.m.collector
   # Get full dimensions
@@ -738,7 +736,6 @@ extract_model_irfs <- function(data, T_use = NULL) {
   if (is.null(T_use)) T_use <- T_full
   
   # Extract and SCALE by 4 for Pi_m and I_m (annualize)
-  # This matches MATLAB: Pi_m_draws = 4 * Pi_m_collector
   Pi_m_raw <- 4 * data$Pi.m.collector[1:T_use, 1:T_use, ]
   Y_m_raw <- data$Y.m.collector[1:T_use, 1:T_use, ]
   I_m_raw <- 4 * data$R.n.m.collector[1:T_use, 1:T_use, ]
@@ -755,21 +752,19 @@ extract_model_irfs <- function(data, T_use = NULL) {
 }
 ```
 
-### 6.2 Prepare Baseline Wold IRFs
+### Prepare Baseline Wold IRFs
 
 ```{r prepare-wold-base}
 # Extract IRFs from all models mixture first to get the model horizon T
-# MATLAB: T = size(Pi_m_rank_draws, 1)
 irfs_all <- extract_model_irfs(all_models, T_use = NULL)
 T_hor <- irfs_all$T
 n_shocks <- dim(IRF_OLS)[2]
 
 # Extract relevant variables: inflation (9), output (2), interest rate (10)
-# MATLAB: wold_base = IS_wold.Theta_OLS([9 2 10],:,1:T)
 wold_base <- IRF_OLS[c(9, 2, 10), , 1:T_hor]
 ```
 
-### 6.3 Baseline Business Cycle Statistics
+### Baseline Business Cycle Statistics
 
 ```{r baseline-stats}
 # Compute baseline VMA-implied covariance
@@ -788,7 +783,7 @@ names(std_base) <- var_names_short
 dimnames(corr_base) <- list(var_names_short, var_names_short)
 ```
 
-### 6.4 Set Up Policy Rule
+### Set Up Policy Rule
 
 ```{r setup-policy-rule}
 # Set up optimal policy (dual mandate) weights
@@ -804,7 +799,7 @@ weights <- set_optpol_weights(
 )
 ```
 
-### 6.5 Compute Counterfactual Wold IRFs for Each Model
+### Compute Counterfactual Wold IRFs for Each Model
 
 ```{r compute-counterfactual-models}
 # Extract IRFs from each model separately (with proper 4x scaling for Pi_m and I_m)
@@ -820,7 +815,7 @@ n_draws_use <- min(1000, irfs_rank$n_draws)
 n_models <- 4
 
 # Storage for counterfactual COVARIANCES by model (not std devs)
-# MATLAB: takes quantile of covariance FIRST, then sqrt
+# MATLAB takes quantile of covariance FIRST, then sqrt
 # Dimensions: (variable, variable, draw, model)
 cov_cnfctl_models <- array(NA, dim = c(3, 3, n_draws_use, n_models))
 
@@ -860,11 +855,11 @@ for (m in seq_len(n_models)) {
 }
 ```
 
-### 6.6 Load Empirical Sufficient Statistics (Semi-structural)
+### Load Empirical Sufficient Statistics (Semi-structural)
 
 Following `import_suffstats_emp.m`, we load the pre-computed empirical monetary
-policy IRFs from the MATLAB BVAR estimation. This ensures exact replication of
-the MATLAB results by using the same posterior draws.
+policy IRFs from the MATLAB BVAR estimation. This ensures exact replication
+results by using the same posterior draws.
 
 ```{r load-empirical-suffstats}
 # Load pre-computed MATLAB empirical IRF draws
@@ -872,10 +867,9 @@ the MATLAB results by using the same posterior draws.
 # Converted to RDS format for R usage
 emp_irfs <- readRDS(file.path(suff_stats_path, "empirical_irfs_adrr.rds"))
 
-# MATLAB dimensions: (T x 1 x n_shocks x n_draws) = (200 x 1 x 2 x 1000)
-# Following import_suffstats_emp.m:
-# "No need to multiply or divide by 4 since empirical IRFs are all measured
-#  in annualized terms."
+# Dimensions: (T x 1 x n_shocks x n_draws) = (200 x 1 x 2 x 1000)
+# No need to multiply or divide by 4 since empirical IRFs are all measured
+# in annualized terms (import_suffstats_emp.m)
 
 # Extract and reshape draws to (T x n_shocks x n_draws)
 Pi_m_emp_draws <- drop(emp_irfs$Pi.m.draws.emp)  # Inflation
@@ -893,17 +887,14 @@ n_draws_emp <- dim(Pi_m_emp_draws)[3]
 n_draws_emp_use <- min(1000, n_draws_emp)
 
 # Verify dimension consistency before proceeding
-# MATLAB requires model_T == empirical_T (both should be 200)
-# If they differ, the code would fail with dimension mismatches
 stopifnot("T_emp_use must equal T_hor for semi-structural to work. Check model sufficient statistics dimensions." = T_emp_use == T_hor)
 
-# IMPORTANT: Following MATLAB exactly - use the SAME weights as model computation
+# Following MATLAB exactly - use the SAME weights as model computation
 # MATLAB does NOT create new weights for the empirical section; it reuses
 # the weights created earlier with T = model_T
 weights_emp <- weights
 
 # Storage for empirical counterfactual COVARIANCES (not std devs)
-# MATLAB: takes quantile of covariance FIRST, then sqrt
 cov_cnfctl_emp <- array(NA, dim = c(3, 3, n_draws_emp_use))
 
 for (d in seq_len(n_draws_emp_use)) {
@@ -931,7 +922,7 @@ for (d in seq_len(n_draws_emp_use)) {
     wold_cnfctl_d[3, s, ] <- result$i_z_optpol
   }
   
-  # Compute VMA covariance - sum over T_hor horizons (matching MATLAB)
+  # Compute VMA covariance - sum over T_hor horizons
   cov_d <- matrix(0, 3, 3)
   for (h in seq_len(T_hor)) {
     Theta_h <- wold_cnfctl_d[, , h]
@@ -943,7 +934,7 @@ for (d in seq_len(n_draws_emp_use)) {
 }
 ```
 
-### 6.7 Compute Summary Statistics
+### Compute Summary Statistics
 
 ```{r counterfactual-stats}
 # MATLAB approach: take quantiles of COVARIANCE, then sqrt of diagonal
@@ -961,7 +952,7 @@ for (m in seq_len(n_models)) {
   cov_med <- apply(cov_m, c(1, 2), quantile, probs = 0.5)
   cov_ub <- apply(cov_m, c(1, 2), quantile, probs = 0.84)
   
-  # Take sqrt of diagonal AFTER taking quantile (MATLAB approach)
+  # Take sqrt of diagonal AFTER taking quantile
   std_model_summary[[model_names[m]]] <- list(
     med = sqrt(diag(cov_med)),
     lb = sqrt(diag(cov_lb)),
@@ -975,7 +966,7 @@ cov_emp_lb <- apply(cov_cnfctl_emp, c(1, 2), quantile, probs = 0.16)
 cov_emp_med <- apply(cov_cnfctl_emp, c(1, 2), quantile, probs = 0.5)
 cov_emp_ub <- apply(cov_cnfctl_emp, c(1, 2), quantile, probs = 0.84)
 
-# Take sqrt of diagonal AFTER taking quantile (MATLAB approach)
+# Take sqrt of diagonal AFTER taking quantile
 std_emp_summary <- list(
   med = sqrt(diag(cov_emp_med)),
   lb = sqrt(diag(cov_emp_lb)),
@@ -983,7 +974,7 @@ std_emp_summary <- list(
 )
 ```
 
-### 6.8 Table 5.1 Output
+### Table 5.1 Output
 
 ```{r table-5-1-output}
 # Create Table 5.1 as a data frame
@@ -1040,7 +1031,7 @@ knitr::kable(table_5_1,
 
 Note: Posterior median with 16th and 84th percentiles in parentheses. Policy rule minimizes loss function with equal weight on inflation, output gap, and interest rate smoothing.
 
-### 6.9 Visualize Distribution of Standard Deviations (Figure D.1)
+### Visualize Distribution of Standard Deviations (Figure D.1)
 
 ```{r figure-d1}
 #| fig-width: 12
@@ -1068,7 +1059,6 @@ df_rank_density <- data.frame(
 df_rank_density$variable <- factor(df_rank_density$variable, levels = var_names_short)
 
 # Use std_model_summary which correctly computes sqrt(median(cov))
-# MATLAB: sqrt(cnfctl_models.cov_med(i_y,i_y,i_model))
 # Reorder to match var_names_short: [Output, Inflation, Rate]
 # std_model_summary has order [Inflation, Output, Rate] from wold_base
 mode_rank <- std_model_summary[["RANK"]]$med[c(2, 1, 3)]    # RANK
@@ -1077,7 +1067,6 @@ mode_brank <- std_model_summary[["B-RANK"]]$med[c(2, 1, 3)] # B-RANK
 mode_bhank <- std_model_summary[["B-HANK"]]$med[c(2, 1, 3)] # B-HANK
 
 # Create data frame for vertical lines (posterior medians)
-# MATLAB order: i_model 1=RANK, 2=HANK, 3=B-RANK, 4=B-HANK
 df_modes <- data.frame(
   variable = factor(rep(var_names_short, 4), levels = var_names_short),
   mode_val = c(mode_rank, mode_hank, mode_brank, mode_bhank),
@@ -1094,7 +1083,7 @@ df_base <- data.frame(
 ggplot() +
   # Blue kernel density for baseline RANK
   geom_density(data = df_rank_density, aes(x = std_cnfctl), 
-               fill = "#4A90D9", color = "#4A90D9", alpha = 0.4) +
+               fill = "#4A90D9", color = "#4A90D9", alpha = 0.2) +
   # Black dashed: baseline (actual data)
   geom_vline(data = df_base, aes(xintercept = std_base), 
              color = "black", linetype = "dashed", linewidth = 1) +
@@ -1102,19 +1091,632 @@ ggplot() +
   geom_vline(data = df_modes[df_modes$model_type == "RANK", ], 
              aes(xintercept = mode_val), color = "#C4AE78", linewidth = 1) +
   geom_vline(data = df_modes[df_modes$model_type == "B-RANK", ], 
-             aes(xintercept = mode_val), color = "#C4AE78", linewidth = 1, linetype = "dotted") +
+             aes(xintercept = mode_val), color = "#C4AE78", linewidth = 1, linetype = "dashed") +
   # Red: HANK models posterior modes
   geom_vline(data = df_modes[df_modes$model_type == "HANK", ], 
              aes(xintercept = mode_val), color = "#CC0000", linewidth = 1) +
   geom_vline(data = df_modes[df_modes$model_type == "B-HANK", ], 
-             aes(xintercept = mode_val), color = "#CC0000", linewidth = 1, linetype = "dotted") +
+             aes(xintercept = mode_val), color = "#CC0000", linewidth = 1, linetype = "dashed") +
   facet_wrap(~variable, scales = "free", ncol = 3) +
   labs(
     title = "Figure D.1: Counterfactual Unconditional Volatilities",
-    subtitle = "Black dashed = observed policy; Blue density = RANK posterior; Beige = RANK modes; Red = HANK modes",
+    subtitle = "Black = observed policy; Blue = RANK posterior density; Solid Beige = RANK; Dashed Beige = B-RANK; Solid Red = HANK; Dashed Red = B-HANK",
     x = "Standard Deviation",
     y = "Density"
   ) +
+  theme_minimal()
+```
+
+## Figure 6: Main Business Cycle Shock
+
+Analysis of counterfactual responses to the main business cycle shock 
+(Angeletos, Collard & Dellas, 2020 - the shock explaining most of business 
+cycle dynamics).
+
+```{r figure-6-compute}
+# The "main business cycle shock" is identified as the first principal 
+# component of structural shocks
+# For simplicity, we use the shock explaining most variance
+
+# Compute variance explained by each shock
+var_explained <- numeric(n_shocks)
+for (s in seq_len(n_shocks)) {
+  shock_irf <- IRF_OLS[, s, 1:T_hor]
+  # Total variance contribution
+  var_s <- sum(shock_irf^2)
+  var_explained[s] <- var_s
+}
+
+# Find the main shock (highest variance)
+mbc_shock_idx <- which.max(var_explained)
+cat("Main business cycle shock index:", mbc_shock_idx, 
+    "(", series_names[mbc_shock_idx], ")\n")
+cat("Variance share:", round(var_explained[mbc_shock_idx] / sum(var_explained) * 100, 1), "%\n")
+
+# Extract baseline path for this shock
+pi_mbc <- wold_base[1, mbc_shock_idx, ]
+y_mbc <- wold_base[2, mbc_shock_idx, ]
+i_mbc <- wold_base[3, mbc_shock_idx, ]
+
+# --- RANK (hybrid) counterfactual ---
+n_draws_fig6 <- min(1000, irfs_rank$n_draws)
+pi_cnfctl_rank <- matrix(NA, T_hor, n_draws_fig6)
+y_cnfctl_rank <- matrix(NA, T_hor, n_draws_fig6)
+i_cnfctl_rank <- matrix(NA, T_hor, n_draws_fig6)
+
+for (d in seq_len(n_draws_fig6)) {
+  Pi_m <- irfs_rank$Pi_m[[d]]
+  Y_m <- irfs_rank$Y_m[[d]]
+  I_m <- irfs_rank$I_m[[d]]
+  
+  result <- compute_optpol(
+    pi_mbc, y_mbc, i_mbc,
+    Pi_m, Y_m, I_m,
+    weights
+  )
+  
+  pi_cnfctl_rank[, d] <- result$pi_z_optpol
+  y_cnfctl_rank[, d] <- result$y_z_optpol
+  i_cnfctl_rank[, d] <- result$i_z_optpol
+}
+
+# RANK summary statistics (blue)
+pi_cnfctl_rank_med <- apply(pi_cnfctl_rank, 1, median)
+pi_cnfctl_rank_lb <- apply(pi_cnfctl_rank, 1, quantile, 0.16)
+pi_cnfctl_rank_ub <- apply(pi_cnfctl_rank, 1, quantile, 0.84)
+
+y_cnfctl_rank_med <- apply(y_cnfctl_rank, 1, median)
+y_cnfctl_rank_lb <- apply(y_cnfctl_rank, 1, quantile, 0.16)
+y_cnfctl_rank_ub <- apply(y_cnfctl_rank, 1, quantile, 0.84)
+
+i_cnfctl_rank_med <- apply(i_cnfctl_rank, 1, median)
+i_cnfctl_rank_lb <- apply(i_cnfctl_rank, 1, quantile, 0.16)
+i_cnfctl_rank_ub <- apply(i_cnfctl_rank, 1, quantile, 0.84)
+
+# --- Empirical counterfactual (orange) ---
+n_draws_fig6_emp <- min(1000, n_draws_emp_use)
+pi_cnfctl_emp_fig6 <- matrix(NA, T_hor, n_draws_fig6_emp)
+y_cnfctl_emp_fig6 <- matrix(NA, T_hor, n_draws_fig6_emp)
+i_cnfctl_emp_fig6 <- matrix(NA, T_hor, n_draws_fig6_emp)
+
+for (d in seq_len(n_draws_fig6_emp)) {
+  Pi_m <- Pi_m_emp_draws[, , d]
+  Y_m <- Y_m_emp_draws[, , d]
+  I_m <- I_m_emp_draws[, , d]
+  
+  result <- compute_optpol(
+    pi_mbc, y_mbc, i_mbc,
+    Pi_m, Y_m, I_m,
+    weights
+  )
+  
+  pi_cnfctl_emp_fig6[, d] <- result$pi_z_optpol
+  y_cnfctl_emp_fig6[, d] <- result$y_z_optpol
+  i_cnfctl_emp_fig6[, d] <- result$i_z_optpol
+}
+
+# Empirical summary statistics (orange)
+pi_cnfctl_emp_med <- apply(pi_cnfctl_emp_fig6, 1, median)
+pi_cnfctl_emp_lb <- apply(pi_cnfctl_emp_fig6, 1, quantile, 0.16)
+pi_cnfctl_emp_ub <- apply(pi_cnfctl_emp_fig6, 1, quantile, 0.84)
+
+y_cnfctl_emp_med <- apply(y_cnfctl_emp_fig6, 1, median)
+y_cnfctl_emp_lb <- apply(y_cnfctl_emp_fig6, 1, quantile, 0.16)
+y_cnfctl_emp_ub <- apply(y_cnfctl_emp_fig6, 1, quantile, 0.84)
+
+i_cnfctl_emp_med <- apply(i_cnfctl_emp_fig6, 1, median)
+i_cnfctl_emp_lb <- apply(i_cnfctl_emp_fig6, 1, quantile, 0.16)
+i_cnfctl_emp_ub <- apply(i_cnfctl_emp_fig6, 1, quantile, 0.84)
+```
+
+```{r figure-6-plot}
+#| fig-width: 12
+#| fig-height: 4
+
+IRF_hor_plot <- 30
+
+# Build data frames for each variable (Output, Inflation, Interest Rate)
+# Variable 1: Output (y)
+df_output <- data.frame(
+  horizon = 0:IRF_hor_plot,
+  baseline = y_mbc[1:(IRF_hor_plot + 1)],
+  rank_med = y_cnfctl_rank_med[1:(IRF_hor_plot + 1)],
+  rank_lb = y_cnfctl_rank_lb[1:(IRF_hor_plot + 1)],
+  rank_ub = y_cnfctl_rank_ub[1:(IRF_hor_plot + 1)],
+  emp_med = y_cnfctl_emp_med[1:(IRF_hor_plot + 1)],
+  emp_lb = y_cnfctl_emp_lb[1:(IRF_hor_plot + 1)],
+  emp_ub = y_cnfctl_emp_ub[1:(IRF_hor_plot + 1)],
+  variable = "Output"
+)
+
+# Variable 2: Inflation (pi)
+df_infl <- data.frame(
+  horizon = 0:IRF_hor_plot,
+  baseline = pi_mbc[1:(IRF_hor_plot + 1)],
+  rank_med = pi_cnfctl_rank_med[1:(IRF_hor_plot + 1)],
+  rank_lb = pi_cnfctl_rank_lb[1:(IRF_hor_plot + 1)],
+  rank_ub = pi_cnfctl_rank_ub[1:(IRF_hor_plot + 1)],
+  emp_med = pi_cnfctl_emp_med[1:(IRF_hor_plot + 1)],
+  emp_lb = pi_cnfctl_emp_lb[1:(IRF_hor_plot + 1)],
+  emp_ub = pi_cnfctl_emp_ub[1:(IRF_hor_plot + 1)],
+  variable = "Inflation"
+)
+
+# Variable 3: Interest Rate (i)
+df_rate <- data.frame(
+  horizon = 0:IRF_hor_plot,
+  baseline = i_mbc[1:(IRF_hor_plot + 1)],
+  rank_med = i_cnfctl_rank_med[1:(IRF_hor_plot + 1)],
+  rank_lb = i_cnfctl_rank_lb[1:(IRF_hor_plot + 1)],
+  rank_ub = i_cnfctl_rank_ub[1:(IRF_hor_plot + 1)],
+  emp_med = i_cnfctl_emp_med[1:(IRF_hor_plot + 1)],
+  emp_lb = i_cnfctl_emp_lb[1:(IRF_hor_plot + 1)],
+  emp_ub = i_cnfctl_emp_ub[1:(IRF_hor_plot + 1)],
+  variable = "Interest Rate"
+)
+
+df_fig6 <- rbind(df_output, df_infl, df_rate)
+df_fig6$variable <- factor(df_fig6$variable, levels = c("Output", "Inflation", "Interest Rate"))
+
+ggplot(df_fig6, aes(x = horizon)) +
+  # Light blue band: RANK hybrid (16th-84th percentile)
+  geom_ribbon(aes(ymin = rank_lb, ymax = rank_ub), 
+              fill = "#749EB2", alpha = 0.3) +
+  # Light orange band: Empirical (16th-84th percentile)
+  geom_ribbon(aes(ymin = emp_lb, ymax = emp_ub), 
+              fill = "#FF9933", alpha = 0.3) +
+  # Black dotted: baseline (Data)
+  geom_line(aes(y = baseline), color = "black", linetype = "dotted", linewidth = 1.2) +
+  # Blue solid: RANK hybrid median
+  geom_line(aes(y = rank_med), color = "#749EB2", linewidth = 1.2) +
+  # Orange solid: Empirical median
+  geom_line(aes(y = emp_med), color = "#FF9933", linewidth = 1.2) +
+  geom_hline(yintercept = 0, linetype = "solid", color = "grey70") +
+  facet_wrap(~variable, scales = "free_y", ncol = 3) +
+  labs(
+    title = "Figure 6: Counterfactual Response to Main Business Cycle Shock",
+    subtitle = "Data (black dotted); Hybrid (blue band/line); Semi-structural (orange band/line)",
+    x = "Horizon",
+    y = "% Deviation"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+## Figure 7: Historical Evolution (Great Recession)
+
+Counterfactual evolution of output, inflation, and the federal funds rate in the Great
+Recession, under the policy rule that minimizes the loss function without any effective 
+lower bound on rates.
+
+```{r figure-7-setup}
+# Following MATLAB: plot starts with some history lag, then shows counterfactual forecast
+date_sample <- date[startdate:enddate]
+
+# Forecast settings (matching MATLAB fcst_evol_results)
+# fcst_date is 2007Q4, fcst_lag is periods of history to show before
+# fcst_hor is how many quarters to forecast forward
+fcst_date_val <- 2007.75  # 2007Q4 - start of Great Recession
+fcst_date <- which(date_sample == fcst_date_val)
+fcst_lag <- 4   # Show 4 quarters of history before forecast
+fcst_hor <- 20  # Forecast 20 quarters ahead (to ~2012Q4)
+
+# Date range for plotting
+plot_start <- fcst_date - fcst_lag
+plot_end <- min(fcst_date + fcst_hor - 1, length(date_sample))
+plot_dates <- date_sample[plot_start:plot_end]
+
+cat("Historical evolution settings:\n")
+cat("  Forecast start:", date_sample[fcst_date], "(index", fcst_date, ")\n")
+cat("  History lag:", fcst_lag, "quarters\n")
+cat("  Forecast horizon:", fcst_hor, "quarters\n")
+cat("  Plot range:", date_sample[plot_start], "to", date_sample[plot_end], "\n")
+
+# Extract full history (indices: 9=Inflation, 2=Output, 10=Rate)
+pi_history <- vardata_dt[, 9]
+y_history <- vardata_dt[, 2]
+i_history <- vardata_dt[, 10]
+
+# For historical evolution, we need VAR forecasts at each date from fcst_date onwards
+forecast_hor_model <- T_hor
+
+# Compute VAR forecast at each date in the forecast window
+fcst_pi <- matrix(NA, forecast_hor_model, fcst_hor)
+fcst_y <- matrix(NA, forecast_hor_model, fcst_hor)
+fcst_i <- matrix(NA, forecast_hor_model, fcst_hor)
+
+# Variable indices: [9] Inflation, [2] Output, [10] Interest Rate
+var_pi_idx <- 9
+var_y_idx <- 2
+var_i_idx <- 10
+
+for (t_idx in seq_len(fcst_hor)) {
+  t_fcst <- fcst_date + t_idx - 1
+  if (t_fcst > nrow(vardata_dt)) break
+  
+  # Simple forecast using VAR coefficients
+  fcst_result <- var_fcst(
+    vardata_dt, n_lags, constant, 
+    bvar_result$B_OLS, t_fcst, forecast_hor_model, 
+    include_current = FALSE
+  )
+  
+  fcst_pi[, t_idx] <- fcst_result[, var_pi_idx]
+  fcst_y[, t_idx] <- fcst_result[, var_y_idx]
+  fcst_i[, t_idx] <- fcst_result[, var_i_idx]
+}
+
+# Actual number of forecast periods we can compute
+n_fcst_actual <- min(fcst_hor, nrow(vardata_dt) - fcst_date + 1)
+
+# Truncate forecast matrices to valid columns
+fcst_pi <- fcst_pi[, 1:n_fcst_actual, drop = FALSE]
+fcst_y <- fcst_y[, 1:n_fcst_actual, drop = FALSE]
+fcst_i <- fcst_i[, 1:n_fcst_actual, drop = FALSE]
+
+# Update plot_end to match actual data range
+plot_end <- fcst_date + n_fcst_actual - 1
+plot_dates <- date_sample[plot_start:plot_end]
+
+cat("Actual forecast periods:", n_fcst_actual, "\n")
+cat("Final plot range:", date_sample[plot_start], "to", date_sample[plot_end], "\n")
+```
+
+```{r figure-7-compute}
+# Helper function to compute historical counterfactual evolution
+compute_hist_evol <- function(irfs_model, fcst_pi, fcst_y, fcst_i, weights, n_draws_use) {
+  n_fcst <- ncol(fcst_pi)
+  T_h <- nrow(fcst_pi)
+  
+  pi_cnfctl <- matrix(NA, n_fcst, n_draws_use)
+  y_cnfctl <- matrix(NA, n_fcst, n_draws_use)
+  i_cnfctl <- matrix(NA, n_fcst, n_draws_use)
+  
+  for (d in seq_len(n_draws_use)) {
+    Pi_m <- irfs_model$Pi_m[[d]]
+    Y_m <- irfs_model$Y_m[[d]]
+    I_m <- irfs_model$I_m[[d]]
+    
+    # First period
+    pi_x <- fcst_pi[, 1]
+    y_x <- fcst_y[, 1]
+    i_x <- fcst_i[, 1]
+    
+    result <- compute_optpol(pi_x, y_x, i_x, Pi_m, Y_m, I_m, weights)
+    
+    pi_path <- result$pi_z_optpol
+    y_path <- result$y_z_optpol
+    i_path <- result$i_z_optpol
+    
+    pi_cnfctl[1, d] <- pi_path[1]
+    y_cnfctl[1, d] <- y_path[1]
+    i_cnfctl[1, d] <- i_path[1]
+    
+    # Subsequent periods: accumulate forecast revisions
+    for (t in 2:n_fcst) {
+      pi_rev <- fcst_pi[, t] - c(fcst_pi[2:T_h, t-1], 0)
+      y_rev <- fcst_y[, t] - c(fcst_y[2:T_h, t-1], 0)
+      i_rev <- fcst_i[, t] - c(fcst_i[2:T_h, t-1], 0)
+      
+      result <- compute_optpol(pi_rev, y_rev, i_rev, Pi_m, Y_m, I_m, weights)
+      
+      pi_path <- c(pi_path[2:T_h], 0) + result$pi_z_optpol
+      y_path <- c(y_path[2:T_h], 0) + result$y_z_optpol
+      i_path <- c(i_path[2:T_h], 0) + result$i_z_optpol
+      
+      pi_cnfctl[t, d] <- pi_path[1]
+      y_cnfctl[t, d] <- y_path[1]
+      i_cnfctl[t, d] <- i_path[1]
+    }
+  }
+  
+  list(pi = pi_cnfctl, y = y_cnfctl, i = i_cnfctl)
+}
+
+# Number of draws to use
+n_draws_fig7 <- min(1000, irfs_rank$n_draws)
+
+# --- Compute counterfactuals for each model ---
+
+# RANK (for blue bands)
+evol_rank <- compute_hist_evol(irfs_rank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+
+# HANK
+evol_hank <- compute_hist_evol(irfs_hank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+
+# B-RANK
+evol_brank <- compute_hist_evol(irfs_brank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+
+# B-HANK
+evol_bhank <- compute_hist_evol(irfs_bhank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+
+# --- Compute empirical (semi-structural) counterfactual ---
+n_draws_fig7_emp <- min(1000, n_draws_emp_use)
+
+pi_cnfctl_emp_evol <- matrix(NA, n_fcst_actual, n_draws_fig7_emp)
+y_cnfctl_emp_evol <- matrix(NA, n_fcst_actual, n_draws_fig7_emp)
+i_cnfctl_emp_evol <- matrix(NA, n_fcst_actual, n_draws_fig7_emp)
+
+for (d in seq_len(n_draws_fig7_emp)) {
+  Pi_m <- Pi_m_emp_draws[, , d]
+  Y_m <- Y_m_emp_draws[, , d]
+  I_m <- I_m_emp_draws[, , d]
+  
+  # First period
+  pi_x <- fcst_pi[, 1]
+  y_x <- fcst_y[, 1]
+  i_x <- fcst_i[, 1]
+  
+  result <- compute_optpol(pi_x, y_x, i_x, Pi_m, Y_m, I_m, weights)
+  
+  pi_path <- result$pi_z_optpol
+  y_path <- result$y_z_optpol
+  i_path <- result$i_z_optpol
+  
+  pi_cnfctl_emp_evol[1, d] <- pi_path[1]
+  y_cnfctl_emp_evol[1, d] <- y_path[1]
+  i_cnfctl_emp_evol[1, d] <- i_path[1]
+  
+  for (t in 2:n_fcst_actual) {
+    pi_rev <- fcst_pi[, t] - c(fcst_pi[2:forecast_hor_model, t-1], 0)
+    y_rev <- fcst_y[, t] - c(fcst_y[2:forecast_hor_model, t-1], 0)
+    i_rev <- fcst_i[, t] - c(fcst_i[2:forecast_hor_model, t-1], 0)
+    
+    result <- compute_optpol(pi_rev, y_rev, i_rev, Pi_m, Y_m, I_m, weights)
+    
+    pi_path <- c(pi_path[2:forecast_hor_model], 0) + result$pi_z_optpol
+    y_path <- c(y_path[2:forecast_hor_model], 0) + result$y_z_optpol
+    i_path <- c(i_path[2:forecast_hor_model], 0) + result$i_z_optpol
+    
+    pi_cnfctl_emp_evol[t, d] <- pi_path[1]
+    y_cnfctl_emp_evol[t, d] <- y_path[1]
+    i_cnfctl_emp_evol[t, d] <- i_path[1]
+  }
+}
+
+# --- Summary statistics ---
+
+# RANK bands (blue)
+pi_rank_med <- apply(evol_rank$pi, 1, median)
+pi_rank_lb <- apply(evol_rank$pi, 1, quantile, 0.16)
+pi_rank_ub <- apply(evol_rank$pi, 1, quantile, 0.84)
+
+y_rank_med <- apply(evol_rank$y, 1, median)
+y_rank_lb <- apply(evol_rank$y, 1, quantile, 0.16)
+y_rank_ub <- apply(evol_rank$y, 1, quantile, 0.84)
+
+i_rank_med <- apply(evol_rank$i, 1, median)
+i_rank_lb <- apply(evol_rank$i, 1, quantile, 0.16)
+i_rank_ub <- apply(evol_rank$i, 1, quantile, 0.84)
+
+# Model medians for vertical lines
+pi_hank_med <- apply(evol_hank$pi, 1, median)
+y_hank_med <- apply(evol_hank$y, 1, median)
+i_hank_med <- apply(evol_hank$i, 1, median)
+
+pi_brank_med <- apply(evol_brank$pi, 1, median)
+y_brank_med <- apply(evol_brank$y, 1, median)
+i_brank_med <- apply(evol_brank$i, 1, median)
+
+pi_bhank_med <- apply(evol_bhank$pi, 1, median)
+y_bhank_med <- apply(evol_bhank$y, 1, median)
+i_bhank_med <- apply(evol_bhank$i, 1, median)
+
+# Empirical median (orange)
+pi_emp_evol_med <- apply(pi_cnfctl_emp_evol, 1, median)
+y_emp_evol_med <- apply(y_cnfctl_emp_evol, 1, median)
+i_emp_evol_med <- apply(i_cnfctl_emp_evol, 1, median)
+
+# Actual history for the period fcst_date - fcst_lag : fcst_date - 1
+# (these are prepended to the counterfactual line for visual continuity)
+pi_actual_hist <- pi_history[(fcst_date - fcst_lag):(fcst_date - 1)]
+y_actual_hist <- y_history[(fcst_date - fcst_lag):(fcst_date - 1)]
+i_actual_hist <- i_history[(fcst_date - fcst_lag):(fcst_date - 1)]
+
+# Actual data for the full plot period (for the black line)
+# This shows what actually happened
+pi_actual <- pi_history[plot_start:plot_end]
+y_actual <- y_history[plot_start:plot_end]
+i_actual <- i_history[plot_start:plot_end]
+```
+
+```{r figure-7-plot}
+#| fig-width: 12
+#| fig-height: 4
+
+# Colors matching MATLAB
+col_black <- "black"
+col_beige <- "#C4AE78"
+col_red <- "#CC0000"
+col_blue <- "#749EB2"
+col_lblue <- scales::alpha(col_blue, 0.3)
+col_orange <- "#FF9933"
+
+# Create NA-padded series for counterfactuals (fcst_lag periods of NA, then counterfactual)
+n_plot <- length(plot_dates)
+n_hist_pad <- fcst_lag
+
+# Helper to prepend NA padding
+pad_cnfctl <- function(x) c(rep(NA, n_hist_pad), x)
+
+# Build data for Output panel
+df_output <- data.frame(
+  date = plot_dates,
+  history = y_actual,
+  rank_med = pad_cnfctl(y_rank_med),
+  rank_lb = pad_cnfctl(y_rank_lb),
+  rank_ub = pad_cnfctl(y_rank_ub),
+  hank_med = pad_cnfctl(y_hank_med),
+  brank_med = pad_cnfctl(y_brank_med),
+  bhank_med = pad_cnfctl(y_bhank_med),
+  emp_med = pad_cnfctl(y_emp_evol_med),
+  variable = "Output"
+)
+
+# Build data for Inflation panel
+df_infl <- data.frame(
+  date = plot_dates,
+  history = pi_actual,
+  rank_med = pad_cnfctl(pi_rank_med),
+  rank_lb = pad_cnfctl(pi_rank_lb),
+  rank_ub = pad_cnfctl(pi_rank_ub),
+  hank_med = pad_cnfctl(pi_hank_med),
+  brank_med = pad_cnfctl(pi_brank_med),
+  bhank_med = pad_cnfctl(pi_bhank_med),
+  emp_med = pad_cnfctl(pi_emp_evol_med),
+  variable = "Inflation"
+)
+
+# Build data for Interest Rate panel
+df_rate <- data.frame(
+  date = plot_dates,
+  history = i_actual,
+  rank_med = pad_cnfctl(i_rank_med),
+  rank_lb = pad_cnfctl(i_rank_lb),
+  rank_ub = pad_cnfctl(i_rank_ub),
+  hank_med = pad_cnfctl(i_hank_med),
+  brank_med = pad_cnfctl(i_brank_med),
+  bhank_med = pad_cnfctl(i_bhank_med),
+  emp_med = pad_cnfctl(i_emp_evol_med),
+  variable = "Interest Rate"
+)
+
+df_fig7 <- rbind(df_output, df_infl, df_rate)
+df_fig7$variable <- factor(df_fig7$variable, levels = c("Output", "Inflation", "Interest Rate"))
+
+ggplot(df_fig7, aes(x = date)) +
+  # Blue band: RANK 16th-84th percentile
+  geom_ribbon(aes(ymin = rank_lb, ymax = rank_ub), fill = col_blue, alpha = 0.3) +
+  # Beige solid: RANK model median
+  geom_line(aes(y = rank_med), color = col_beige, linewidth = 1.2) +
+  # Beige dashed: B-RANK model median
+  geom_line(aes(y = brank_med), color = col_beige, linewidth = 1, linetype = "dashed") +
+  # Red solid: HANK model median
+  geom_line(aes(y = hank_med), color = col_red, linewidth = 1.2) +
+  # Red dashed: B-HANK model median
+  geom_line(aes(y = bhank_med), color = col_red, linewidth = 1, linetype = "dashed") +
+  # Orange solid: Empirical/semi-structural median
+  geom_line(aes(y = emp_med), color = col_orange, linewidth = 1.2) +
+  # Black solid: actual history
+  geom_line(aes(y = history), color = col_black, linewidth = 1.2) +
+  geom_hline(yintercept = 0, color = "grey70") +
+  facet_wrap(~variable, scales = "free_y", ncol = 3) +
+  labs(
+    title = "Figure 7: Historical Evolution Under Counterfactual Policy (Great Recession)",
+    subtitle = "Black: data; Beige: RANK (solid/dashed=behavioral); Red: HANK; Blue: RANK bands; Orange: semi-structural",
+    x = "Date",
+    y = "% Deviation"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+```
+
+## 9. Figure 8: Historical Scenario (Post-COVID Inflation)
+
+Counterfactual analysis of the post-COVID inflationary episode. Since our 
+sample ends in 2019Q4, we simulate a forward-looking scenario starting from
+the last observation.
+
+```{r figure-8-compute}
+# Use the last date in our sample as the forecast origin
+scenario_date <- nrow(vardata_dt)
+
+# Generate baseline forecast from final date
+fcst_scenario <- var_fcst(
+  vardata_dt, n_lags, constant,
+  bvar_result$B_OLS, scenario_date, T_hor,
+  include_current = TRUE
+)
+
+# Variable indices: [9] Inflation, [2] Output, [10] Interest Rate
+pi_fcst <- fcst_scenario[, 9]
+y_fcst <- fcst_scenario[, 2]
+i_fcst <- fcst_scenario[, 10]
+
+cat("Baseline forecast from", date_sample[scenario_date], "\n")
+cat("  Inflation (h=0):", round(pi_fcst[1], 2), "\n")
+cat("  Output (h=0):", round(y_fcst[1], 2), "\n")
+cat("  Rate (h=0):", round(i_fcst[1], 2), "\n")
+
+# Compute counterfactual scenario
+n_draws_fig8 <- min(100, n_draws)
+
+pi_cnfctl_scen <- matrix(NA, T_hor, n_draws_fig8)
+y_cnfctl_scen <- matrix(NA, T_hor, n_draws_fig8)
+i_cnfctl_scen <- matrix(NA, T_hor, n_draws_fig8)
+
+for (d in seq_len(n_draws_fig8)) {
+  Pi_m <- irfs_all$Pi_m[[d]]
+  Y_m <- irfs_all$Y_m[[d]]
+  I_m <- irfs_all$I_m[[d]]
+  
+  result <- compute_optpol(
+    pi_fcst, y_fcst, i_fcst,
+    Pi_m, Y_m, I_m,
+    weights
+  )
+  
+  pi_cnfctl_scen[, d] <- result$pi_z_optpol
+  y_cnfctl_scen[, d] <- result$y_z_optpol
+  i_cnfctl_scen[, d] <- result$i_z_optpol
+}
+```
+
+```{r figure-8-plot}
+#| fig-width: 10
+#| fig-height: 8
+
+# Summary statistics
+pi_scen_med <- apply(pi_cnfctl_scen, 1, median)
+pi_scen_lb <- apply(pi_cnfctl_scen, 1, quantile, 0.16)
+pi_scen_ub <- apply(pi_cnfctl_scen, 1, quantile, 0.84)
+
+y_scen_med <- apply(y_cnfctl_scen, 1, median)
+y_scen_lb <- apply(y_cnfctl_scen, 1, quantile, 0.16)
+y_scen_ub <- apply(y_cnfctl_scen, 1, quantile, 0.84)
+
+i_scen_med <- apply(i_cnfctl_scen, 1, median)
+i_scen_lb <- apply(i_cnfctl_scen, 1, quantile, 0.16)
+i_scen_ub <- apply(i_cnfctl_scen, 1, quantile, 0.84)
+
+# Build plot data
+df_fig8 <- data.frame(
+  horizon = rep(0:(T_hor - 1), 6),
+  value = c(pi_fcst, pi_scen_med, y_fcst, y_scen_med, i_fcst, i_scen_med),
+  lower = c(rep(NA, T_hor), pi_scen_lb, rep(NA, T_hor), y_scen_lb, 
+            rep(NA, T_hor), i_scen_lb),
+  upper = c(rep(NA, T_hor), pi_scen_ub, rep(NA, T_hor), y_scen_ub,
+            rep(NA, T_hor), i_scen_ub),
+  type = rep(c("Baseline Forecast", "Counterfactual"), each = T_hor, times = 3),
+  variable = rep(c("Inflation", "Output Gap", "Interest Rate"), each = 2 * T_hor)
+)
+
+df_fig8$variable <- factor(df_fig8$variable, 
+                            levels = c("Inflation", "Output Gap", "Interest Rate"))
+
+ggplot(df_fig8, aes(x = horizon)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "coral", alpha = 0.5) +
+  geom_line(aes(y = value, color = type, linetype = type), linewidth = 1) +
+  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
+  facet_wrap(~variable, scales = "free_y", ncol = 1) +
+  scale_color_manual(values = c("Baseline Forecast" = "black", 
+                                  "Counterfactual" = "coral")) +
+  scale_linetype_manual(values = c("Baseline Forecast" = "dashed", 
+                                    "Counterfactual" = "solid")) +
+  labs(
+    title = "Figure 8: Counterfactual Scenario Analysis",
+    subtitle = paste0("Forecast from ", date_sample[scenario_date], 
+                       ". Dashed = Baseline, Solid = Optimal policy (median with 68% bands)"),
+    x = "Quarters ahead",
+    y = "Percent",
+    color = "", linetype = ""
+  ) +
   theme_minimal() +
-  theme(legend.position = "none")
+  theme(legend.position = "bottom")
 ```
