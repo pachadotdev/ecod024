@@ -37,9 +37,8 @@ library(ggplot2)
 library(dplyr)
 library(tidyr)
 
-# Paths - relative to workspace root
-data_path <- "./cmw26-replication/var_inputs/_data/main"
-suff_stats_path <- "./cmw26-replication/suff_stats"
+data_path <- "./var_inputs/_data/main"
+suff_stats_path <- "./suff_stats"
 
 # Display settings
 theme_set(theme_minimal(base_size = 12))
@@ -1653,7 +1652,7 @@ df_fig7$variable <- factor(df_fig7$variable, levels = c("Output", "Inflation", "
 #     panel.grid.minor = element_blank()
 #   )
 
-ggplot(df_fig7, aes(x = date)) +
+f7_1 <- ggplot(df_fig7, aes(x = date)) +
   # Blue band: RANK 16th-84th percentile
   geom_ribbon(aes(ymin = rank_lb, ymax = rank_ub), fill = col_blue, alpha = 0.3) +
   # Beige solid: RANK model median
@@ -1676,7 +1675,7 @@ ggplot(df_fig7, aes(x = date)) +
     panel.grid.minor = element_blank()
   )
 
-ggplot(df_fig7, aes(x = date)) +
+f7_2 <- ggplot(df_fig7, aes(x = date)) +
   # Red solid: HANK model median
   geom_line(aes(y = hank_med), color = col_red, linewidth = 1.2) +
   # Red dashed: B-HANK model median
@@ -1697,7 +1696,7 @@ ggplot(df_fig7, aes(x = date)) +
     panel.grid.minor = element_blank()
   )
 
-f7 <- ggplot(df_fig7, aes(x = date)) +
+f7_3 <- ggplot(df_fig7, aes(x = date)) +
   # Orange solid: Empirical/semi-structural median
   geom_line(aes(y = emp_med), color = col_orange, linewidth = 1.2) +
   # Black solid: actual history
@@ -1716,9 +1715,13 @@ f7 <- ggplot(df_fig7, aes(x = date)) +
     panel.grid.minor = element_blank()
   )
 
-f7
+f7_1
 
-saveRDS(f7, "figure-7.rds")
+f7_2
+
+f7_3
+
+saveRDS(list(f7_1 = f7_1, f7_2 = f7_2, f7_3 = f7_3), "figure-7.rds")
 ```
 
 ## Figure 8: Historical Scenario (Post-COVID Inflation)
@@ -1789,11 +1792,6 @@ i_history_fig8 <- vardata_fig8[, 10]
 plot_start_fig8 <- scenario_date - fcst_lag
 plot_dates_fig8 <- c(date_sample_fig8[plot_start_fig8:scenario_date], 
                       date_sample_fig8[scenario_date] + (1:fcst_hor_fig8) * 0.25)
-
-cat("Figure 8 settings:\n")
-cat("  Extended sample ends at:", date_sample_fig8[scenario_date], "\n")
-cat("  Showing history from:", date_sample_fig8[plot_start_fig8], "\n")
-cat("  Forecast horizon:", fcst_hor_fig8, "quarters\n")
 ```
 
 ```{r figure-8-compute}
