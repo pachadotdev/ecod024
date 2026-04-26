@@ -1360,9 +1360,6 @@ fcst_i <- fcst_i[, 1:n_fcst_actual, drop = FALSE]
 # Update plot_end to match actual data range
 plot_end <- fcst_date + n_fcst_actual - 1
 plot_dates <- date_sample[plot_start:plot_end]
-
-cat("Actual forecast periods:", n_fcst_actual, "\n")
-cat("Final plot range:", date_sample[plot_start], "to", date_sample[plot_end], "\n")
 ```
 
 ```{r figure-7-compute}
@@ -1421,19 +1418,44 @@ n_draws_fig7 <- min(1000, irfs_rank$n_draws)
 
 # --- Compute counterfactuals for each model ---
 
+# I pre-save these as these are very demanding to run!
+
+fout <- c("evol_rank.rds", "evol_hank.rds", "evol_brank.rds", "evol_bhank.rds")
+
 # RANK (for blue bands)
-evol_rank <- compute_hist_evol(irfs_rank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+if (!file.exists(fout[1])) {
+  evol_rank <- compute_hist_evol(irfs_rank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+  saveRDS(evol_rank, fout[1])
+} else {
+  evol_rank <- readRDS(fout[1])
+}
 
 # HANK
-evol_hank <- compute_hist_evol(irfs_hank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+if (!file.exists(fout[2])) {
+  evol_hank <- compute_hist_evol(irfs_hank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+  saveRDS(evol_hank, fout[2])
+} else {
+  evol_hank <- readRDS(fout[2])
+}
 
 # B-RANK
-evol_brank <- compute_hist_evol(irfs_brank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+if (!file.exists(fout[3])) {
+  evol_brank <- compute_hist_evol(irfs_brank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+  saveRDS(evol_brank, fout[3])
+} else {
+  evol_brank <- readRDS(fout[3])
+}
 
 # B-HANK
-evol_bhank <- compute_hist_evol(irfs_bhank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+if (!file.exists(fout[4])) {
+  evol_bhank <- compute_hist_evol(irfs_bhank, fcst_pi, fcst_y, fcst_i, weights, n_draws_fig7)
+  saveRDS(evol_bhank, fout[4])
+} else {
+  evol_bhank <- readRDS(fout[4])
+}
 
 # --- Compute empirical (semi-structural) counterfactual ---
+
 n_draws_fig7_emp <- min(1000, n_draws_emp_use)
 
 pi_cnfctl_emp_evol <- matrix(NA, n_fcst_actual, n_draws_fig7_emp)
@@ -1587,6 +1609,37 @@ df_rate <- data.frame(
 df_fig7 <- rbind(df_output, df_infl, df_rate)
 df_fig7$variable <- factor(df_fig7$variable, levels = c("Output", "Inflation", "Interest Rate"))
 
+# For clarity, I opted to split this into sub-plots
+
+# ggplot(df_fig7, aes(x = date)) +
+#   # Blue band: RANK 16th-84th percentile
+#   geom_ribbon(aes(ymin = rank_lb, ymax = rank_ub), fill = col_blue, alpha = 0.3) +
+#   # Beige solid: RANK model median
+#   geom_line(aes(y = rank_med), color = col_beige, linewidth = 1.2) +
+#   # Beige dashed: B-RANK model median
+#   geom_line(aes(y = brank_med), color = col_beige, linewidth = 1, linetype = "dashed") +
+#   # Red solid: HANK model median
+#   geom_line(aes(y = hank_med), color = col_red, linewidth = 1.2) +
+#   # Red dashed: B-HANK model median
+#   geom_line(aes(y = bhank_med), color = col_red, linewidth = 1.2, linetype = "dashed") +
+#   # Orange solid: Empirical/semi-structural median
+#   geom_line(aes(y = emp_med), color = col_orange, linewidth = 1.2) +
+#   # Black solid: actual history
+#   geom_line(aes(y = history), color = col_black, linewidth = 1.2) +
+#   geom_hline(yintercept = 0, color = "grey70") +
+#   facet_wrap(~variable, scales = "free_y", ncol = 3) +
+#   labs(
+#     title = "Figure 7: Historical Evolution Under Counterfactual Policy (Great Recession)",
+#     subtitle = "Black: data; Beige: RANK (solid/dashed=behavioral); Red: HANK; Blue: RANK bands; Orange: semi-structural",
+#     x = "Date",
+#     y = "% Deviation"
+#   ) +
+#   theme_minimal(base_size = 14) +
+#   theme(
+#     legend.position = "bottom",
+#     panel.grid.minor = element_blank()
+#   )
+
 ggplot(df_fig7, aes(x = date)) +
   # Blue band: RANK 16th-84th percentile
   geom_ribbon(aes(ymin = rank_lb, ymax = rank_ub), fill = col_blue, alpha = 0.3) +
@@ -1594,10 +1647,44 @@ ggplot(df_fig7, aes(x = date)) +
   geom_line(aes(y = rank_med), color = col_beige, linewidth = 1.2) +
   # Beige dashed: B-RANK model median
   geom_line(aes(y = brank_med), color = col_beige, linewidth = 1, linetype = "dashed") +
+  # Black solid: actual history
+  geom_line(aes(y = history), color = col_black, linewidth = 1.2) +
+  geom_hline(yintercept = 0, color = "grey70") +
+  facet_wrap(~variable, scales = "free_y", ncol = 3) +
+  labs(
+    title = "Figure 7: Historical Evolution Under Counterfactual Policy (Great Recession) - RANK",
+    subtitle = "Black: data; Beige: RANK (dashed=behavioral); Blue: RANK bands",
+    x = "Date",
+    y = "% Deviation"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+
+ggplot(df_fig7, aes(x = date)) +
   # Red solid: HANK model median
   geom_line(aes(y = hank_med), color = col_red, linewidth = 1.2) +
   # Red dashed: B-HANK model median
-  geom_line(aes(y = bhank_med), color = col_red, linewidth = 1, linetype = "dashed") +
+  geom_line(aes(y = bhank_med), color = col_red, linewidth = 1.2, linetype = "dashed") +
+  # Black solid: actual history
+  geom_line(aes(y = history), color = col_black, linewidth = 1.2) +
+  geom_hline(yintercept = 0, color = "grey70") +
+  facet_wrap(~variable, scales = "free_y", ncol = 3) +
+  labs(
+    title = "Figure 7: Historical Evolution Under Counterfactual Policy (Great Recession) - HANK",
+    subtitle = "Black: data; Red: HANK (dashed=behavioral)",
+    x = "Date",
+    y = "% Deviation"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "bottom",
+    panel.grid.minor = element_blank()
+  )
+
+ggplot(df_fig7, aes(x = date)) +
   # Orange solid: Empirical/semi-structural median
   geom_line(aes(y = emp_med), color = col_orange, linewidth = 1.2) +
   # Black solid: actual history
@@ -1605,8 +1692,8 @@ ggplot(df_fig7, aes(x = date)) +
   geom_hline(yintercept = 0, color = "grey70") +
   facet_wrap(~variable, scales = "free_y", ncol = 3) +
   labs(
-    title = "Figure 7: Historical Evolution Under Counterfactual Policy (Great Recession)",
-    subtitle = "Black: data; Beige: RANK (solid/dashed=behavioral); Red: HANK; Blue: RANK bands; Orange: semi-structural",
+    title = "Figure 7: Historical Evolution Under Counterfactual Policy (Great Recession) - Semi-Structural",
+    subtitle = "Black: data; Orange: semi-structural",
     x = "Date",
     y = "% Deviation"
   ) +
@@ -1617,15 +1704,18 @@ ggplot(df_fig7, aes(x = date)) +
   )
 ```
 
-## 9. Figure 8: Historical Scenario (Post-COVID Inflation)
+## Figure 8: Historical Scenario (Post-COVID Inflation)
 
-Counterfactual analysis of the post-COVID inflationary episode. Since our 
-sample ends in 2019Q4, we simulate a forward-looking scenario starting from
-the last observation.
+Counterfactual projections of output, inflation, and the federal funds rate in
+the post-COVID inflationary episode, under the policy rule that minimizes the
+loss function. Following get_historical_scenario_b.m, we show:
 
-```{r figure-8-compute}
+```{r figure-8-setup}
+# Following MATLAB get_historical_scenario_b.m structure
 # Use the last date in our sample as the forecast origin
 scenario_date <- nrow(vardata_dt)
+fcst_lag <- 4   # Quarters of history to show before forecast
+fcst_hor_fig8 <- min(20, T_hor)  # Forecast horizon for plotting
 
 # Generate baseline forecast from final date
 fcst_scenario <- var_fcst(
@@ -1635,88 +1725,297 @@ fcst_scenario <- var_fcst(
 )
 
 # Variable indices: [9] Inflation, [2] Output, [10] Interest Rate
-pi_fcst <- fcst_scenario[, 9]
-y_fcst <- fcst_scenario[, 2]
-i_fcst <- fcst_scenario[, 10]
+pi_base_x <- fcst_scenario[, 9]
+y_base_x <- fcst_scenario[, 2]
+i_base_x <- fcst_scenario[, 10]
 
-cat("Baseline forecast from", date_sample[scenario_date], "\n")
-cat("  Inflation (h=0):", round(pi_fcst[1], 2), "\n")
-cat("  Output (h=0):", round(y_fcst[1], 2), "\n")
-cat("  Rate (h=0):", round(i_fcst[1], 2), "\n")
+# Historical values (for prepending to plots)
+pi_history_fig8 <- vardata_dt[, 9]
+y_history_fig8 <- vardata_dt[, 2]
+i_history_fig8 <- vardata_dt[, 10]
 
-# Compute counterfactual scenario
-n_draws_fig8 <- min(100, n_draws)
+# Date range for plotting
+plot_start_fig8 <- scenario_date - fcst_lag
+plot_dates_fig8 <- c(date_sample[plot_start_fig8:scenario_date], 
+                      date_sample[scenario_date] + (1:fcst_hor_fig8) * 0.25)
+```
 
-pi_cnfctl_scen <- matrix(NA, T_hor, n_draws_fig8)
-y_cnfctl_scen <- matrix(NA, T_hor, n_draws_fig8)
-i_cnfctl_scen <- matrix(NA, T_hor, n_draws_fig8)
+```{r figure-8-compute}
+# Compute counterfactuals for each model separately
+n_draws_fig8 <- min(1000, irfs_rank$n_draws)
 
-for (d in seq_len(n_draws_fig8)) {
-  Pi_m <- irfs_all$Pi_m[[d]]
-  Y_m <- irfs_all$Y_m[[d]]
-  I_m <- irfs_all$I_m[[d]]
+# Storage for each model
+compute_scenario_cnfctl <- function(irfs_model, pi_x, y_x, i_x, weights, n_draws) {
+  T_h <- length(pi_x)
+  pi_cnfctl <- matrix(NA, T_h, n_draws)
+  y_cnfctl <- matrix(NA, T_h, n_draws)
+  i_cnfctl <- matrix(NA, T_h, n_draws)
   
-  result <- compute_optpol(
-    pi_fcst, y_fcst, i_fcst,
-    Pi_m, Y_m, I_m,
-    weights
-  )
+  for (d in seq_len(n_draws)) {
+    Pi_m <- irfs_model$Pi_m[[d]]
+    Y_m <- irfs_model$Y_m[[d]]
+    I_m <- irfs_model$I_m[[d]]
+    
+    result <- compute_optpol(pi_x, y_x, i_x, Pi_m, Y_m, I_m, weights)
+    
+    pi_cnfctl[, d] <- result$pi_z_optpol
+    y_cnfctl[, d] <- result$y_z_optpol
+    i_cnfctl[, d] <- result$i_z_optpol
+  }
   
-  pi_cnfctl_scen[, d] <- result$pi_z_optpol
-  y_cnfctl_scen[, d] <- result$y_z_optpol
-  i_cnfctl_scen[, d] <- result$i_z_optpol
+  list(pi = pi_cnfctl, y = y_cnfctl, i = i_cnfctl)
 }
+
+# RANK counterfactual (beige)
+scen_rank <- compute_scenario_cnfctl(irfs_rank, pi_base_x, y_base_x, i_base_x, 
+                                      weights, n_draws_fig8)
+
+# HANK counterfactual (red)
+scen_hank <- compute_scenario_cnfctl(irfs_hank, pi_base_x, y_base_x, i_base_x, 
+                                      weights, n_draws_fig8)
+
+# B-RANK counterfactual (blue)
+scen_brank <- compute_scenario_cnfctl(irfs_brank, pi_base_x, y_base_x, i_base_x, 
+                                       weights, n_draws_fig8)
+
+# Semi-structural (empirical) counterfactual (orange)
+n_draws_fig8_emp <- min(1000, n_draws_emp_use)
+pi_cnfctl_emp_scen <- matrix(NA, T_hor, n_draws_fig8_emp)
+y_cnfctl_emp_scen <- matrix(NA, T_hor, n_draws_fig8_emp)
+i_cnfctl_emp_scen <- matrix(NA, T_hor, n_draws_fig8_emp)
+
+for (d in seq_len(n_draws_fig8_emp)) {
+  Pi_m <- Pi_m_emp_draws[, , d]
+  Y_m <- Y_m_emp_draws[, , d]
+  I_m <- I_m_emp_draws[, , d]
+  
+  result <- compute_optpol(pi_base_x, y_base_x, i_base_x, Pi_m, Y_m, I_m, weights)
+  
+  pi_cnfctl_emp_scen[, d] <- result$pi_z_optpol
+  y_cnfctl_emp_scen[, d] <- result$y_z_optpol
+  i_cnfctl_emp_scen[, d] <- result$i_z_optpol
+}
+
+# Compute summary statistics (median and 16/84 percentiles)
+summarize_cnfctl <- function(mat) {
+  list(
+    med = apply(mat, 1, median),
+    lb = apply(mat, 1, quantile, 0.16),
+    ub = apply(mat, 1, quantile, 0.84)
+  )
+}
+
+# RANK
+pi_rank_scen <- summarize_cnfctl(scen_rank$pi)
+y_rank_scen <- summarize_cnfctl(scen_rank$y)
+i_rank_scen <- summarize_cnfctl(scen_rank$i)
+
+# HANK
+pi_hank_scen <- summarize_cnfctl(scen_hank$pi)
+y_hank_scen <- summarize_cnfctl(scen_hank$y)
+i_hank_scen <- summarize_cnfctl(scen_hank$i)
+
+# B-RANK
+pi_brank_scen <- summarize_cnfctl(scen_brank$pi)
+y_brank_scen <- summarize_cnfctl(scen_brank$y)
+i_brank_scen <- summarize_cnfctl(scen_brank$i)
+
+# Empirical
+pi_emp_scen <- summarize_cnfctl(pi_cnfctl_emp_scen)
+y_emp_scen <- summarize_cnfctl(y_cnfctl_emp_scen)
+i_emp_scen <- summarize_cnfctl(i_cnfctl_emp_scen)
 ```
 
 ```{r figure-8-plot}
-#| fig-width: 10
-#| fig-height: 8
+#| fig-width: 12
+#| fig-height: 10
 
-# Summary statistics
-pi_scen_med <- apply(pi_cnfctl_scen, 1, median)
-pi_scen_lb <- apply(pi_cnfctl_scen, 1, quantile, 0.16)
-pi_scen_ub <- apply(pi_cnfctl_scen, 1, quantile, 0.84)
+# Colors matching MATLAB get_historical_scenario_b.m
+col_black <- "black"
+col_grey <- "#969696"
+col_beige <- "#C4AE78"
+col_lbeige <- scales::alpha(col_beige, 0.3)
+col_red <- "#CC0000"
+col_lred <- scales::alpha(col_red, 0.3)
+col_blue <- "#66B2FF"
+col_lblue <- scales::alpha(col_blue, 0.3)
+col_orange <- "#FF9933"
+col_lorange <- scales::alpha(col_orange, 0.3)
 
-y_scen_med <- apply(y_cnfctl_scen, 1, median)
-y_scen_lb <- apply(y_cnfctl_scen, 1, quantile, 0.16)
-y_scen_ub <- apply(y_cnfctl_scen, 1, quantile, 0.84)
+# Helper to build plot series with history prepended
+# hist_vals: history values to prepend
+# fcst_vals: forecast/counterfactual values (first fcst_hor_fig8 used)
+build_series <- function(hist_vals, fcst_vals, fcst_hor) {
+  c(hist_vals, fcst_vals[1:fcst_hor])
+}
 
-i_scen_med <- apply(i_cnfctl_scen, 1, median)
-i_scen_lb <- apply(i_cnfctl_scen, 1, quantile, 0.16)
-i_scen_ub <- apply(i_cnfctl_scen, 1, quantile, 0.84)
+# Historical data to prepend (fcst_lag + 1 periods ending at scenario_date)
+pi_hist <- pi_history_fig8[(scenario_date - fcst_lag):scenario_date]
+y_hist <- y_history_fig8[(scenario_date - fcst_lag):scenario_date]
+i_hist <- i_history_fig8[(scenario_date - fcst_lag):scenario_date]
 
-# Build plot data
-df_fig8 <- data.frame(
-  horizon = rep(0:(T_hor - 1), 6),
-  value = c(pi_fcst, pi_scen_med, y_fcst, y_scen_med, i_fcst, i_scen_med),
-  lower = c(rep(NA, T_hor), pi_scen_lb, rep(NA, T_hor), y_scen_lb, 
-            rep(NA, T_hor), i_scen_lb),
-  upper = c(rep(NA, T_hor), pi_scen_ub, rep(NA, T_hor), y_scen_ub,
-            rep(NA, T_hor), i_scen_ub),
-  type = rep(c("Baseline Forecast", "Counterfactual"), each = T_hor, times = 3),
-  variable = rep(c("Inflation", "Output Gap", "Interest Rate"), each = 2 * T_hor)
+# Baseline VAR forecast (prepend history, then forecast)
+pi_base_plot <- build_series(pi_hist, pi_base_x, fcst_hor_fig8)
+y_base_plot <- build_series(y_hist, y_base_x, fcst_hor_fig8)
+i_base_plot <- build_series(i_hist, i_base_x, fcst_hor_fig8)
+
+# History line (history part, then NaN for forecast period)
+pi_hist_plot <- c(pi_hist, rep(NA, fcst_hor_fig8))
+y_hist_plot <- c(y_hist, rep(NA, fcst_hor_fig8))
+i_hist_plot <- c(i_hist, rep(NA, fcst_hor_fig8))
+
+# Build counterfactual series (prepend history to counterfactual)
+build_cnfctl_series <- function(hist_vals, cnfctl_summary, fcst_hor) {
+  n_hist <- length(hist_vals)
+  list(
+    med = c(hist_vals, cnfctl_summary$med[1:fcst_hor]),
+    lb = c(hist_vals, cnfctl_summary$lb[1:fcst_hor]),
+    ub = c(hist_vals, cnfctl_summary$ub[1:fcst_hor])
+  )
+}
+
+# RANK series
+pi_rank_plot <- build_cnfctl_series(pi_hist, pi_rank_scen, fcst_hor_fig8)
+y_rank_plot <- build_cnfctl_series(y_hist, y_rank_scen, fcst_hor_fig8)
+i_rank_plot <- build_cnfctl_series(i_hist, i_rank_scen, fcst_hor_fig8)
+
+# HANK series
+pi_hank_plot <- build_cnfctl_series(pi_hist, pi_hank_scen, fcst_hor_fig8)
+y_hank_plot <- build_cnfctl_series(y_hist, y_hank_scen, fcst_hor_fig8)
+i_hank_plot <- build_cnfctl_series(i_hist, i_hank_scen, fcst_hor_fig8)
+
+# B-RANK series
+pi_brank_plot <- build_cnfctl_series(pi_hist, pi_brank_scen, fcst_hor_fig8)
+y_brank_plot <- build_cnfctl_series(y_hist, y_brank_scen, fcst_hor_fig8)
+i_brank_plot <- build_cnfctl_series(i_hist, i_brank_scen, fcst_hor_fig8)
+
+# Empirical series
+pi_emp_plot <- build_cnfctl_series(pi_hist, pi_emp_scen, fcst_hor_fig8)
+y_emp_plot <- build_cnfctl_series(y_hist, y_emp_scen, fcst_hor_fig8)
+i_emp_plot <- build_cnfctl_series(i_hist, i_emp_scen, fcst_hor_fig8)
+
+# Create 3x3 grid of plots
+n_pts <- length(plot_dates_fig8)
+
+# Build long-format data frame for faceting
+# Row 1: RANK vs HANK
+# Row 2: RANK vs B-RANK
+# Row 3: Semi-structural only
+
+df_fig8 <- rbind(
+  # Row 1: RANK vs HANK - Output
+  data.frame(date = plot_dates_fig8, history = y_hist_plot, baseline = y_base_plot,
+             model1_med = y_rank_plot$med, model1_lb = y_rank_plot$lb, model1_ub = y_rank_plot$ub,
+             model2_med = y_hank_plot$med, model2_lb = y_hank_plot$lb, model2_ub = y_hank_plot$ub,
+             row = "RANK vs HANK", variable = "Output"),
+  # Row 1: RANK vs HANK - Inflation
+  data.frame(date = plot_dates_fig8, history = pi_hist_plot, baseline = pi_base_plot,
+             model1_med = pi_rank_plot$med, model1_lb = pi_rank_plot$lb, model1_ub = pi_rank_plot$ub,
+             model2_med = pi_hank_plot$med, model2_lb = pi_hank_plot$lb, model2_ub = pi_hank_plot$ub,
+             row = "RANK vs HANK", variable = "Inflation"),
+  # Row 1: RANK vs HANK - Interest Rate
+  data.frame(date = plot_dates_fig8, history = i_hist_plot, baseline = i_base_plot,
+             model1_med = i_rank_plot$med, model1_lb = i_rank_plot$lb, model1_ub = i_rank_plot$ub,
+             model2_med = i_hank_plot$med, model2_lb = i_hank_plot$lb, model2_ub = i_hank_plot$ub,
+             row = "RANK vs HANK", variable = "Interest Rate"),
+  
+  # Row 2: RANK vs B-RANK - Output
+  data.frame(date = plot_dates_fig8, history = y_hist_plot, baseline = y_base_plot,
+             model1_med = y_rank_plot$med, model1_lb = y_rank_plot$lb, model1_ub = y_rank_plot$ub,
+             model2_med = y_brank_plot$med, model2_lb = y_brank_plot$lb, model2_ub = y_brank_plot$ub,
+             row = "RANK vs B-RANK", variable = "Output"),
+  # Row 2: RANK vs B-RANK - Inflation
+  data.frame(date = plot_dates_fig8, history = pi_hist_plot, baseline = pi_base_plot,
+             model1_med = pi_rank_plot$med, model1_lb = pi_rank_plot$lb, model1_ub = pi_rank_plot$ub,
+             model2_med = pi_brank_plot$med, model2_lb = pi_brank_plot$lb, model2_ub = pi_brank_plot$ub,
+             row = "RANK vs B-RANK", variable = "Inflation"),
+  # Row 2: RANK vs B-RANK - Interest Rate
+  data.frame(date = plot_dates_fig8, history = i_hist_plot, baseline = i_base_plot,
+             model1_med = i_rank_plot$med, model1_lb = i_rank_plot$lb, model1_ub = i_rank_plot$ub,
+             model2_med = i_brank_plot$med, model2_lb = i_brank_plot$lb, model2_ub = i_brank_plot$ub,
+             row = "RANK vs B-RANK", variable = "Interest Rate"),
+  
+  # Row 3: Semi-structural - Output
+  data.frame(date = plot_dates_fig8, history = y_hist_plot, baseline = y_base_plot,
+             model1_med = y_emp_plot$med, model1_lb = y_emp_plot$lb, model1_ub = y_emp_plot$ub,
+             model2_med = NA, model2_lb = NA, model2_ub = NA,
+             row = "Semi-structural", variable = "Output"),
+  # Row 3: Semi-structural - Inflation
+  data.frame(date = plot_dates_fig8, history = pi_hist_plot, baseline = pi_base_plot,
+             model1_med = pi_emp_plot$med, model1_lb = pi_emp_plot$lb, model1_ub = pi_emp_plot$ub,
+             model2_med = NA, model2_lb = NA, model2_ub = NA,
+             row = "Semi-structural", variable = "Inflation"),
+  # Row 3: Semi-structural - Interest Rate
+  data.frame(date = plot_dates_fig8, history = i_hist_plot, baseline = i_base_plot,
+             model1_med = i_emp_plot$med, model1_lb = i_emp_plot$lb, model1_ub = i_emp_plot$ub,
+             model2_med = NA, model2_lb = NA, model2_ub = NA,
+             row = "Semi-structural", variable = "Interest Rate")
 )
 
-df_fig8$variable <- factor(df_fig8$variable, 
-                            levels = c("Inflation", "Output Gap", "Interest Rate"))
+df_fig8$row <- factor(df_fig8$row, levels = c("RANK vs HANK", "RANK vs B-RANK", "Semi-structural"))
+df_fig8$variable <- factor(df_fig8$variable, levels = c("Output", "Inflation", "Interest Rate"))
 
-ggplot(df_fig8, aes(x = horizon)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), fill = "coral", alpha = 0.5) +
-  geom_line(aes(y = value, color = type, linetype = type), linewidth = 1) +
-  geom_hline(yintercept = 0, linetype = "dashed", alpha = 0.5) +
-  facet_wrap(~variable, scales = "free_y", ncol = 1) +
-  scale_color_manual(values = c("Baseline Forecast" = "black", 
-                                  "Counterfactual" = "coral")) +
-  scale_linetype_manual(values = c("Baseline Forecast" = "dashed", 
-                                    "Counterfactual" = "solid")) +
-  labs(
-    title = "Figure 8: Counterfactual Scenario Analysis",
-    subtitle = paste0("Forecast from ", date_sample[scenario_date], 
-                       ". Dashed = Baseline, Solid = Optimal policy (median with 68% bands)"),
-    x = "Quarters ahead",
-    y = "Percent",
-    color = "", linetype = ""
-  ) +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+# Since colors differ by row, we need separate plots per row
+library(patchwork)
+
+# Function to create one row of plots
+create_row_plot <- function(df_row, row_name, col_m1, col_lm1, col_m2, col_lm2, 
+                             show_model2 = TRUE) {
+  p <- ggplot(df_row, aes(x = date)) +
+    # Model 1 band
+    geom_ribbon(aes(ymin = model1_lb, ymax = model1_ub), fill = col_lm1, na.rm = TRUE) +
+    # Model 1 median
+    geom_line(aes(y = model1_med), color = col_m1, linewidth = 1.2, na.rm = TRUE)
+  
+  if (show_model2) {
+    p <- p +
+      # Model 2 band
+      geom_ribbon(aes(ymin = model2_lb, ymax = model2_ub), fill = col_lm2, na.rm = TRUE) +
+      # Model 2 median
+      geom_line(aes(y = model2_med), color = col_m2, linewidth = 1.2, na.rm = TRUE)
+  }
+  
+  p <- p +
+    # Grey dashed: VAR baseline forecast
+    geom_line(aes(y = baseline), color = col_grey, linetype = "dashed", linewidth = 1.2) +
+    # Black solid: history
+    geom_line(aes(y = history), color = col_black, linewidth = 1.2, na.rm = TRUE) +
+    geom_hline(yintercept = 0, color = "grey70") +
+    facet_wrap(~variable, scales = "free_y", ncol = 3) +
+    labs(subtitle = row_name, x = "Date", y = "% Deviation") +
+    theme_minimal(base_size = 12) +
+    theme(panel.grid.minor = element_blank())
+  
+  p
+}
+
+# Row 1: RANK (beige) vs HANK (red)
+p_row1 <- create_row_plot(
+  df_fig8[df_fig8$row == "RANK vs HANK", ],
+  "RANK (beige) vs HANK (red)",
+  col_beige, col_lbeige, col_red, col_lred, show_model2 = TRUE
+)
+
+# Row 2: RANK (beige) vs B-RANK (blue)
+p_row2 <- create_row_plot(
+  df_fig8[df_fig8$row == "RANK vs B-RANK", ],
+  "RANK (beige) vs B-RANK (blue)",
+  col_beige, col_lbeige, col_blue, col_lblue, show_model2 = TRUE
+)
+
+# Row 3: Semi-structural (orange)
+p_row3 <- create_row_plot(
+  df_fig8[df_fig8$row == "Semi-structural", ],
+  "Semi-structural (orange)",
+  col_orange, col_lorange, NA, NA, show_model2 = FALSE
+)
+
+# Combine rows
+(p_row1 / p_row2 / p_row3) +
+  plot_annotation(
+    title = "Figure 8: Counterfactual Projections Under Optimal Policy",
+    subtitle = paste0("Post-", date_sample[scenario_date], " scenario. ",
+                       "Black: history. Grey dashed: VAR baseline. ",
+                       "Colored: posterior median with 68% bands.")
+  )
 ```
