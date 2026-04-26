@@ -1,0 +1,6 @@
+cmw26-replication/var_inputs
+cmw26-replication/suff_stats
+documents
+cmw26-replication/*.rds
+*.pdf
+*.zip
