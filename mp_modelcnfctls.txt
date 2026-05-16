@@ -1,0 +1,3796 @@
+Evaluating Monetary Policy Counterfactuals:
+(When) Do We Need Structural Models?†
+Tomás E. Caravello Alisdair McKay Christian K. Wolf
+MIT
+
+FRB Minneapolis
+
+MIT & NBER
+
+March 4, 2026
+Abstract: To evaluate the evolution of the macro-economy under counterfactual assumptions on monetary policy, it suffices, under weak structural assumptions, to know the causal effects of monetary shocks on macroeconomic outcomes.
+The existing empirical literature estimates the effects of monetary policy shocks
+to the short end of the yield curve, allowing the evaluation of counterfactuals that
+change assumptions on near-term policy. If the contemplated policy changes are
+instead more persistent, then model structure becomes necessary, for one purpose: to extrapolate from the estimated policy effects to those of monetary shocks
+further out on the yield curve. Among popular structural models of monetary
+policy transmission, household heterogeneity (as in the “HANK” literature) does
+not change this extrapolation much, while behavioral frictions do.
+Keywords: Monetary policy, policy shocks, counterfactuals, impulse response matching, Lucas critique, invertibility. JEL codes: E32, E61.
+
+†
+
+Email: tomasec@mit.edu, alisdair.mckay@mpls.frb.org and ckwolf@mit.edu. We received helpful
+comments from Marios Angeletos, Régis Barnichon, Francesco Bianchi, Luigi Bocola, Ricardo Caballero,
+Gabriel Chodorow-Reich, Marco Del Negro, Martin Eichenbaum, Xavier Gabaix, Simon Gilchrist, Cosmin
+Ilut, Geert Mesters, Mikkel Plagborg-Møller, Giorgio Primiceri, Valerie Ramey, Matt Rognlie, Karthik Sastry,
+Ben Schumann, Ludwig Straub, Iván Werning, and seminar participants at various venues. We also thank
+Seungki Hong, Klodiana Istrefi, and Diego Känzig for valuable discussions, and Valeria Morales Vasquez
+for superb research assistance. Wolf acknowledges that this material is based upon work supported by the
+NSF under Grant #2314736. Any opinions, findings, and conclusions or recommendations expressed in this
+material are those of the authors and do not necessarily reflect the views of the NSF, the Federal Reserve
+Bank of Minneapolis, or the Federal Reserve System.
+
+1
+
+1
+
+Introduction
+
+A central challenge in monetary economics is how to construct credible counterfactuals for
+alternative policy regimes. Following Lucas (1976), the standard way to evaluate such counterfactuals has been to build a micro-founded model of macroeconomic fluctuations, change
+monetary policy in that model, and re-solve. A different tradition, going back to Sims (1980),
+instead directly leverages empirical evidence associated with historical policy variation. Recent work (see McKay and Wolf, 2023; Barnichon and Mesters, 2023) has demonstrated that
+such reduced-form evidence on the causal effects of policy can actually suffice to construct
+valid, so-called “semi-structural,” policy regime counterfactuals. That approach is inherently limited, however, by data constraints: for some counterfactuals of interest, the existing
+evidence on policy causal effects will be insufficient to allow accurate evaluation.
+In this paper we build a bridge between these two traditions, introducing a hybrid strategy
+that uses as much reduced-form empirical evidence as possible, and supplements it with the
+minimal structure necessary to evaluate any given policy counterfactual. In the context
+of monetary policy, the semi-structural approach requires estimates of the causal effects of
+changes in monetary policy at all horizons, i.e., across the entire yield curve. As we show, this
+is not what the existing empirical “policy shock” literature delivers, as it chiefly estimates the
+effects of transitory interest rate changes. This limitation of the available variation implies a
+role for structural models as tools for extrapolating beyond the observed support of the data
+to the other policy changes whose effects we cannot estimate. Our hybrid strategy builds on
+these insights, taking the available policy causal effects from the data, and then using model
+structure for the sole purpose of causal effect extrapolation, and nothing else.
+We apply our strategy to a series of monetary policy counterfactuals, with the effects of
+transitory policy rate changes pinned down by the data, and using frontier models of monetary transmission—with or without household heterogeneity, and with or without behavioral
+frictions—for extrapolation. We first evaluate the accuracy of the pure semi-structural approach vis-à-vis our more general hybrid approach. In two of our three applications we find
+them to actually be relatively close, revealing that the data constraints on the semi-structural
+approach are only weakly binding. In the remaining application—in which extrapolation does
+play a key role—we explore what features of our extrapolating models are most important in
+shaping the reported counterfactuals. Focusing on macroeconomic aggregates, we show that
+market incompleteness and household heterogeneity are, perhaps surprisingly, unimportant.
+Assumptions about private-sector expectation formation are, in contrast, crucial.
+
+2
+
+Why policy causal effects suffice. Our analysis builds upon recent advances in
+the literature on the “semi-structural” approach. The object of interest is the counterfactual
+evolution of the macro-economy under alternative monetary policy rules, both on average, for
+how the “typical” business cycle would have unfolded, and for particular historical episodes.
+McKay and Wolf (2023) establish that, across a relatively general family of linearized structural macroeconomic models, these policy counterfactuals are pinned down by just two “sufficient statistics.” The first one are policy causal effects; for monetary policy, those are the
+effects of current and expected future policy rate changes on the macro-economy. The second one are reduced-form projections: impulse responses to Wold innovations for the average
+business cycle, and forecasts for conditional historical counterfactuals.
+In theory, the required projections need to be formed with respect to an information set
+that spans the entire history of the primitive shocks hitting the macro-economy—the clearly
+formidable assumption of “invertibility.” The first contribution of this paper is to argue theoretically and through simulations that even projections with respect to small information sets
+can deliver highly accurate counterfactuals; all that matters is that those information sets
+contain the main predictors for the macroeconomic outcomes of interest, i.e., approximate
+“oracle” forecasts (cf. Barnichon and Mesters, 2023). This preliminary discussion substantiates the premise of our main analysis: that, for monetary policy counterfactual evaluation,
+the only missing piece are the dynamic causal effects of changes in the policy rate. The rest
+of the paper develops our hybrid strategy to learn about those causal effects.
+Empirical evidence. We review the available empirical evidence on monetary policy
+shock propagation, and argue that it primarily pins down the causal effects of interest rate
+changes concentrated at the short end of the yield curve. In principle, each empirically
+identified monetary policy shock may capture a different “treatment”—some may only revise
+the policy rate today, while others may involve more persistent changes. In practice, however,
+that is unfortunately not the case, with most of the available data variation speaking only to
+the causal effects of relatively transitory policy rate changes. Two representative examples
+are Romer and Romer (2004), who estimate the effects of a very short-lived change in policy
+rates, and then the more recent refinement in Aruoba and Drechsel (2024), whose shock series
+has somewhat more persistent effects, consistent with the increased gradualism in monetary
+policy practice over recent years. Many other recently popular monetary policy shock series,
+e.g., like those of Gertler and Karadi (2015) or of Miranda-Agrippino and Ricco (2023), also
+behave similarly. Even the “forward guidance” disturbance in Swanson (2024) only leads to
+
+3
+
+relatively transitory revisions of the expected short-run interest rate path.
+Taking stock, we see that empirical evidence alone—in terms of reduced-form projections
+plus identified policy causal effects—may fall short of allowing monetary policy counterfactual evaluation for one important reason: historical data is relatively uninformative about
+the causal effects of more delayed or persistent changes in rates. We thus now turn to
+additional structural assumptions to substitute for that missing data variation.
+Causal effect extrapolation. Having established the singular role that model structure plays in our analysis, we next ask what features of such structure matter most to substitute for the missing pieces of empirical variation. Calculating monetary policy causal effects
+requires a model of how interest rates transmit to the macro-economy; it does not, however,
+require any statements about the disturbances hitting the economy, or about the monetary
+policy rule itself. An analogy is instructive to understand why: in a simple static model of
+demand and supply, to predict the price change induced by a given change in the quantity
+demanded, it suffices to know the slope of supply; knowledge of the slope of demand, or of
+shocks to either demand or supply, is not necessary. These observations reveal that some
+of the assumptions routinely made—and routinely criticized, see Chari et al. (2009)—in the
+quantitative DSGE literature are actually not necessary for policy counterfactual evaluation.
+We will elaborate further on this observation in the literature review.
+To achieve the required extrapolation we consider several frontier quantitative models of
+the transmission of interest rate policy to macroeconomic outcomes. Specifically, we study
+structural models rich enough to be consistent with the empirical evidence for transitory rate
+changes reviewed above, and then ask how they extrapolate to the missing causal effects of
+persistent rate changes. Consistent with prior work, we document that representative-agent
+(RANK) and heterogeneous-agent (HANK) models alike can match the available evidence
+on transitory monetary shocks. We then show that, once the two models are disciplined in
+this way, they will also largely agree on the unknown effects of highly persistent or delayed
+policy changes. Intuitively, while it is well-known that market incompleteness can in principle
+dampen or amplify monetary policy propagation (e.g., see the discussion in Auclert, 2019),
+our insistence on identical short-end effects means that any heterogeneity-related channels
+largely offset, delivering as-if aggregation that echoes the prior analytical results in Werning
+(2015). In particular we find that, in both models, short-run economic conditions are highly
+sensitive to assumptions about far-ahead nominal interest rates. This contrasts sharply with
+alternative models featuring strong behavioral frictions in the expectations of price setters
+
+4
+
+(e.g., as in Gabaix, 2020). We show that such models can be similarly consistent with the
+available short-end empirical evidence, but instead predict much weaker effects of far-ahead
+policy rate changes, in particular on near-term inflation. This centrality of expectations
+echoes earlier insights from the “forward guidance puzzle” literature.
+The hybrid method. Putting the pieces of the previous analysis together, we now have
+all ingredients in place to evaluate a large class of monetary policy counterfactuals: reducedform projections using relevant information sets; the causal effects of more transitory policy
+rate changes obtained from data; and the causal effects of delayed or persistent rate changes
+as implied by different sets of frontier quantitative models of monetary policy transmission.
+We consider three such monetary policy counterfactual questions.
+1. We ask whether monetary policy could have reduced the volatility of output and inflation
+over a post-war sample period. Our analysis suggests that substantial volatility reductions
+for output would have been feasible, with limited effect on inflation volatility.
+2. We study how the Great Recession would have evolved in the counterfactual absence of a
+binding lower bound on nominal interest rates. We find that a standard “dual mandate”
+central bank would have liked to reduce interest rates substantially into negative territory,
+suggesting that the implemented unconventional policy measures were insufficient.
+We find that, for both of these policy counterfactuals, our reported conclusions are chiefly
+governed by changes in monetary policy conduct at the short end of the yield curve. Approximating the same counterfactuals using empirical evidence alone—i.e., the “best linear
+approximation” strategy of McKay and Wolf (2023)—thus unsurprisingly delivers quite similar results. This is the first major applied message of the present paper: when the hypothesized monetary policy counterfactual is chiefly about assumptions on monetary policy in the
+near-term, then the conclusions of the pure semi-structural approach do not change much
+as we relax data constraints through structural extrapolation.
+3. We evaluate monetary policy options after the summer of 2021, when inflation had started
+to accelerate. Under our estimated reduced-form projections the inflation spike is expected
+to be quite persistent, and so assumptions about the effects of longer-horizon changes in
+monetary policy now take center stage. In counterfactuals based on extrapolation through
+standard RANK and HANK models, the policymaker can use forward guidance to steer
+inflation expectations, reducing current inflation at little to no cost to output in the short
+run. With behavioral discounting among price-setters, this strategy is instead ineffective.
+5
+
+This application reveals the second major applied message: when the contemplated monetary policy counterfactual is such that model-based extrapolation matters, then, at least for
+the aggregate questions studied here, whether that extrapolation happens through RANK
+or HANK is largely immaterial, while the strength of behavioral frictions is crucial. Relating
+to ongoing debates in the literature, our analysis reveals that differences in transmission
+channels—the direct-indirect dichotomy prominently stressed by Kaplan et al. (2018)—may
+actually not matter at all for aggregate dynamics.
+Literature. Situated in between the “semi-structural” and the model-based approaches
+to policy counterfactual evaluation, our analysis contributes to the literatures on both traditions. Relative to the semi-structural literature (which also includes Hebden and Winkler,
+2021; De Groot et al., 2021; Barnichon and Mesters, 2024), we make three main contributions, all in the specific context of monetary policy counterfactual evaluation. First, we show
+when the tools of that semi-structural literature already suffice. Second, we clarify what exact model structure is necessary to substitute for any missing empirical variation. And third,
+we discuss what features of model structure play the biggest role in that substitution. The
+extrapolation commonality between RANK and HANK is reminiscent of sufficient statistics
+results of the recent trade and New Keynesian pricing literatures (e.g., see Arkolakis et al.,
+2012; Auclert et al., 2022), and suggests that future structural work should perhaps re-orient
+and focus on behavioral frictions instead (e.g., à la Gabaix, 2020).
+In terms of model-based counterfactual analyses, the standard strategy is to leverage complete general equilibrium models estimated via full-information, likelihood-based approaches
+(e.g., see Smets and Wouters, 2007; Bocola et al., 2024). Relative to this strategy, our hybrid
+approach has two main appeals. First, whenever the empirical evidence alone suffices, it automatically only uses that data, with the modeling structure playing no role. And second,
+because of the underlying “sufficient statistics” results, our approach is transparent, revealing exactly what features of modeling structure supplement the data to deliver any given
+conclusion. This transparency is illustrated by our third application here and by Angeletos
+et al. (2025), who leverage our method. That said, our insights are also useful for those who,
+perhaps for efficiency reasons, prefer to stick to likelihood-based estimation methods. Such
+researchers can check whether their estimated model matches reduced-form second moments
+and delivers empirically sensible policy causal effects; if so, even if the rest of the model is
+arbitrarily misspecified (e.g., because shocks are “dubiously structural”, Chari et al., 2009),
+their conclusions for the counterfactuals covered by our results are necessarily valid.
+
+6
+
+2
+
+Why policy causal effects suffice
+
+We begin with a brief discussion of why policy causal effects are the central required input for
+policy counterfactual evaluation. That analysis will provide an important “building block,”
+allowing the remainder of the paper to focus on how we can learn about those causal effects
+in the context of monetary policy.
+Section 2.1 mainly reviews and somewhat extends the “sufficient statistics” identification
+results of the semi-structural literature. A first novel contribution then follows in Section 2.2,
+where we establish why, for purposes of policy counterfactual evaluation, the required “invertibility” assumption is actually relatively innocuous.
+
+2.1
+
+Identification results
+
+We begin with a sketch of the policy counterfactual identification results. While the notation
+is purposefully general, we will connect to our monetary policy focus when appropriate.
+We refer the reader to McKay and Wolf (2023) for a detailed discussion of the scope and
+limitations of the model setting; for our purposes, it suffices to note that typical linearized
+business-cycle models—from representative-agent New Keynesian models (Christiano et al.,
+2005; Smets and Wouters, 2007), to heterogeneous-agent environments (à la Kaplan et al.,
+2018), and also including certain models with behavioral frictions (e.g., like Gabaix, 2020)—
+are all nested in the general environment considered here.
+Environment. We consider a stochastic economy that admits representation as a general
+structural vector moving average process (SVMA):
+yt =
+
+∞
+X
+
+Θℓ εt−ℓ .
+
+(1)
+
+ℓ=0
+
+yt is a vector of macroeconomic aggregates, the aggregate shocks εt are distributed as εt ∼
+N (0, I), and the ny ×nε -dimensional matrices Θℓ denote the impulse response of yt at horizon
+ℓ to a date-t vector of shocks εt . In the following, the notation Et [•] will be reserved for
+expectations conditioning on the sequence of shocks {εt−ℓ }∞
+ℓ=0 up to date t.
+Leveraging the equivalence between linearized systems with aggregate risk and perfectforesight transition paths, we obtain the impulse responses Θℓ as solutions of a linear, perfectforesight, infinite-horizon economy. Below boldface denotes time paths for t = 0, 1, 2, . . . ,
+
+7
+
+and all variables are expressed in deviations from the deterministic steady state. The perfectforesight system is
+Hww + Hxx + Hzz + He e0 = 0 ,
+
+(2)
+
+Axx + Azz + Av v0 = 0 .
+
+(3)
+
+Here xt and wt are nx - and nw -dimensional vectors of endogenous variables, respectively, zt is
+an nz -dimensional vector of policy instruments, et is an ne -dimensional vector of exogenous
+structural shocks, vt is an nv -dimensional vector of policy shocks, and we write yt = (x′t , zt′ )′ ,
+εt = (e′t , vt′ )′ .1 The distinction between w and x is that the x’s are observable to the econometrician while the w’s are not. Equation (2) summarizes the nx + nw -dimensional non-policy
+block of the model, with {Hw , Hx , Hz , He } embedding private-sector relations. Equation (3)
+is the policy rule, with the policy instrument z set as a function of x and v. In the monetary
+policy applications considered in the remainder of this paper, z will be the policy rate, and
+x will typically include measures of aggregate output and inflation.2
+Given the date-0 shocks {e0 , v0 }, impulse responses are sets of bounded sequences {w , x , z }
+that solve (2) - (3). We assume that this solution exists and is unique, and write it as
+yℓ = Θℓ · ε0 .
+Stacked together, those perfect-foresight mappings from date-0 shocks to date-ℓ outcomes
+deliver the SVMA(∞) representation (1).
+Objects of interest. We wish to study the evolution of the economy if policy were
+instead, and counterfactually, set as
+Ãxx + Ãzz = 0
+
+(4)
+
+rather than (3). From here we recover the counterfactual SVMA process
+ỹt =
+
+∞
+X
+
+Θ̃ℓ εt−ℓ ,
+
+(5)
+
+ℓ=0
+
+The boldface vectors {w , x , z } stack time paths for all variables (e.g., x = (x ′1 , . . . , x ′nx )′ ). The maps
+{Hw , Hx , Hz , He } and {Ax , Az , Av } are conformable and map bounded sequences into bounded sequences.
+2
+In this application, the fiscal policy rule—which will be held fixed in our counterfactual analysis—would
+actually be part of the “non-policy” block (2).
+1
+
+8
+
+with the convention that εt = et , and where the shock impulse responses Θ̃ℓ are derived from
+the solution of the perfect-foresight system (2) together with (4), assuming again equilibrium
+existence and uniqueness.
+We are interested in the effects of the counterfactual policy change both unconditionally,
+for the “average” business cycle, as well as conditionally, for particular historical episodes.
+The counterfactual properties of the average cycle are, in our stationary setting, fully summarized by the autocovariance function of ỹt , given as
+Γ̃y (ℓ) =
+
+∞
+X
+
+Θ̃m Θ̃′m+ℓ .
+
+(6)
+
+m=0
+
+For specific historical episodes, the counterfactual evolution of the economy is instead directly
+given by the counterfactual process (5), with the actual history of shocks {εt−ℓ }∞
+ℓ=0 now
+∞ 3
+propagating according to the counterfactual impulse responses {Θ̃ℓ }ℓ=0 .
+Identification results. We now state the identification results, establishing that our
+objects of interest are, in the general model class sketched above, pinned down by just two
+“sufficient statistics”: policy causal effects and reduced-form projections.
+Policy causal effects are the impulse responses of shocks to the policy instrument z at all
+possible horizons. To define these effects consider the following generalized policy rule:
+Axx + Azz + ν = 0 .
+
+(3’)
+
+While the actual policy rule (3) is subject only to the nv -dimensional vector of policy shocks
+v0 (which may be low-dimensional, or in fact even empty), the policy shock vector ν in the
+artificial rule (3’) is instead unrestricted—i.e., we allow for arbitrarily flexible wedges in the
+policy rule at each date t = 0, 1, 2, . . . . Analogously to the discussion above, the solution of
+(2) - (3’) given an arbitrary policy shock vector ν alone yields
+y = Θν · ν .
+Θν is the space of y-allocations implementable through policy shocks—i.e., the paths of macro
+3
+
+For conditional counterfactuals, matters are actually slightly more complicated than stated in the main
+text if we contemplate a policy switch that begins at some given date t∗ (rather than the infinite past). If
+that is so, and if the economy was not at the deterministic steady state at t∗ − 1, then the process (5) needs
+to be augmented with suitable initial conditions. We provide a precise discussion in Appendix A.1.
+
+9
+
+aggregates corresponding to any possible time path of the policy instrument.4 For example, in
+our monetary policy applications below, Θν is the space of paths of macroeconomic outcomes
+x (e.g., of aggregate output and inflation) that is implementable through all possible paths
+of nominal interest rates z; i.e., through monetary policy shocks at every single point along
+the yield curve, from the short end to the long end.
+The required reduced-form projections are a function of the Wold representation of yt
+under the actual (not counterfactual) prevailing policy rule, given as
+yt =
+
+∞
+X
+
+Ψℓ ut−ℓ ,
+
+(7)
+
+ℓ=0
+
+where u†t ≡ yt − E (yt | {yτ }−∞<τ ≤t−1 ) denotes one-step-ahead forecast errors under the baseline SVMA (1), Var(u†t ) = Σu , and ut ≡ chol(Σu )−1 u†t are orthogonalized Wold innovations,
+with Var(ut ) = I and chol(•) giving the lower-triangular Cholesky factor.
+The identification result now states that, under the additional assumption of invertibility,
+these two objects actually suffice to recover all of our policy counterfactuals of interest. We
+note that the first part of this result—for unconditional business cycles—is already contained
+in McKay and Wolf (Appendix A.5, 2023), while the arguments for the conditional episodes
+are new to the present paper. After stating the proposition, we briefly discuss its intuition,
+before then, in the next section, turning to our first material contribution—an in-depth
+investigation of the role of the invertibility assumption.
+Proposition 1. Suppose that the SVMA(∞) process (1) is invertible; i.e., that
+εt ∈ span({yτ }−∞<τ ≤t ).
+
+(8)
+
+Then knowledge of policy causal effects, Θν , together with the Wold representation of yt , (7),
+suffices to evaluate the counterfactual SVMA process ỹt (5) and construct the counterfactual
+autocovariance function (6).
+Proof. Please see Appendix A.2.
+The reduced-form projections, encapsulated in the Wold representation of the data yt ,
+are shaped by both the actual in-sample policy rule (3) together with the structural shocks
+4
+
+Θν here is defined through shocks to the particular rule in (3’). As discussed in McKay and Wolf (2023),
+this choice of rule is immaterial—Θν could be defined through shocks to an alternative determinacy-inducing
+policy rule, and all subsequent results would go through unchanged.
+
+10
+
+εt hitting the economy. Knowing the causal effects of policy, as encapsulated in the matrix
+Θν , then allows us to do two things: first, strip out the effects of the in-sample policy; and
+second, add back in the hypothesized counterfactual policy. The formal proof of Proposition 1
+leverages this intuition as follows. It begins with the reduced-form Wold innovations ut and
+their impulse responses Ψ(L); by invertibility, those innovations span the history of the true
+structural shocks {εt−ℓ }∞
+ℓ=0 , ensuring that Wold shocks and impulse responses capture all the
+relevant primitives of the economy. The second step is to use the policy causal effects Θν to
+assess how the reduced-form innovations ut would have propagated under a counterfactual
+policy rule, i.e., to map the actual reduced-form impulse responses Ψ(L) into counterfactual
+responses Ψ̃(L). Implicitly, this steps removes the effects of the actual policy and adds in
+the effects of the new policy, turning actual into counterfactual Wold representation. With
+that representation in hand, all counterfactuals of interest can be evaluated.
+Invertibility played an important role in the above argument sketch, ensuring that indeed
+the reduced-form Wold representation captured all date-t information relevant for the future
+evolution of the macro-economy. The next section digs deeper into that assumption.
+
+2.2
+
+Invertibility and forecasting
+
+The assumption of invertibility underlying Proposition 1 is undoubtedly strong, failing for
+example if there are more shocks than observables, or if shocks have strong news or noise
+components (see Fernández-Villaverde et al., 2007). While standard since Sims (1980), this
+assumption has been criticized in the recent literature on estimating macroeconomic shocks
+and their propagation (see the references in Plagborg-Møller and Wolf, 2022). We instead will
+argue here that, for our specific purposes, the invertibility assumption is actually relatively
+innocuous, in the precise sense that simple reduced-form techniques suffice to inoculate our
+analysis against the threats associated with a failure of invertibility.
+The remainder of the section makes the argument in two steps, first by digging deeper
+theoretically into the role played by invertibility, and then through quantitative simulations
+illustrating those insights.
+The actual role of invertibility. In the classic macroeconometrics literature on
+structural shock identification, the role of invertibility is to ensure that the shock of interest
+can be obtained as a linear combination of the reduced-form Wold innovations. For Proposition 1, invertibility instead plays a very different role: it ensures that forecasts based on
+the econometrician information set—the history of observed macroeconomic aggregates—are
+11
+
+equal to full-information, “oracle” forecasts (Barnichon and Mesters, 2023). Intuitively, once
+that is the case, we can use knowledge of policy causal effects to solely change assumptions
+on policy, otherwise fixing the underlying primitive state of the economy. We formalize this
+intuition in Appendix A.3, where we establish that the Wold representation of yt suffices for
+policy evaluation if and only if the forecasts it implies equal full-information forecasts.5
+The key implication of the preceding discussion is that, in the context of Proposition 1, invertibility is sufficient but not necessary. Formally, even significant violations of invertibility
+may not threaten our ability to arrive at correct counterfactuals—what matters is to ensure
+that Wold projections are formed with respect to an information set that does not omit any
+relevant predictors of the macroeconomic outcomes of interest, and thus correctly captures
+the date-t information relevant for the future evolution of the economy. In the remainder of
+this section we illustrate this theoretical observation with model-based simulations.
+Simulation evidence. For our illustrations we use a particular structural model—the
+medium-scale DSGE model of Smets and Wouters (2007)—as an artificial laboratory. We
+then consider a researcher that wishes to predict the second moment properties of output,
+inflation, and nominal interest rates in this model economy under an alternative monetary
+rule that puts a larger weight on output stabilization. Since the true data-generating process
+is unknown to the researcher, she leverages Proposition 1. Consistent with the focus of this
+section, we assume that she does know the true matrix of policy causal effects Θν , but then
+relies on information sets {yt−ℓ }∞
+ℓ=0 that are (potentially) insufficient to deliver invertibility.
+Specifically, we will consider four information sets: interest rates, output, and inflation alone
+(“baseline”); the baseline plus hours worked; the baseline plus investment and consumption;
+and finally the baseline plus hours worked, wages, investment as well as consumption. Among
+those four information sets, only the fourth one satisfies invertibility.
+The headline result, visible in Figure 1, is that even small information sets can deliver predicted policy counterfactuals that are almost indistinguishable from the true ones. The top
+panel summarizes second moments via spectral densities over business-cycle frequencies, with
+the pink lines corresponding to the prevailing monetary rule, while the other lines indicate
+the true (solid) and predicted (dashed) counterfactual spectral densities. We see that, for all
+information sets, the predicted counterfactuals are close to each other, and so to the truth.
+5
+
+As discussed in Appendix A.4, our identification results are consistent with various kinds of frictions in
+private-sector expectation formation; however, the forecasts that the econometrician leveraging Proposition 1
+constructs still always need to be full-information forecasts.
+
+12
+
+Approximate and exact counterfactuals
+
+Relative Residual Forecast Uncertainty
+
+Figure 1: Top panel: business-cycle spectral densities for interest rates, output, and inflation under
+the old rule (solid pink) and under the counterfactual rule, true (solid dark blue) and predicted
+using Proposition 1 for different information sets (solid-dashed blue, dashed orange, dotted red,
+solid-dashed cyan). We normalize the peak spectral density to 1. Bottom panel: residual forecast
+variances for the same variables and for the same information sets, as a function of the forecast
+horizon (x-axis), and relative to the forecast variance for the full information set.
+
+The explanation follows from our forecasting intuition given above, and is illustrated by the
+bottom panel. That panel shows residual forecast uncertainty for interest rates, output, and
+inflation at different horizons (x-axis), and for our different information sets (different lines),
+with the residual forecast uncertainty under the full information set normalized to 1 at each
+horizon h. As h → ∞, the residual forecast variances for all information sets of course limit
+
+13
+
+to the same number—the unconditional variance. For intermediate h, forecasting uncertainty is instead strictly larger for smaller information sets. The differences, however, are
+moderate, with forecast variances that are only at most around 10 percent larger than with
+the full information set. Even the small information sets can thus deliver accurate forecasts,
+and thereby also accurate counterfactuals. In other words, the key requirement is to have
+forecasts of output, inflation, and interest rates close to the accuracy of the full-information
+benchmark—and for that, the past history of those three series evidently suffices.
+Since the Smets and Wouters model features seven shocks, the previous discussion substantiates our point of invertibility mattering only through forecasts. With three observables
+we are necessarily quite far from invertibility, and so accurate shock identification—the usual
+use of the invertibility assumption—is impossible, with no rotation of the three-dimensional
+reduced-form innovations ut equal to any individual structural shock. Forecasting, in contrast, is an easier task: the formed forecasts are already close to full-information ones, and
+so, consistent with the theory reviewed above, counterfactuals are highly accurate.
+
+2.3
+
+Looking ahead
+
+Our analysis in this section has added a simple yet practically important takeaway to the
+recent literature on sufficient statistics for policy evaluation: for all of the counterfactuals that
+we consider here, it suffices to supplement policy causal effects with reduced-form projections
+relative to a sufficiently large information set. Intuitively, by not omitting any important
+predictors for the outcomes of interest, we implicitly summarize well the relevant date-t state
+of the macro-economy, allowing the arguments in Proposition 1 to go through. Since figuring
+out key predictors is a well-understood forecasting task, this observation now frees us in the
+remainder of the paper to focus instead on monetary policy causal effects.
+
+3
+
+Empirical evidence on monetary transmission
+
+We begin by reviewing what existing empirical work can teach us about monetary policy
+causal effects. We first, in Section 3.1, connect our theoretical notion of those causal effects,
+denoted by Θν above, with the econometric estimand of the monetary policy shock empirical
+literature (e.g., as reviewed in detail in Ramey, 2016). Once that connection is established,
+we in Section 3.2 summarize the core findings of that literature.
+
+14
+
+3.1
+
+Interpreting existing empirical work
+
+To interpret the estimand of empirical work on monetary shock identification, we return to
+our general formulation of policy rules in Section 2.1, where we introduced general feedback
+rules of the form
+Axx + Azz + ν = 0 .
+(3’)
+This “sequence-space” formulation of the policy rule prescribes feedback from current and
+expected future endogenous macroeconomic outcomes x to current and expected future policy
+instrument paths z , subject to shocks ν . In the monetary policy setting that we focus on
+here, the instrument z is simply the short-term policy rate. Denoting—in line with the usual
+notational conventions—that policy rate by it , we can specialize the general sequence-space
+rule formulation (3’) to the following, perhaps more familiar, example of an explicit monetary
+policy feedback rule (as familiar from Woodford, 2003):
+it =
+
+∞
+X
+
+Aℓ Et [xt−ℓ ] + ν0,t + ν1,t−1 + ν2,t−2 + . . .
+{z
+}
+|
+ℓ=−∞
+policy shocks
+{z
+}
+|
+
+(9)
+
+systematic feedback
+
+where the first part of (9) reflects the systematic feedback from current, lagged, and expected
+future macroeconomic outcomes to the policy instrument, and the second part is a general
+set of contemporaneous and news shocks to the policy rule, with the shock νℓ,t−ℓ realizing at
+date t − ℓ and affecting policy at date t.6
+Viewed through the lens of the rule (9), the objective of all empirical work on monetary
+policy transmission is to recover (instrumental variables for) the policy shocks νℓ,t−ℓ , thereby
+allowing the estimation of their dynamic causal effects through standard reduced-form methods like local projections or vector autoregressions. In particular, a valid instrumental variable st is then simply a series that correlates with any combination of the monetary policy
+shocks νℓ,t−ℓ , and not with any other current or lagged non-monetary shocks hitting the economy. Projection on this instrument series then recovers the corresponding weighted average
+treatment effect of the particular mix of policy shocks that correlate with st , by standard
+arguments (e.g., see Plagborg-Møller and Wolf, 2022, Appendix B.3).
+To connect this interpretation of the estimand of empirical methods for policy propagation
+6
+
+See Wolf (2024, Appendix D) for a general discussion of the mapping between recursive formulations
+like (9) and sequential rules like (3’).
+
+15
+
+with our theoretical analysis in the previous section, the key conceptual step is to note that,
+in the environment of Section 2.1, policy affects the economy exclusively through current and
+expected future values of the instrument, z . Knowledge of the causal effects of policy shocks
+ν is then sufficient because, and in fact only because, it can be used to engineer any such path
+of the instrument. It thus follows that, when interpreting the output of empirical work on
+monetary policy shock propagation, it is completely immaterial whether any given identified
+shock νℓ,t or instrument st is labeled as “contemporaneous” or as “forward guidance”; rather,
+all that matters is the current and expected future path of the policy rate that this shock
+induces, i.e., the implied change in the yield curve.7 This insight formally justifies this paper’s
+focus—implicit in the introduction, and from now on adopted explicitly—not on shocks, but
+instead on monetary policy causal effects couched in terms of interest rate paths.
+
+3.2
+
+Propagation of the short end of the yield curve
+
+The empirical literature on monetary policy shock propagation is voluminous. In principle,
+the various different shocks and instrumental variables studied in that literature could lead
+to very heterogeneous policy “treatments”—some of those monetary policy events may primarily revise the short end of the yield curve, i.e., lead to short-lived policy rate changes,
+while others may instead revise the medium or perhaps even long end. Through the lens of
+our theory, such heterogeneity would be very useful, allowing empirical estimation of most
+of the policy causal effect matrix Θν .
+In practice, however, it turns out that most of the historical events we use to learn about
+the propagation of monetary policy shocks tend to only induce relatively short-lived changes
+of the policy rate, and thus primarily move the shorter end of the yield curve. A paper
+well-suited to illustrate this observation is Swanson (2024): similarly to Gürkaynak et al.
+(2005), Swanson isolates high-frequency “forward guidance” shocks that alter the yield curve
+without affecting the short-term policy rate, and explicitly distinguishes those from “federal
+funds rate” shocks. In spite of this difference in construction, however, projections of the
+policy rate on those two shocks only show moderate differences, with the “forward guidance”
+disturbances resulting in only somewhat more persistent fluctuations in policy.8 Many of the
+7
+A different way of seeing this is to note the following: shocks that are labeled “contemporaneous” with
+respect to a policy rule featuring endogenous persistence would be labeled as having a “forward guidance”
+component when hitting a rule without such endogenous persistence. The labels are thus immaterial—all
+that matters are the induced policy instrument paths.
+8
+In making this statement we are comparing Figures 2 and 3 in Swanson (2024). Similar conclusions
+on the relatively small differences between interest rate paths induced by contemporaneous and forward
+
+16
+
+Figure 2: The purple and grey lines and shaded areas indicate impulse responses (with 16th and
+84th percentile confidence bands) for the monetary policy shocks of Romer and Romer (2004) and
+Aruoba and Drechsel (2024). For estimation details please see Appendix C.1.
+
+other historically and recently popular monetary policy shock series—from Romer and Romer
+(2004) to the more recent Gertler and Karadi (2015), Jarociński and Karadi (2020), MirandaAgrippino and Ricco (2023), or Aruoba and Drechsel (2024)—similarly differ somewhat in
+the precise timing of the induced nominal interest rate path revisions, but still all broadly
+move the short- to medium-end of the yield curve.
+Consistent with the previous discussion we will, for the remainder of this paper, take as
+our empirical reference point the policy causal effects in Figure 2, showing the propagation of
+two shocks that induce relatively transitory policy rate movements. The impulse responses
+in the two panels are estimated through projection on the classic series of Romer and Romer
+(2004) as well as its more recent refinement in Aruoba and Drechsel (2024); estimation details
+are provided in Appendix C.1. We take these two series as representative examples because
+they rely on relatively similar approaches to monetary policy causal effect identification,
+yet somewhat differ in the induced policy rate time profiles, with the series of Aruoba and
+Drechsel leading to a moderately more delayed interest rate change, consistent with greater
+policy gradualism over the past two decades. The two implied policy rate “treatments,”
+displayed in the right panel, then lead to moderately persistent falls in the level of output
+(left panel) as well as a more delayed fall in the inflation rate (middle panel); as expected,
+since the Romer and Romer treatment is more transitory, the associated output and inflation
+responses are also more short-lived. Both qualitatively and quantitatively these patterns are
+in line with those estimated in other empirical work that uses different monetary policy
+shock series, including in particular the various other studies cited above.
+guidance shocks are reported in Bundick and Smith (2020).
+
+17
+
+Putting together the results of this as well as the preceding section, we see that, to answer
+our policy counterfactual questions of interest, empirical evidence alone is insufficient for one
+sole reason—the data are just not informative enough about monetary policy causal effects,
+with the existing empirical evidence only plausibly teaching us about the effects of transitory
+rate changes. This observation suggests one particular residual role for structural modeling:
+to extrapolate beyond the observed support of the data to what we do not know, i.e., to the
+causal effects of delayed or more persistent policy rate changes. The next section tackles this
+challenge, thus completing our proposed “hybrid” methodology.
+
+4
+
+Causal effect extrapolation through structure
+
+Our analysis of policy causal effect extrapolation through model structure proceeds in two
+steps. First, we ask what features of model structure are irrelevant to the ask at hand, i.e.,
+have no direct bearing on policy causal effects, and thus do not need to be specified. Second,
+of the structure that does need to be specified, we ask what features are most important in
+shaping the required extrapolation. For that second part we consider frontier quantitative
+models of monetary transmission, rich enough to match the empirical evidence on transitory
+rate change causal effects reviewed in the previous section.
+With all policy causal effects in hand, we are then ready to implement our proposed hybrid
+approach for policy counterfactual evaluation. The section concludes with a brief discussion
+of how our strategy compares with its semi-structural and fully structural antecedents.
+
+4.1
+
+How much structure is actually needed?
+
+Using the notation of Section 2.1, the dynamic causal effects of changes in policy on macroeconomic outcomes are completely pinned down by the non-policy model blocks {Hw , Hx , Hz }.
+In words, the part of the model structure that governs policy propagation are the model’s
+non-policy relations, but not the structural shocks to those relations {He e0 }, nor the policy
+rule {Ax , Az } itself.9 The intuition is straightforward, and echoes insights from the analysis
+of static models of demand and supply: to predict to first order the effect on prices of the
+quantity demanded changing to some hypothetical level, all we need to know are (i) initial
+9
+
+Again, to be clear, “non-policy” here refers to all model equations except for those setting the particular
+policy instrument of interest; e.g., for monetary policy, those other blocks contain not just private-sector
+behavioral relations, but also assumptions on fiscal policy.
+
+18
+
+outcomes plus (ii) the slope of the supply function, and not the slope of demand, nor the
+actual shocks to demand or supply that generated the observed outcomes. In our dynamic
+general equilibrium setting, we similarly require initial outcomes (here the autocovariance
+function) as well as the non-policy block (to deliver the causal effects of policy changes), but
+neither the policy rule nor the history of true policy and non-policy shocks.
+The above discussion suggests a simple extrapolation strategy to learn about the full
+matrix of monetary policy causal effects Θν : first specify a model of monetary policy transmission (i.e., model structure that delivers the required tuple {Hw , Hx , Hz }), then discipline
+it targeting the available empirical evidence on policy shocks at the short end of the yield
+curve (taken from Figure 2), and finally use this model to learn about the missing long-end
+causal effects of monetary policy. This strategy is a hybrid of empirical sufficient statistics
+and structural approaches in the exact same spirit as discussed in Chetty (2009, p. 455),
+just there in the context of public finance: theory is used to identify the relevant sufficient
+statistics, they are measured from data whenever possible, and the empirics are supplemented
+with the minimal amount of model-based extrapolation when necessary. Sections 4.2 and 4.3
+implement this extrapolation for monetary policy transmission.
+
+4.2
+
+Frontier models of monetary transmission
+
+For our causal effect extrapolation, we will consider multiple different models of monetary
+policy transmission. Doing so will allow us to understand how particular model assumptions
+shape the extrapolation, and thus what model features are most important to substitute
+for missing data variation. Our first model is a relatively standard representative-agent
+model with nominal rigidities (“RANK”), augmented with several other frictions to allow
+a quantitative fit to the monetary shock evidence, following Christiano et al. (2005). Our
+second model then enriches the consumer block to feature heterogeneous households with
+uninsurable income risk, e.g., as in Kaplan et al. (2018) (“HANK”). Those first two models
+arguably capture the dominant approaches to quantitative business-cycle modeling of the
+past two decades. Finally, we will also consider behavioral variants of these two models,
+with price- and wage-setters forming expectations with cognitive discounting, as in Gabaix
+(2020). We will see that such behavioral frictions can matter greatly for monetary policy
+dynamic causal effect extrapolation to the long end of the yield curve.
+The remainder of this section proceeds as follows. We will first sketch the representativeagent, rational-expectations model. We then explain how the heterogeneous-agent and behavioral models depart from this benchmark. Throughout we will only provide brief verbal
+19
+
+descriptions, with details in Appendix C.2. We do so because all the models we consider are
+standard; our contribution instead lies in how we use these models for extrapolation.
+RANK model. Our first model is a standard quantitative business-cycle model, as familiar
+from the “medium-scale DSGE” tradition, and in particular rich enough to allow us to
+match the empirical evidence on the transmission of transitory policy rate changes discussed
+above. Following Christiano et al. (2005), the model features capital accumulation subject to
+investment adjustment costs and with variable capacity utilization, nominal rigidities (with
+indexation) in price- and wage-setting, and habit formation in consumer preferences. We
+now provide a brief sketch of each of the constituent model blocks.
+• Households & unions. The economy is populated by a representative household with
+separable preferences for consumption and leisure, and allowing for habit formation.
+This agent chooses paths for consumption and assets to maximize lifetime utility. Labor
+supply is intermediated by labor unions (just as in Erceg et al., 2000), with households
+taking hours worked as given when solving their consumption-savings problem. The
+unions face Calvo-style frictions in adjusting their wages, with full indexation to lagged
+price inflation (as in Christiano et al., 2005).
+• Production. There is a unit continuum of perfectly competitive intermediate goods
+producers. They produce using capital and labor, and with a variable rate of capital
+capacity utilization; they sell their good to retailers who costlessly differentiate it, and
+set prices subject to Calvo frictions. Prices that are not re-optimized are fully indexed
+to lagged inflation (as in Christiano et al., 2005). The intermediate goods producers
+purchase capital goods from competitive capital goods producers. Those capital goods
+producers purchase the final good, turn it into the capital good subject to adjustment
+costs on their level of investment, and sell the capital good.
+• Policy. There is a monetary and a fiscal authority. The fiscal authority issues nominal
+bonds with exponential maturity structure, spends a constant amount in real terms,
+and then adjusts labor taxes gradually to maintain long-run budget balance. In the
+representative-agent economy described here, this fiscal rule has real effects through
+the distortionary effects of taxes on labor supply. In the heterogeneous-agent economy
+sketched below, it also matters by affecting the timing of household income.
+The monetary authority sets nominal interest rates. As discussed in Section 4.1 (and
+further in Appendix B.2), we do not need to specify any particular policy rule.
+20
+
+Stacking all model blocks except the behavior of the monetary authority, we then obtain
+{Hw , Hx , Hz }—i.e., the “non-policy” block (2). Solving the system for every possible path
+of monetary policy shocks and thus of nominal interest rates, we obtain the monetary policy
+causal effects, Θν .10 We estimate the model to ensure consistency between Θν and the shortend estimated effects of Section 3.2—i.e., a familiar impulse response matching strategy (see
+Christiano et al., 2010, for a literature review).11 Details on the set of estimated parameters
+and on the choice of priors are provided in Appendix C.3.
+HANK model. Our second model is a heterogeneous-agent (“HANK”) model. It differs
+from the representative-agent baseline in that the representative consumer is replaced by a
+unit continuum of households subject to uninsurable idiosyncratic income risk and borrowing
+constraints (e.g., Kaplan et al., 2018), delivering elevated average marginal propensities to
+consume (MPCs). To ensure consistency with the empirically observed gradual response of
+output to changes in monetary policy, we furthermore assume that households are inattentive
+to macroeconomic conditions, as in Auclert et al. (2020). Unlike habits, this modeling choice
+delivers sluggish responses to changing aggregates while still maintaining large MPCs out of
+transitory income changes. The remainder of the model is unchanged.
+Behavioral frictions. Standard New Keynesian models, including the representativeand heterogeneous-agent variants presented so far, imply that inflation is strongly forwardlooking. This model feature implies that small changes in future monetary policy can have
+large and immediate effects on inflation. The literature on the forward guidance puzzle (e.g.,
+Del Negro et al., 2023) has questioned this feature of standard models.
+For our final set of model variants, we will consider versions of our representative- and
+heterogeneous-agent baselines in which price- and wage-setting becomes less forward-looking;
+specifically, we follow Gabaix (2020) in assuming that agents engage in cognitive discounting.
+According to this view, agents do not trust that they understand the structure of the economy
+and thus shrink their expectation of future outcomes towards the economy’s steady state. In
+particular, an innovation occurring s periods in the future is down-weighed by a factor ms ,
+10
+
+Note that the fiscal rule is actually contained in the “non-policy” block (2). Our counterfactuals thus
+keep the fiscal rule fixed, and only change assumptions on monetary policy conduct.
+11
+In the standard impulse response-matching literature, the researcher writes down a policy rule, and then
+restricts attention to contemporaneous shocks to that rule. Commitment to a rule, however, is actually not
+at all necessary—one can simply find the best fit to the empirical impulse response targets within the overall
+space implementable by policy, sidestepping the need to commit to any rule. This is thus what we do in our
+estimation; see Appendix B for details.
+
+21
+
+where m ∈ [0, 1] controls the strength of cognitive discounting, and with m = 1 corresponding
+to the rational-expectations benchmark. Our behavioral models will feature m = 0.65, at
+the lower end of the range considered by Gabaix; we have decided to make this choice (rather
+than estimating m, like the other model parameters) because, as we will see, our empirically
+estimated monetary policy shock causal effects at the short end of the yield curve are actually
+only very weakly informative about m.
+As we will discuss further later, household inattention alone—as already featured in the
+benchmark HANK model—is insufficient to meaningfully dampen the economy’s response to
+far-ahead changes in monetary policy. We will thus often lump together the baseline HANK
+model with its rational-expectations RANK cousin, reserving the term “behavioral” for the
+models with additional discounting among wage- and price-setters.
+
+4.3
+
+Estimation and policy causal effect extrapolation
+
+We now use the empirical evidence of Section 3.2 on the propagation of short-lived monetary
+shocks to estimate the four models of Section 4.2, and thus extrapolate to the missing causal
+effects at the long end of the yield curve. We first show that all four models can—pretty
+much equally well—match the targeted short-end evidence.
+Model estimation results. We begin in Figure 3 by repeating the two empirical monetary policy shock estimation targets from Figure 2 and then overlaying the matched impulses
+at the posterior mode for each of our four models (beige and red, solid and dashed); the full
+posterior distributions for the estimated parameters are presented in Appendix C.3. We see
+that all four of the models are able to match the two empirical estimation targets reasonably
+well: both interest rate impulses lead to a hump-shaped decline in output as well as a delayed
+decline in inflation, with the responses more back-loaded for the more delayed interest rate
+innovation of Aruoba and Drechsel (2024).12
+Monetary shock extrapolation. We now turn to the main purpose of our estimated
+models—extrapolation of monetary policy shocks to the long end of the yield curve. We will
+12
+
+While the tightly estimated interest rate path of Romer and Romer (2004) is matched almost perfectly,
+the fit to the somewhat noisier delayed interest rate path of Aruoba and Drechsel (2024) is worse, with the
+estimated policy treatment path less persistent than the data target. Forcing closer alignment on that second
+rate path does not, however, change any of this section’s takeaways: behavioral and non-behavioral model
+variants still largely agree on the effects of this now slightly more gradual treatment, while clearly differing
+for the more delayed rate changes (see Figure 5). These additional results are available upon request.
+
+22
+
+Romer and Romer (2004)
+
+Aruoba and Drechsel (2024)
+
+Figure 3: The purple and grey lines and areas indicate the two empirically estimated monetary
+shock impulse responses (see Section 3.2), with 16th and 84th percentile confidence bands. The
+remaining lines indicate the model-implied impulse responses at the estimated posterior modes.
+Beige: representative-agent consumer block. Red: heterogeneous-agent consumer block. Solid: no
+cognitive discounting. Dotted: cognitive discounting with m = 0.65.
+
+proceed in two steps: first comparing the baseline representative- and heterogeneous-agent
+models, and then asking how the further behavioral frictions in price-setting change things.
+Results are displayed in Figures 4 and 5, which show the model-implied impulse responses
+to “forward guidance” shocks—i.e., nominal interest rate movements at the long end of the
+yield curve, much more delayed than our shorter-end empirical targets. Details on how we
+construct those particular delayed interest rate paths are provided in Appendix C.3.
+• RANK vs. HANK. We consider a monetary policy intervention much farther out on
+the yield curve: a deviation from a standard monetary policy rule that is announced
+at t = 0 but occurs four years later. The right panel shows the response of nominal
+23
+
+4-Year-Ahead Forward Guidance
+
+Figure 4: Policy causal effect extrapolation in the estimated RANK and HANK models. The
+figure shows output and inflation impulse responses to a forward guidance policy shock that leads
+to the interest rate movements depicted on the right. Solid line shows the posterior median. The
+shaded area shows the 16th and 84th percentile confidence band.
+
+interest rates, while the left and middle panels display the effects of this monetary
+intervention on output and inflation in RANK (beige) as well as in HANK (red).
+The main takeaway is that the two models, which by construction closely agree on the
+effects of the two targeted interest rate paths, also at least approximately agree on the
+dynamic causal effects of this much more delayed monetary intervention. In fact this
+is not just the case for the particular nominal rate paths shown in Figure 4, but holds
+robustly for monetary shocks all along the yield curve. In other words, whether RANK
+or HANK are used to extrapolate from the empirically estimable short-end monetary
+policy shock causal effects to the missing effects at the long end does not really matter;
+by our identification result in Proposition 1, it follows that the two estimated models
+will be approximately equivalent (in terms of macroeconomic outcomes) for all possible
+monetary policy counterfactuals. This discussion in particular reveals that differences
+in transmission channels—for RANK and HANK notably the contrast between direct
+vs. indirect propagation, e.g., as stressed by Kaplan et al. (2018)—may not matter at
+all for counterfactual aggregate outcomes.
+• Baseline vs. cognitive discounting. Figure 5 repeats the same exercise, but now instead
+comparing the baseline (beige) and behavioral (blue) representative-agent models.
+We see that now there are more material differences. In particular, and just as expected
+24
+
+4-Year-Ahead Forward Guidance
+
+Figure 5: Policy causal effect extrapolation in the estimated RANK and behavioral-RANK (BRANK) models. The figure shows output and inflation impulse responses to a forward guidance
+policy shock that leads to the interest rate movements depicted on the right. Solid line shows the
+posterior median. The shaded area shows the 16th and 84th percentile confidence band.
+
+given the additional cognitive discounting among price-setters of the behavioral models,
+we see that the inflation responses in the behavioral model are more delayed, and the
+subsequent output overshooting is more pronounced. While Figure 5 shows this for the
+representative-agent models, we note that the same is also true for the heterogeneousagent model variants. It follows that, for monetary policy counterfactuals that involve
+persistent interest rate changes, whether to extrapolate through models with or without
+behavioral frictions will matter greatly.
+
+4.4
+
+A discussion of the hybrid approach
+
+We now have all ingredients in place to implement our hybrid approach to monetary policy
+counterfactual evaluation: reduced-form projections constructed in line with the theoretical
+guidance of Section 2; empirical estimates of the dynamic causal effects of short-lived interest
+rate changes from Section 3.2; and finally model-based extrapolation beyond the observed
+support of the data as presented in Section 4.3. We will present several applications in the
+next section; before doing so, however, we close here with a brief comparison of our approach
+with existing alternatives—both in terms of when and why results are likely to differ, and
+what makes our strategy comparatively appealing.
+
+25
+
+vs. the semi-structural approach. Our hybrid strategy nests but generalizes the
+semi-structural approach. In general, the empirically estimated causal effects of policy are
+insufficient to exactly evaluate any given policy counterfactual of interest—the required Θν is
+infinite-dimensional, but we in practice only have access to a finite (small) number of policy
+shocks. The approach taken by the semi-structural literature to date has been to construct
+an “approximate” counterfactual, imposing the hypothesized counterfactual rule as well as
+possible using the evidence available (see McKay and Wolf, 2023).
+Our strategy here is different: we start with the same empirical evidence, but then we
+extrapolate, allowing us to implement the desired counterfactual exactly. Not only does this
+make it possible to evaluate a broader set of counterfactuals, it also allows us to assess the
+extent to which data limitations distort the semi-structural counterfactuals. In particular,
+if the data limitations are only weakly binding, we will find exact counterfactuals that are
+nearly identical to the approximate ones of the pure semi-structural approach. Our first two
+applications in Section 5 will reveal that this case is actually quite common in practice.
+vs. conventional model-based analyses. In full-information, likelihood-based approaches to policy evaluation (e.g., Smets and Wouters, 2007; Bocola et al., 2024, among
+many others), the researcher specifies a structural model that provides an adequate fit to
+unconditional aggregate time series data. Our use of structure is more targeted—its sole
+purpose being statements conditional on a given policy action—and this more limited role
+confers important transparency benefits. By comparing our results with the analogous approximate semi-structural counterfactual, the researcher immediately sees the role played by
+model structure relative to empirical measurement. Decompositions of this sort are of course
+never available under the standard full-information approach, contributing to the perceived
+opacity of such large-scale structural exercises. Our applications in Section 5 provide several
+practical illustrations of these transparency benefits, cleanly tying our reported results to
+key data moments as well as particular, targeted uses of model structure.13
+Beyond those transparency benefits, our results in the preceding sections also have implications for the interpretation of existing full model-based analyses. A frequent criticism of
+such strategies is likely model misspecification, in particular in terms of the model’s primitive
+shocks, often labeled “dubiously structural” (Chari et al., 2009). Our results reveal that, for
+13
+
+Angeletos et al. (2025) is a recent contribution that leverages our hybrid method and similarly illustrates
+those transparency benefits, tying conclusions about fiscal-monetary interactions to reduced-form data moments and assumptions on policy transmission.
+
+26
+
+the counterfactuals considered here, such misspecification may simply not matter: as long
+as the model matches reduced-form second moments of the data (and thus delivers accurate
+projections) and implies empirically sensible policy causal effects, the reported conclusions
+are necessarily correct, even if the model is misspecified.14 Put differently, misspecification
+only matters to the extent that it affects our two “sufficient statistics”; in our applications in
+Section 5, we shine light on this observation by showing that, at least for our counterfactual
+questions, the choice between RANK and HANK is actually largely immaterial, simply because quantitatively relevant variants of such models agree on monetary policy transmission
+to macroeconomic aggregates along the entirety of the yield curve.
+
+5
+
+Applications
+
+We now leverage our hybrid approach for several applications to monetary policy evaluation.
+Section 5.1 describes our counterfactual assumptions on policy conduct. In Sections 5.2 to 5.4
+we evaluate how such alternative policy design would have shaped the average business cycle
+as well as two particular historical episodes.
+
+5.1
+
+The policy experiment
+
+For all three applications we will consider as our counterfactual monetary policy rule the one
+that minimizes the following standard central bank objective:
+L = E0
+
+"∞
+X
+
+#
+β
+
+
+t
+
+λπ πt2 + λy yt2 + λi (it − it−1 )2
+
+,
+
+(10)
+
+t=0
+
+where πt is inflation, yt is the output gap, and it is the nominal rate of interest. Formally,
+given the monetary policy causal effects Θν , we set the counterfactual monetary policy rule
+coefficients {Ãx , Ãz } to yield the optimal implicit forecast targeting rule corresponding to
+(10), using the exact same expressions as in Proposition 2 of McKay and Wolf (2023).15 We
+14
+
+In practice, of course, forcing the model to match reduced-form second-moments—which is what happens
+in standard likelihood-based estimation—may distort inference on policy causal effects, unless the entirety
+of the model is well-specified. We briefly elaborate on those robustness concerns in Appendix B.3.
+15
+As discussed in Section 4.4, to transparently decompose the respective roles of direct empirical evidence
+and model-implied causal effect extrapolation, we will also report results for the approximate counterfactual
+that instead only uses the empirical evidence of Section 3. In words, this counterfactual minimizes the loss
+(10) within the empirically estimated space of (short-end) monetary policy shock causal effects.
+
+27
+
+study this particular counterfactual exercise because it closely mirrors the popular strategy
+of flexible inflation targeting (see Svensson, 1997), and as such appears in much central bank
+communication (e.g., Federal Reserve Tealbook, 2016). Consistent with the discussion there
+we consider an equal-weights parameterization across the three objectives and over time,
+with λπ = λy = λi = 1 and no discounting, i.e., β = 1.
+
+5.2
+
+Average business cycle
+
+For our first application we ask how the average U.S. post-war business cycle would have
+differed had the Federal Reserve (always) followed the flexible inflation targeting monetary
+policy rule implied by (10). We communicate our main results by reporting the counterfactual volatilities of the output gap, inflation, and nominal interest rates.
+Reduced-form projections. By the identification result in Proposition 1, we require
+the autocovariance function of the three core variables of interest, as well as other aggregates
+that are useful to predict them. One particularly simple and convenient way of recovering this
+object is to estimate a reduced-form VAR in a large vector of macroeconomic observables,
+and then translate this VAR to the implied Wold lag polynomial.
+For our estimated reduced-form VAR we consider a set of 10 macroeconomic variables,
+following Angeletos et al. (2020). Differently from those authors, however, we will transform
+all of the included variables to stationarity (if necessary), as in Hamilton (2018); in particular,
+we treat the detrended real output series as a measure of the output gap. Our sample period
+stretches from 1960:Q1 – 2019:Q4—a long post-war, pre-COVID sample. Further details on
+the VAR estimation and on how to translate the VAR to the Wold representation required
+to implement Proposition 1 are provided in Appendix D.1. We there also document that the
+forecasts implied by our reduced-form VAR are competitive with other forecasting strategies.
+Our counterfactuals are constructed at the reduced-form VAR point estimates.
+Main results. Our headline finding is that the counterfactual policy would have achieved
+quite materially lower output volatilities and somewhat more stable inflation, all at the cost
+of only moderately more volatile policy rates. Results are summarized in Table 5.1, which
+reports actual as well as counterfactual volatilities of output, inflation, and the federal funds
+rate. The top row first of all depicts the actual in-sample observed volatilities.16 The other
+16
+
+Formally, these observed volatilities are constructed by translating the estimated reduced-form VAR into
+its implied Wold representation, and then from there computing the three volatilities.
+
+28
+
+Actual
+
+Inflation
+
+Output
+
+Interest Rate
+
+1.978
+
+3.050
+
+2.927
+
+1.674
+
+1.795
+
+3.748
+
+(1.607, 1.772)
+
+(1.591, 2.091)
+
+(3.407, 4.049)
+
+1.634
+
+1.774
+
+3.496
+
+(1.558, 1.733)
+
+(1.554, 2.101)
+
+(3.203, 3.758)
+
+1.679
+
+1.577
+
+3.692
+
+(1.582, 1.859)
+
+(1.339, 1.831)
+
+(3.328, 4.117)
+
+1.666
+
+1.543
+
+3.530
+
+(1.594, 1.844)
+
+(1.297, 1.811)
+
+(3.213, 3.871)
+
+1.795
+
+2.153
+
+2.841
+
+(1.628, 1.912)
+
+(1.910, 2.422)
+
+(2.512, 3.185)
+
+Counterfactual
+Hybrid
+RANK
+HANK
+B-RANK
+B-HANK
+Semi-structural
+
+Table 5.1: Actual as well as counterfactual unconditional volatilities of output, inflation, and the
+federal funds rate, with counterfactuals for the policy rule that minimizes (10). Posterior median
+with 16th and 84th percentiles in parentheses.
+
+lines then report the counterfactuals; for now we focus on results from our hybrid method,
+with policy causal effect extrapolation through the four quantitative models of Section 4.3.
+To evaluate the desired counterfactual volatilities, we begin by drawing from the posterior
+over monetary policy causal effects across the entire yield curve, i.e., Θν , as implied by
+each of the four models. For each draw we compute the volatilities under the contemplated
+counterfactual policy, following Proposition 1. The main finding is that, for output (and, to a
+lesser extent, for inflation), essentially all posterior mass is concentrated below the in-sample
+volatility.17 For a visual representation of the same results, we also report smoothed Kernel
+density estimates of the entire posterior distribution in Appendix D.2.
+Our second main result is that this possibility of lower output volatility is chiefly driven
+by the empirically estimated short-end causal effects of monetary policy, and less so by the
+model-based extrapolation to the long end of the yield curve. There are two ways of seeing
+17
+
+Note that this volatility reduction does not just reflect infeasible rate cuts during the period of a binding
+lower bound on nominal interest rates; see Appendix D.2 for pre-2007 results.
+
+29
+
+this. First, in Table 5.1, the four hybrid method posterior volatilities are all quite close, even
+though we know that the behavioral and non-behavioral models extrapolate very differently.
+This suggests that the remaining posterior uncertainty (i.e., the reported percentiles) chiefly
+reflects uncertainty about the causal effects of transitory interest rate changes, rather than
+any across-model uncertainty in how to extrapolate those policy shock causal effects. Second,
+in the last row (labeled “Semi-structural”), we repeat our policy counterfactual analysis using
+only the empirically estimated short-end monetary policy causal effects, rather than the
+entire, model-extrapolated matrix Θν ; by construction, this approach foregoes extrapolation
+altogether. We see that changes in monetary policy conduct at the short end of the yield
+curve do already suffice to attain quite material reductions in output volatility, revealing
+that here the pure semi-structural approach is already relatively accurate.
+Inspecting the mechanism. To see more clearly where those sharp results are coming
+from, we now zoom in further and study the counterfactual propagation of one particular
+linear combination of reduced-form Wold residuals that Angeletos et al. (2020) have labeled
+the “main business-cycle shock”—that is, the reduced-form shock that “explains” the largest
+share of short-term volatility in real outcomes.18 The black-dashed lines in Figure 6 show
+the propagation of this shock under the in-sample monetary policy reaction: inflation drops
+just a little, output drops quite materially, and monetary policy only somewhat leans against
+this contraction. The blue and orange lines then report the propagation of this particular
+reduced-form innovation under our counterfactual monetary policy, showing posterior modes
+and bands with policy causal effect extrapolation using RANK (blue) and relying on empirical
+policy causal effect estimates alone (orange).19 The key observation is that, in both cases,
+the contemplated counterfactual monetary policy leans against the reduced-form shock much
+more than the in-sample policy, stabilizing output at the cost of moderately higher inflation
+and larger policy rate movements. Model-based causal effect extrapolation simply allows the
+volatilities to be reduced even further by more finely tailoring the path of the interest rate
+response to the output fluctuations that it is designed to offset.
+The takeaway from Figure 6 is that our headline conclusions in Table 5.1 are essentially
+driven by two moments of the data: first, that “typical” output movements in the historical time series are associated with moderate inflation movements and partial interest rate
+18
+
+This exercise is an informative diagnostic because it reduces the 10-dimensional Wold representation of
+the data to a 1-dimensional slicing that explains most output volatility, allowing easy graphical analysis.
+19
+Consistent with our previous discussion, counterfactuals using causal effect extrapolation based on any
+of the three other models look similar.
+
+30
+
+Figure 6: Counterfactual impulse responses of output, inflation, and the federal funds rate to the
+main business-cycle shock (see Angeletos et al., 2020), under the policy rule that minimizes (10).
+Black dashed: data point estimate under observed policy. Blue: posterior 16th and 84th percentile
+bands with causal effect extrapolation through baseline RANK. Orange: posterior 16th and 84th
+percentile bands using empirical causal effect estimates only.
+
+offset; and second, that interest rate cuts boost output, with only little effect on inflation.
+Combining those two empirical moments—which are already well-documented from much
+prior work (notably Ramey, 2016; Angeletos et al., 2020)—with our identification results in
+Section 2 immediately delivers the main results in Table 5.1; in other words, the key for everything reported here are the empirically estimable short-end causal effects (together with
+reduced-form projections), with little incremental role for model-based extrapolation to the
+long end of the yield curve. This first counterfactual thus illustrates our first main applied
+takeaway: when a given monetary policy counterfactual chiefly involves assumptions about
+policy in the near term, then relaxing the data constraints that limit the pure semi-structural
+approach does not affect the reported conclusions much.
+
+5.3
+
+Great Recession
+
+For our second application we evaluate how the U.S. economy would have evolved during the
+Great Recession if monetary policy had followed the inflation targeting framework described
+above, and without any effective lower bound on nominal interest rates.20 Specifically, we
+will assume that the central bank follows this alternative, unconstrained rule from 2008:Q4
+onwards, and does so throughout 2012:Q1. A counterfactual of this sort is informative about
+20
+
+We note that our methodology remains applicable to model environments with a linear non-policy block
+(2) and a non-linear policy rule, allowing for a binding lower bound on nominal interest rates. The argument
+is analogous to that in Appendix A.9 of McKay and Wolf (2023).
+
+31
+
+Hybrid Method
+
+Semi-structural
+
+Figure 7: Counterfactual evolution of output, inflation, and the federal funds rate in the Great
+Recession, under the policy rule that minimizes (10) without any effective lower bound on rates.
+Black: data. Beige: posterior mode of counterfactual using RANK models (baseline and behavioral). Red: posterior mode of counterfactual using HANK models (baseline and behavioral). Blue:
+posterior 16th and 84th percentile bands with causal effect extrapolation through baseline RANK.
+Orange: pure semi-structural counterfactual.
+
+the plausible costs of a binding lower bound constraint. We first discuss how we construct
+the required reduced-form forecasting inputs, and then present the main results.
+Reduced-form projections. We here require forecasts of output, inflation, and nominal
+interest rates at each in-sample date, for the entire period under study. We construct these
+forecasts using the same 10-variable reduced-form VAR as in Section 5.2.
+Main results. Results from our hybrid method are summarized in the top panels of Figure 7, which display realized (black) as well as counterfactual (beige, red, and blue) paths
+
+32
+
+of output, inflation, and nominal interest rates; as before, we report posterior medians for
+all four of our extrapolating models (the solid and dashed colored lines), with posterior uncertainty for the baseline RANK model (blue). We see that, absent any effective binding
+lower bound on nominal rates, a policy that follows the rule of minimizing (10) would have
+involved an aggressive rate cut, down to around -5 percent. Such an (infeasible) interest rate
+cut would have materially reduced the output gap, at the cost of moderately elevated inflation. These conclusions are informative about the broader policy response during the Great
+Recession. Given constraints on policy rates, policymakers attempted to substitute through
+other stimulative measures, most notably unconventional monetary policy as well as fiscal
+stimulus. If we interpret (10) as the objective for monetary policy, our counterfactual results
+suggest that the unconventional monetary policy response was insufficient, with additional
+stimulus of around 500 basis points necessary.
+Just as in our first counterfactual, these conclusions are largely governed by the available
+evidence on short-end monetary policy shock propagation, and less so by the model-based
+policy causal effect extrapolation. There are again two ways of seeing this. First, in the top
+panel of Figure 7, the posterior median lines for all four models are actually rather close
+to each other, echoing the previous results in Table 5.1; given that we know that rationalexpectations and behavioral model variants extrapolate very differently, this suggests limited
+importance for monetary policy causal effects at the long end of the yield curve. Second,
+the bottom panel of Figure 7 shows results for the pure semi-structural counterfactual. As
+before, while the full matrix of policy causal effects Θν allows better tailoring of policy path to
+the specific macroeconomic conditions, the semi-structural analysis already captures well the
+broad contours of the counterfactual. This application thus provides a second illustration of
+our first main applied insight: for transitory changes in policy, relaxing the data constraints
+on the semi-structural approach does not tend to change reported conclusions much.
+
+5.4
+
+Post-COVID inflation
+
+As the third and final application we evaluate monetary policy options at the height of the
+post-COVID inflation. Looking from 2021:Q2 onwards, we ask what counterfactual conduct
+of monetary policy would have been expected to minimize the loss function (10).21
+21
+
+A similar counterfactual question is studied in Bocola et al. (2024). Differently from the present analysis,
+however, they rely on a standard full-information likelihood-based approach.
+
+33
+
+Reduced-form projections. We require forecasts of output, inflation, and nominal
+interest rates only for the date of interest, 2021:Q2. We construct these forecasts using
+exactly the same 10-variable VAR as in the previous two applications; differently from those,
+however, we extend the sample to the chosen forecast date.
+Main results. Figure 8 shows the actual historical evolution of output, inflation, and the
+federal funds rate (black), their VAR-implied forecasts from 2021:Q2 onwards (grey-dashed),
+and their counterfactual forecasts (colors). The top and middle panels show results from our
+hybrid method, comparing causal effect extrapolation through baseline RANK and HANK
+(top) as well as RANK and B-RANK (middle); the bottom instead reports results for the
+pure semi-structural counterfactual. Under the baseline forecast, inflation is expected to
+be persistently elevated, output is slightly depressed, and interest rates rise quickly and
+relatively sharply. Our focus is now on how the contemplated inflation targeting monetary
+policy moves the economy away from these baseline forecasts. Importantly, since inflation is
+expected to be persistently elevated, the effects of monetary policy further out on the yield
+curve—and thus model-implied causal effect extrapolation—are likely to matter greatly here,
+unlike our first two applications.
+Consider first the top panel of Figure 8, which shows counterfactuals constructed with
+policy shock extrapolation via our two rational-expectations models. Since representativeand heterogeneous-agent models imply almost identical monetary policy causal effects across
+the entire yield curve, the two resulting counterfactuals lie essentially on top of each other.
+In both cases, monetary policy succeeds in reducing inflation with only a small reduction
+in output. Furthermore, and counterintuitively, a lower nominal interest rate path achieves
+this disinflation. This result reflects the extremely forward-looking nature of both models:
+the policymaker achieves low inflation in the short-run via depressed output in the far-future,
+implemented through future increases in real interest rates; in fact, small future output gaps
+move current inflation so much that lower short-term real rates can actually be used to
+stabilize output in the short run. The beige lines in Figure 9 further illustrate this intuition:
+real rates initially decline and only later rise (left panel); short-run inflation is much more
+sensitive to real rates in the far-future than to real rates today (middle panel); and finally,
+combining the two, it follows that near-term disinflation can be achieved through moderate
+medium- and long-term real interest rate hikes (right panel).
+Now turn to the middle panel, which compares counterfactuals with policy causal effect
+extrapolation through RANK (as in the top panel) and the behavioral B-RANK model (here
+
+34
+
+RANK vs. HANK
+
+Rational Expectations vs. Behavioral
+
+Empirics only
+
+Figure 8: Counterfactual projections of output, inflation, and the federal funds rate in the postCOVID inflationary episode, under the policy rule that minimizes (10). Policy causal effects from
+RANK and HANK (top), RANK and B-RANK (middle) and data only (bottom). Black: data.
+Grey: actual (VAR-implied) forecast. Colored: posterior median (solid) and 16th and 84th percentile bands (shaded) for RANK (beige), HANK (red), B-RANK (blue) and data (orange).
+
+35
+
+Figure 9: Behavior of real interest rates under the counterfactual monetary policy. Left panel:
+difference between the counterfactual and the forecast real interest rate path. Middle panel: change
+in inflation at 2022:Q2 in response to a policy-induced real interest rate change by horizon of the
+rate change, as indicated on the x-axis. Right panel: contribution of real interest rate changes
+at different horizons to the change in inflation at 2022:Q2. Beige: posterior mode of the baseline
+RANK model. Blue: posterior mode of the behavioral RANK model.
+
+displayed in blue). We see that adding behavioral frictions—which, recall, did not affect the
+model’s fit to empirical evidence on the propagation of transitory policy rate changes—here
+yields a very different counterfactual: the federal funds rate now is hiked somewhat more
+aggressively than in the baseline forecast, thus bringing inflation down slightly, though at the
+cost of moderately lower output. Intuitively, the policymaker now cannot rely on far-ahead
+real interest rate movements to stabilize inflation in the short run. Instead, she faces an
+undesirable short-run trade-off between output and inflation, and she chooses to respond to
+it through higher short-term real interest rates, simply because short-run inflation is more
+elevated than output is depressed. A visual illustration is provided with the blue lines in
+Figure 9: real interest rates rise immediately (left panel); short-run inflation is not nearly
+as sensitive to long-run real rate fluctuations (middle panel); and as a result, the short-term
+inflation reduction largely reflects relatively short-term expected real rate movements.
+Finally, the bottom panel of Figure 8 shows the corresponding counterfactual using the
+pure semi-structural method. The estimates are largely uninformative, lying somewhere
+between the RANK and B-RANK counterfactuals. Intuitively, given the persistence of the
+underlying disturbances, assumptions on short-run monetary transmission are simply not
+what matters most for this particular counterfactual.
+Discussion. This final application illustrates our second main applied takeaway. When
+the contemplated monetary policy counterfactual involves delayed or persistent interest rate
+36
+
+changes, then the purely semi-structural approach is not applicable, and researcher assumptions about the (empirically unknown) propagation of such persistent interest rate changes
+now take center stage. For that extrapolation to the long end of the yield curve, household
+heterogeneity and market incompleteness appear to not matter much, yielding broad counterfactual equivalence—with respect to macroeconomic aggregates, at least—of RANK and
+HANK models. Assumptions about the strength of behavioral frictions, instead, are central
+to the reported results. The concluding section will discuss implications of these observations
+for future empirical and theoretical work.
+
+6
+
+Conclusions
+
+How much explicit model structure is needed to evaluate the effects of hypothetical changes
+in monetary policy conduct? How far can we get using empirical evidence? We have provided
+a new methodology—our hybrid approach—that is more broadly applicable than recently
+introduced “semi-structural” strategies, but remains appealingly transparent, with a clear
+separation of the roles played by empirical evidence on one side, and by structural assumptions on the other. Our analysis in this paper suggests two main takeaways that we hope
+will shape future applied work on monetary policy counterfactual evaluation.
+1. Many monetary policy counterfactuals of interest only involve changes in monetary policy
+over the relatively near term. For such counterfactuals, the data constraints on the semistructural approach are actually not particularly binding, simply because the effects on
+the macro-economy of such short-lived policy rate changes are already very well-studied
+in existing empirical work. Further relaxing the data constraints through model structure
+thus has little scope to change the reported conclusions.
+2. Additional model structure is instead indispensable—and matters greatly for the reported
+conclusions—when the contemplated counterfactual involves medium- to long-run changes
+in monetary policy. Such extrapolation of causal effects along the yield curve is the sole
+remaining purpose of model structure; there is, in contrast, no need to provide a full
+structural account of overall cyclical fluctuations. It follows that, to judge how any given
+change in the model environment would alter the reported conclusions, it is enough to
+understand how that change would alter extrapolation to the long end of the yield curve.
+Our two observations have implications for future empirical and structural work. Empirically, an important task will be to estimate the dynamic causal effects of delayed or persistent
+37
+
+changes in monetary policy. Doing so would expand even further the range of counterfactual
+questions for which data constraints are not binding. Theoretically, more attention should
+be paid to how different plausible models of monetary policy transmission extrapolate to the
+causal effects of further-ahead interest rate changes. In particular, discriminating between
+models with and without behavioral frictions appears much more important than the extent
+of household market incompleteness (“HANK”), at least for the aggregate monetary policy
+counterfactuals studied here.
+
+38
+
+References
+Angeletos, G.-M., F. Collard, and H. Dellas (2020): “Business-cycle anatomy,”
+American Economic Review, 110, 3030–70.
+Angeletos, G.-M., C. Lian, and C. K. Wolf (2025): “Fiscal inaction as monetary
+support,” Working Paper.
+Arias, J. E., J. F. Rubio-Ramı́rez, and D. F. Waggoner (2018): “Inference based
+on structural vector autoregressions identified with sign and zero restrictions: Theory and
+applications,” Econometrica, 86, 685–720.
+Arkolakis, C., A. Costinot, and A. Rodrı́guez-Clare (2012): “New trade models,
+same old gains?” American Economic Review, 102, 94–130.
+Aruoba, S. B. and T. Drechsel (2024): “Identifying Monetary Policy Shocks: A Natural
+Language Approach,” CEPR Discussion Paper No. DP17133.
+Auclert, A. (2019): “Monetary policy and the redistribution channel,” American Economic Review, 109, 2333–2367.
+Auclert, A., B. Bardóczy, M. Rognlie, and L. Straub (2021): “Using the sequencespace Jacobian to solve and estimate heterogeneous-agent models,” Econometrica, 89,
+2375–2408.
+Auclert, A., R. D. Rigato, M. Rognlie, and L. Straub (2022): “New Pricing
+Models, Same Old Phillips Curves?” Tech. rep., National Bureau of Economic Research.
+Auclert, A., M. Rognlie, and L. Straub (2020): “Micro jumps, macro humps: Monetary policy and business cycles in an estimated HANK model,” Tech. rep., National
+Bureau of Economic Research.
+Barnichon, R. and G. Mesters (2023): “A Sufficient Statistics Approach for Macro
+Policy,” American Economic Review, 113, 2809–2845.
+——— (2024): “Evaluating policy institutions-150 years of U.S. monetary policy,” Working
+Paper.
+Bocola, L., A. Dovis, K. Jørgensen, and R. Kirpalani (2024): “Bond market views
+of the fed,” Tech. rep., National Bureau of Economic Research.
+39
+
+Brockwell, P. J. and R. A. Davis (1991): Time Series: Theory and Methods, Springer
+Series in Statistics, Springer, 2nd ed.
+Bundick, B. and A. L. Smith (2020): “The dynamic effects of forward guidance shocks,”
+Review of Economics and Statistics, 102, 946–965.
+Chari, V. V., P. J. Kehoe, and E. R. McGrattan (2009): “New Keynesian models:
+Not yet useful for policy analysis,” American Economic Journal: Macroeconomics, 1,
+242–266.
+Chetty, R. (2009): “Sufficient statistics for welfare analysis: A bridge between structural
+and reduced-form methods,” Annu. Rev. Econ., 1, 451–488.
+Christiano, L. J., M. Eichenbaum, and C. L. Evans (2005): “Nominal rigidities and
+the dynamic effects of a shock to monetary policy,” Journal of Political Economy, 113,
+1–45.
+Christiano, L. J., M. Trabandt, and K. Walentin (2010): “DSGE models for monetary policy analysis,” in Handbook of monetary economics, Elsevier, vol. 3, 285–367.
+De Groot, O., F. Mazelis, R. Motto, and A. Ristiniemi (2021): “A Toolkit for
+Computing Constrained Optimal Policy Projections (COPPs),” ECB Working Paper.
+Del Negro, M., M. P. Giannoni, and C. Patterson (2023): “The forward guidance
+puzzle,” Journal of Political Economy Macroeconomics, 1, 43–79.
+Erceg, C. J., D. W. Henderson, and A. T. Levin (2000): “Optimal monetary policy
+with staggered wage and price contracts,” Journal of Monetary Economics, 46, 281–313.
+Federal Reserve Tealbook (2016): “Report to the FOMC on Economic Conditions
+and Monetary Policy,” FRB Report.
+Fernández-Villaverde, J., J. F. Rubio-Ramı́rez, T. J. Sargent, and M. W.
+Watson (2007): “ABCs (and Ds) of understanding VARs,” American economic review,
+97, 1021–1026.
+Fernández-Villaverde, J., J. F. Rubio-Ramı́rez, and F. Schorfheide (2016):
+“Solution and estimation methods for DSGE models,” in Handbook of macroeconomics,
+Elsevier, vol. 2, 527–724.
+
+40
+
+Gabaix, X. (2020): “A behavioral New Keynesian model,” American Economic Review,
+110, 2271–2327.
+Gertler, M. and P. Karadi (2015): “Monetary policy surprises, credit costs, and economic activity,” American Economic Journal: Macroeconomics, 7, 44–76.
+Geweke, J. (1999): “Using simulation methods for bayesian econometric models: inference,
+development, and communication,” Econometric Reviews, 18, 1–73.
+Gürkaynak, R. S., B. Sack, and E. T. Swanson (2005): “Do actions speak louder
+than words? The response of asset prices to monetary policy actions and statements,”
+International Journal of Central Banking, 1, 55–93.
+Hamilton, J. D. (2018): “Why You Should Never Use the Hodrick-Prescott Filter,” The
+Review of Economics and Statistics, 100, 831–843.
+Hebden, J. and F. Winkler (2021): “Impulse-Based Computation of Policy Counterfactuals,” FEDS Working Paper.
+Jarociński, M. and P. Karadi (2020): “Deconstructing monetary policy surprises—the
+role of information shocks,” American Economic Journal: Macroeconomics, 12, 1–43.
+Känzig, D. R. (2021): “The macroeconomic effects of oil supply news: Evidence from
+OPEC announcements,” American Economic Review, 111, 1092–1125.
+Kaplan, G., B. Moll, and G. L. Violante (2018): “Monetary policy according to
+HANK,” American Economic Review, 108, 697–743.
+Li, D., M. Plagborg-Møller, and C. K. Wolf (2023): “Local projections vs. VARs:
+Lessons from Thousands of DGPs,” Working Paper.
+Lucas, Robert E., J. (1972): “Expectations and the Neutrality of Money,” Journal of
+Economic Theory, 4, 103–124.
+Lucas, R. (1976): “Econometric policy evaluation: A critique,” in Carnegie-Rochester
+Conference Series on Public Policy, Elsevier, vol. 1, 19–46.
+McKay, A. and C. Wolf (2022): “Optimal policy rules in HANK,” Tech. rep., Working
+Paper, FRB Minneapolis.
+
+41
+
+McKay, A. and C. K. Wolf (2023): “What Can Time-Series Regressions Tell Us About
+Policy Counterfactuals?” Working Paper.
+Miranda-Agrippino, S. and G. Ricco (2023): “Identification with external instruments
+in structural VARs,” Journal of Monetary Economics.
+Molavi, P. (2019): “Macroeconomics with learning and misspecification: A general theory
+and applications,” Unpublished manuscript.
+Plagborg-Møller, M. and C. K. Wolf (2021): “Local projections and VARs estimate
+the same impulse responses,” Econometrica, 89, 955–980.
+——— (2022): “Instrumental variable identification of dynamic variance decompositions,”
+Journal of Political Economy, 130, 2164–2202.
+Ramey, V. A. (2016): “Macroeconomic shocks and their propagation,” Handbook of
+macroeconomics, 2, 71–162.
+Romer, C. D. and D. H. Romer (2004): “A new measure of monetary shocks: Derivation
+and implications,” American Economic Review, 94, 1055–1084.
+Sims, C. A. (1980): “Macroeconomics and reality,” Econometrica: journal of the Econometric Society, 1–48.
+Smets, F. and R. Wouters (2007): “Shocks and frictions in US business cycles: A
+Bayesian DSGE approach,” American economic review, 97, 586–606.
+Stock, J. H. and M. W. Watson (2016): “Dynamic factor models, factor-augmented vector autoregressions, and structural vector autoregressions in macroeconomics,” in Handbook of macroeconomics, Elsevier, vol. 2, 415–525.
+Svensson, L. E. (1997): “Inflation forecast targeting: Implementing and monitoring inflation targets,” European economic review, 41, 1111–1146.
+Swanson, E. (2024): “The Macroeconomic Effects of the Federal Reserve’s Conventional
+and Unconventional Monetary Policies,” IMF Economic Review, 72, 1152–1184.
+Werning, I. (2015): “Incomplete markets and aggregate demand,” Tech. rep., National
+Bureau of Economic Research.
+
+42
+
+Wolf, C. K. (2020): “Svar (mis) identification and the real effects of monetary policy
+shocks,” American Economic Journal: Macroeconomics, 12, 1–32.
+——— (2023): “The missing intercept: A demand equivalence approach,” Tech. rep., National Bureau of Economic Research.
+——— (2024): “Interest rate cuts vs. stimulus payments: An equivalence result,” Working
+Paper.
+Woodford, M. (2003): Interest and prices: Foundations of a theory of monetary policy,
+Princeton University Press.
+
+43
+
+Online Appendix for:
+Evaluating Monetary Policy Counterfactuals:
+(When) Do We Need Structural Models?
+This appendix contains supplemental material for the article “Evaluating Monetary Policy
+Counterfactuals: (When) Do We Need Structural Models?”. We provide: (i) some additional
+theoretical results to complement the discussion in Section 2; (ii) implementation details for
+our hybrid strategy; (iii) further details for our empirical and model-based analysis of monetary shock propagation in Sections 3 and 4; and (iv) supplementary results to complement
+the applications in Section 5.
+Any references to equations, figures, tables, assumptions, propositions, lemmas,
+or sections that are not preceded by “A.”—“D.” refer to the main article.
+
+44
+
+A
+
+Supplementary details on the identification result
+
+This appendix provides several supplementary theoretical results. Appendix A.1 gives some
+missing details for the description of the general environment in Section 2, Appendix A.2
+contains the proof of Proposition 1, Appendix A.3 elaborates on the role played by invertibility in our identification results, and finally Appendix A.4 discusses how the identification
+results apply in environments with behavioral frictions.
+
+A.1
+
+More on the general environment
+
+This section provides some supplementary details on our general model set-up in Section 2.1.
+This is necessary for a precise definition of our (conditional) policy counterfactuals of interest,
+as well as for the proofs in Appendix A.2.
+We first note that, under our assumptions on (1), the autocovariance function Γy (•) of
+macroeconomic observables yt under the actual policy rule is given as
+Γy (ℓ) =
+
+∞
+X
+
+Θm Θ′m+ℓ .
+
+(A.1)
+
+m=0
+
+It is straightforward to use (A.1) to derive our first sufficient statistic, the Wold representation (7); see, e.g., Brockwell and Davis (1991).
+We next provide some missing details for the definition of the conditional counterfactuals,
+elaborating on the comment in Footnote 3. First of all note that the counterfactual SVMA
+(5) embeds the assumption that the counterfactual policy rule (4) is actually followed forever,
+starting in the infinite past. A more practically relevant assumption, however, is that the
+policymaker unexpectedly changes to the alternative rule (4) at some date t∗ , having followed
+the original rule (3) up to t∗ − 1. In that case we will have
+∗
+
+ỹt =
+
+t−t
+X
+
+Θ̃ℓ εt−ℓ
+
+ℓ=0
+
+|
+
+{z
+
+}
+
++
+
+ỹt∗
+|{z}
+
+(A.2)
+
+initial conditions
+
+new shocks after t∗
+
+The first term in (A.2) is straightforward: all newly arriving shocks εt propagate according to
+the new counterfactual impulse responses Θ̃ℓ . The second term reflects initial conditions: at
+date t∗ , the policymaker revises the planned policy path to ensure that current and expected
+future values of x and z are related according to (4). Letting yt∗ = Et∗ −1 [yt ] denote date-t∗ −1
+45
+
+expectations under the initially prevailing rule, the initial conditions term ỹt∗ can thus be
+obtained by solving the system
+Hw (w̃ ∗ − w ∗ ) + Hx (x̃ ∗ − x ∗ ) + Hz (z̃ ∗ − z ∗ ) = 0 ,
+
+(A.3)
+
+Ãxx̃ ∗ + Azz̃ ∗ = 0 ,
+
+(A.4)
+
+i.e., a system written in terms of forecast revisions.22 These definitions allow us to introduce
+two particular kinds of conditional counterfactuals—forecasts, and full historical episodes.
+(i) Conditional forecasts. Consider some date t∗ , and suppose the policymaker from t∗
+commits to the new rule (4). We may ask how, from that point onward, the economy
+would be predicted to evolve; i.e., we would like to recover the expectation
+Et∗ [ỹt∗ +h ] = Θ̃h εt∗ + ỹt∗∗ +h ,
+where ỹt∗∗ +h reflects how the policy change at t∗ revises policy promises made and thus
+expectations formed before t∗ .
+(ii) Historical evolution. Consider a particular episode, t ∈ [t1 , t1 + 1, . . . , t2 ]. We may ask
+how the economy would have evolved over that time window if the policymaker had
+followed the rule (4) from date t1 onward; i.e., we seek to recover
+ỹt =
+
+t−t1
+X
+
+Θ̃ℓ εt−ℓ + ỹt1 ,
+
+∀t ∈ [t1 , t1 + 1, . . . , t2 ]
+
+ℓ=0
+
+where again the second term reflects revisions of past promises.
+
+A.2
+
+Proof of Proposition 1
+
+Consider using the policy transmission map Θν to predict the counterfactual propagation of
+the Wold innovations ut under the counterfactual policy rule (4), proceeding as in McKay and
+Wolf (2023, Proposition 1). Formally, for j ∈ {1, . . . , ny }, let Ψ•,j be the impulse response of
+yt to the j-th Wold innovation uj,t , and then construct the counterfactual impulse responses
+Ψ̃•,j as
+Ψ̃•,j = Ψ•,j + Θν ν̃ j ,
+Here, boldface denotes sequences from t∗ onwards. (A.4) says the new, counterfactual policy rule holds.
+By (A.3), the revised forecasts remain consistent with all private-sector relationships.
+22
+
+46
+
+where the artificial policy shocks ν̃ j solve the system of equations
+Ãx (Ψ•,x,j + Θx,ν ν̃ j ) + Ãz (Ψ•,z,j + Θz,ν ν̃ j ) = 0 .
+
+(A.5)
+
+Combining the Ψ̃•,j ’s for all j, we get the counterfactual process
+ỹt =
+
+∞
+X
+
+Ψ̃ℓ ut−ℓ .
+
+(A.6)
+
+ℓ=0
+
+Under invertibility, the Wold innovations ut and true structural shocks εt are related as
+ut = P εt ,
+where P is an orthogonal matrix. It then again follows from McKay and Wolf (2023) that
+the counterfactual Wold lag polynomial Ψ̃(L) satisfies
+Ψ̃(L) = Θ̃(L)P ′ .
+
+(A.7)
+
+We now recover each of the desired counterfactuals.
+• Counterfactual autocovariance function. Consider using the counterfactual process
+(A.6) to recover the desired counterfactual second-moment properties. Its implied
+autocovariance function is
+∞
+X
+m=0
+
+Ψ̃m Ψ̃′m+ℓ =
+
+∞
+X
+
+′
+
+Θ̃m P P Θ̃′m+ℓ =
+
+∞
+X
+
+Θ̃m Θ̃′m+ℓ = Γ̃y (ℓ),
+
+m=0
+
+m=0
+
+where the first equality uses (A.7), and the second one follows since P is an orthogonal
+matrix.
+• Conditional counterfactuals. We show how to recover the two conditional counterfactuals defined in Appendix A.1; setting t∗ = −∞, this delivers the counterfactual process
+ỹt as defined in Section 2.1. Applying Proposition 1 of McKay and Wolf (2023) to
+the system (A.3) - (A.4) that defines initial conditions ỹ ∗ , we see that we can recover
+initial conditions at t∗ as
+ỹ ∗ = y ∗ + Θν ν̃ ∗ ,
+(A.8)
+
+47
+
+where the artificial policy shocks ν̃ ∗ now solve
+Ãx (x ∗ + Θx,ν ν̃ ∗ ) + Ãz (z ∗ + Θz,ν ν̃ ∗ ) = 0 .
+
+(A.9)
+
+Note that our informational requirements (i) - (ii) suffice to construct ν̃ ∗ and thus allow
+us to also evaluate the initial conditions term ỹ ∗ . In particular, invertibility ensures
+that x ∗ and z ∗ are equal to date-t∗ − 1 forecasts based on the Wold representation (7),
+P
+given as yt∗∗ +h = ∞
+ℓ=1 Ψh+ℓ ut∗ −ℓ . We can now recover the two counterfactuals.
+(i) Consider using (A.6) and (A.8) to recover the conditional forecast Et [ỹt+h ]. We
+have
+Ψ̃h ut∗ + ỹt∗∗ +h = Ψ̃h P εt∗ + ỹt∗∗ +h = Et∗ [ỹt∗ +h ] .
+|{z}
+=Θ̃h
+
+(ii) Consider using (A.6) and (A.8) to recover the historical counterfactual ỹt . We
+have
+t−t1
+t−t1
+X
+X
+Ψ̃ℓ ut−ℓ + ỹt1 =
+Ψ̃ℓ P εt−ℓ + ỹt1 = ỹt .
+|{z}
+ℓ=0
+
+A.3
+
+ℓ=0
+
+=Θ̃ℓ
+
+More on the role of invertibility
+
+We begin by establishing, consistent with the intuition given throughout Section 2, that the
+sole purpose of invertibility is to generate full-information forecasts. Afterwards we provide
+some further discussion of what happens in the absence of invertibility. We also give some
+missing implementation details for the numerical explorations in Section 2.2.
+Invertibility and forecasts. We provide a constructive argument showing that access
+to full-information forecasts is sufficient to recover our counterfactuals. For this it will prove
+convenient to reverse the order relative to the arguments in Proposition 1, beginning instead
+with counterfactuals for conditional episodes.
+• Conditional counterfactuals.
+(i) Recall that we need to construct ỹt∗∗ +h and Θ̃h εt∗ . Given the full-information
+forecasts Et∗ −1 [yt+h ], ỹt∗∗ +h can be constructed from Θν exactly as in the proof
+48
+
+of Proposition 1. Next note that Θh εt∗ can be recovered as the revision in fullinformation forecasts
+Θh εt∗ = (Et∗ − Et∗ −1 )[yt∗ +h ].
+We can then just as before use Θν to turn those expectation revisions into Θ̃h εt∗ ,
+completing the argument.
+Pt−t1
+(ii) We now need to construct ỹt1 as well
+ℓ=0 Θ̃ℓ εt−ℓ . As in the previous item,
+ỹt1 can still be computed directly from date-t1 − 1 forecasts, as in the proof of
+Proposition 1. Next, for date t1 , we obtain Θh εt1 from forecast revisions as (Et1 −
+Et1 −1 )[yt1 +h ], and then use Θν to get the counterfactual Θ̃h εt1 , thus in particular
+giving ỹt1 = Θ̃0 εt1 + ỹt1 . Proceeding recursively, we for time ť obtain forecast
+revisions to get Θh εť , and so as usual via Θν recover Θ̃h εť . From here we then get
+the date-ť realized counterfactual outcome as
+ỹť = Θ̃0 εť +
+
+ť−t1
+X
+
+|ℓ=1
+
+Θ̃ℓ εť−ℓ + ỹt1 ,
+{z
+
+}
+
+from previous steps
+
+completing the argument.
+• Counterfactual autocovariance function. Proposition 1 presupposes knowledge of the
+autocovariance function of the observables yt or, equivalently, access to an arbitrarily
+large sample of observations {yt }∞
+t=0 . By the discussion in the previous item, knowledge
+of full-information forecasts suffices to instead construct an arbitrarily large counterfactual sample {ỹt }∞
+t=0 , thus delivering the counterfactual autocovariance function Γ̃(ℓ).
+From this discussion it follows that, conditional on full-information forecasts being observable, invertibility ceases to be necessary. Our empirical implementation of the VAR step
+is designed with this observation in mind.
+Proposition 1 without invertibility. Without invertibility, the orthogonalized reducedform residuals ut satisfy (e.g., see Wolf, 2020)
+ut = P (L)εt .
+
+49
+
+The Wold lag polynomial Ψ(L) then satisfies
+Ψ(L)P (L) = Θ(L),
+Using that P (L)P ∗ (L−1 ) = I, it then follows from the arguments in McKay and Wolf (2023)
+that the artificial Wold lag polynomial Ψ̃(L) constructed in our proof of Proposition 1 satisfies
+Ψ̃(L) = Θ̃(L)P ∗ (L−1 ).
+Proceeding from here, however, the proof strategy of Proposition 1 now fails, as it is generally
+the case that P ∗ (L−1 )P (L) ̸= I.
+The results in Section 2.2 furthermore reveal that it is not just our particular proof strategy that fails here—without invertibility, Wold-implied forecasts are generally not equal to
+full-information forecasts, and so the derived counterfactuals do not equal the truth (though
+they may be close, of course). Mathematically, the problem is that, while the true lag polynomial Θ(L) and the Wold lag polynomial Ψ(L) generate the same autocovariance function,
+nothing guarantees that the counterfactual lag polynomials Θ̃(L) and Ψ̃(L) will also generate
+the same second moments. It is only the assumption of invertibility—which ties the impulse
+responses in the lag polynomials Θ(L) and Ψ(L) together in a particular way—that allows
+this argument to go through.
+Numerical explorations without invertibility. Our laboratory data-generating
+process for the illustrations in Section 2.2 is the well-known structural model of Smets and
+Wouters (2007), but with one minor change—we assume that the monetary authority follows
+rules of the form
+it = ρi it−1 + (1 − ρi ) (ϕπ πt + ϕy yt ) ,
+(A.10)
+which is slightly simpler than the headline specification considered by Smets and Wouters.
+Specifically, we assume that the researcher observes data generated from the posterior
+mode parameterization of the Smets and Wouters model, but with the monetary policy rule
+taking the particular form (A.10) with ϕπ = 1.5 and ρi = ϕy = 0. She then wishes to predict
+the counterfactual second-moment properties of interest if instead the monetary authority
+followed the rule (A.10) but with ρi = 0.8, ϕπ = 1.5 and ϕy = 0.5. We have chosen these two
+particular policy rules because they imply quite starkly different second-moment properties,
+with the first one aggressively stabilizing inflation, while the second one smoothes interest
+rates and also stabilizes output. This allows us to most transparently illustrate our results
+50
+
+about counterfactual accuracy under non-invertibility, as displayed in Figure 1.
+
+A.4
+
+Behavioral models
+
+In this subsection we discuss to what extent our theoretical identification results are consistent with deviations from the usual full-information, rational-expectations (FIRE) benchmark. We first clarify what kinds of behavioral frictions are admissible (and which are not),
+and then explain why, to implement our methodology, researchers still always need to try to
+construct full-information forecasts, consistent with our main-text discussion.
+Nested behavioral models. Every structural environment that can be written in the
+general form (2) - (3) is consistent with our identification results. Importantly, this contains
+models with behavioral frictions in which the deviation from FIRE is independent of the
+policy rule, in the sense that the behavioral friction is encoded in Hw , Hx , Hz , He , and does
+not change as the policy rule changes.
+More formally, begin by considering a model with FIRE, and consider the ith equation
+in its non-policy block, written as
+R
+R
+R
+R
+Hi,w
+w + Hi,x
+x + Hi,z
+z + Hi,e
+e0 = 0 .
+
+(A.11)
+
+A typical example of such a block would be the aggregate consumption function, mapping
+sequences of household income and asset returns into a path of consumption. Our theory
+is consistent with behavioral frictions in which the model equation (A.11) is replaced by an
+alternative of the form
+B
+B
+B
+B
+w + Hi,x
+x + Hi,z
+z + Hi,e
+e0 = 0 .
+(A.12)
+Hi,w
+B
+R
+:
+where the matrices Hi,•
+are a policy rule-invariant transformation of Hi,•
+B
+R
+(θ) = f (Hi,•
+, θ),
+Hi,•
+
+with the parameter vector θ governing the behavioral friction. Examples of behavioral frictions that can be written in this general way include sticky information, sticky expectations,
+cognitive discounting, level-k thinking, and diagnostic expectations; see Auclert et al. (2021)
+for further details. Crucially, in all of these cases, agent behavior continues to be shaped
+by policy only through the current and expected future (full-information) paths of {w , x , z },
+
+51
+
+and so our identification results continue to apply.23
+Implications for forecasting. The previous discussion reveals that, even if the underlying data-generating process features behavioral frictions (of the sort consistent with our
+identification result, of course), the forecasts that appear in (2) - (3) and thus our identification results are full-information forecasts. It follows that, when leveraging our identification
+result, researchers should aim to construct such full-information forecasts, and then note
+that their reported counterfactuals will be valid across a wide range of models with and
+without underlying behavioral frictions.
+
+23
+
+A simple example that violates this restriction is the misspecified learning model of Molavi (2019). Here,
+a change in policy rule affects agent learning and thus alters the response to any given set of (full-information)
+expected future time paths, breaking the policy rule independence that we require. Mathematically, this is
+isomorphic to how incomplete information as in Lucas (1972) breaks our identification results.
+
+52
+
+B
+
+The hybrid strategy
+
+Appendices B.1 and B.2 provide implementation details for our proposed hybrid strategy:
+first on impulse response estimation, then on model estimation. Appendix B.3 elaborates on
+some of the well-known fragilities of standard full-information likelihood-based approaches.
+
+B.1
+
+Impulse response estimation
+
+The first step of the impulse response-matching approach is the estimation of the monetary
+shock impulse response targets. We assume access to nν distinct policy shocks, and that the
+subsequent model estimation targets the impulse responses of nm outcome variables over H
+impulse response horizons to the identified shocks. We stack these impulse responses in the
+nν × nm × H vector θν .
+Under standard asymptotic sampling theory, the asymptotic distribution of the estimated
+policy shock causal effect vector θ̂ν satisfies (e.g., see Christiano et al., 2010)
+a
+
+θ̂ν ∼ N (θν , Vθν ).
+As in much prior work on impulse response-matching, we propose to estimate θν using
+standard Bayesian VAR methods. Estimation delivers draws i = 1, 2, . . . , N of the policy
+shock causal effect vector, denoted θ̂i,ν . We obtain θ̂ν as the posterior mode of the estimated
+policy shock causal effects. For Vθν we first construct:
+N 
+′
+
+X
+θ̂i,ν − θ̂ν θ̂i,ν − θ̂ν .
+V̄θν ≡
+i=1
+
+Since the small-sample properties of estimating Vθν in this way are poor, we instead work
+with a sample size-dependent transformation of V̄θν , following Christiano et al. (2010):
+Vθν = f (V̄θν , T )
+where T is the sample size. The transformation f (•) has the following properties. First, Vθν
+and V̄θν have the same diagonal entries. Second, for off-diagonal entries that correspond to
+the ℓth and jth lagged response of a common variable to a common shock, it scales down
+
+53
+
+the entry of V̄θν by
+
+
+|ℓ − j|
+1−
+H̄T
+
+η1,T
+,
+
+ℓ, j = 1, 2, . . . , H̄T
+
+(B.1)
+
+where H̄T ≤ H and H̄T → H, η1,T → 0 as T → ∞. Third, for all other off-diagonal entries
+corresponding ℓth and jth lagged responses, it scales down the entry of V̄θν by
+η
+
+|ℓ − j| 2,T
+ζT 1 −
+,
+H̄T
+
+ℓ, j = 1, 2, . . . , H̄T
+
+(B.2)
+
+where ζT → 1 and η2,T → 0 as T → ∞. Intuitively, this transformation dampens some (offdiagonal) elements in V̄θν , with the dampening factor removed as the sample size increases.
+Finally, all covariances that are further apart than H̄T periods are set to zero. One popular
+approach—followed, for example, in Christiano et al. (2005)—is to set η1,T = ∞ and ζT = 0
+(thus η2,T and H̄T are immaterial), so that Vθν is simply a diagonal matrix composed of the
+diagonal components of V̄θν . The opposite extreme is to not dampen at all, setting Vθν = V̄θν .
+In our applications we will follow an intermediate strategy. We set ζT = 1 in order to
+treat autocorrelations and correlations across different variables equally; we furthermore use
+a triangular kernel, so η1,T = η2,T = 1, and a bandwidth of H̄T = 8.24
+
+B.2
+
+Model estimation
+
+We next describe how we use the empirically estimated impulse response targets for structural
+model estimation. Relative to standard implementations of impulse response-matching, our
+approach differs in two respects. First, our approach does not require the researcher to
+specify a policy rule, as already previewed in Footnote 11. Second, we want to allow for the
+possibility of a researcher jointly estimating multiple models for causal effect extrapolation.
+The remainder of this section provides implementation details, focusing in particular on these
+two novelties.
+We consider the joint estimation of a list M of models of policy transmission, denoted by
+Mj for j = 1, 2, . . . , M . In the notation of Section 2.1, a “model” is a tuple {Hw , Hx , Hz }.
+Each model then has a parameter vector ψj mapping into {Hw , Hx , Hz }, a prior distribution
+p(ψj | Mj ) for the model parameters, as well as a prior probability p(Mj ). We use impulse
+response-matching strategies to arrive at posterior distributions for parameters given models,
+and across models. We describe our approach in two steps. First, for a given model Mj
+24
+
+We note that our results are robust to different choices of bandwidth or to the use of other kernels.
+
+54
+
+and parameter vector ψj , we explain how to obtain θν (ψj , Mj ), the model-implied analogue
+of the empirically observed policy shock causal effect vector. This step is somewhat nonstandard; in particular, we explain why we need not specify a policy rule to do so. Second,
+we discuss how we draw from the posterior and estimate the marginal likelihood. That step
+is instead entirely standard, so we will be brief.
+Obtaining θν (ψj , Mj ). To evaluate the likelihood, we first need to obtain θν (ψj , Mj ). We
+do so in the following way:
+1. Given (ψj , Mj ), solve for impulse responses of the targeted outcome variables to policy
+news shocks for all horizons, ν . To do so we close the model with some determinacyinducing policy rule; as discussed in McKay and Wolf (2023), the choice of that baseline
+rule is immaterial. Denote the (truncated) impulse response function matrices of interest as Θx m ,ν (ψj , Mj ) for variable x m . Stack all of those impulse response matrices
+vertically in the same order as for θ̂ν , and denote the stacked matrix as Θν (ψj , Mj ).
+This is a (nm T̄ ) × T̄ matrix, where T is the truncation horizon.25
+2. We then, for each of the nν empirically identified policy shocks, find the unique vector
+of policy shocks in the model that matches the empirical impulse response targets as
+well as possible. Formally, for each empirical target shock n = 1, . . . , nν , define a
+T × 1 vector of news shocks ν̃ n . Vertically stack all these vectors of policy news shocks
+in the (nν T̄ ) × 1 vector ν̃ = [ν̃ ′1 , . . . , ν̃ ′nν ]′ . Define also for convenience the following
+(nm T̄ ) × (nν T̄ ) matrix: Φ(ψj , Mj ) = Inν ⊗ Θν (ψj , Mj ) where Inν is an nν -dimensional
+identity matrix. We then obtain the best-fit vector of news shocks ν̃ ∗ as
+ν̃ ∗ (ψj , Mj ) = argmax p̃(θ̂ν , θ̃ν , Vθν )
+ν̃
+
+s.t
+
+ν̃H+1:T,n = 0 for all 1, . . . , nν
+θ̃ν = Φ (ψj , Mj )ν̃
+
+where p̃(θ̂ν , Vθν , θ̃ν ) is the assumed density for “data” θ̂ν with mean θ̃ν and covariance
+matrix Vθν , and ν̃H+1:T̄ ,n denotes elements H +1, H +2, . . . , T̄ of vector ν̃ n .26 Given that
+f is assumed to be the density of a multivariate normal and Vθν is taken as given, the
+25
+
+We set a truncation horizon of T = 300. Our results are insensitive to that choice.
+We impose this constraint to avoid overfitting: in order to match the IRF up to horizon H, we can only
+use the news shocks up to horizon H, and all other news shocks are set to zero.
+26
+
+55
+
+maximizer ν̃ ∗ (ψj , Mj ) can be found in closed form (since the maximization problem is
+a simple restricted linear quadratic problem).
+3. With ν̃ ∗ in hand, compute the model-implied impulse response functions as θν (ψj , Mj ) =
+Φ (ψj , Mj )ν̃ ∗ .
+We note that this way of constructing the model-implied impulse responses θν (ψj , Mj )
+differs from the standard approach of first (i) specifying a policy rule and then (ii) assuming
+that the identified policy shock corresponds to a time-0 shock under that rule (e.g., as in
+Christiano et al., 2005). For this approach to be valid, the assumed rule has to be correctly
+specified. In contrast, our approach does not require assumptions about the policy rule—we
+simply construct a sequence of contemporaneous and news policy shocks ν̃ ∗ that perturbs
+the expected path of the policy instrument analogously to the empirically estimated policy
+instrument impulse response.27
+Posterior distribution & marginal likelihood. Given the above strategy to evaluate θν (ψj , Mj ), we can now estimate posteriors for models and model parameters using a
+standard limited-information Bayesian estimation approach. We can define an approximate
+likelihood of the “data,” θ̂ν , as a function of ψj given Mj :
+
+
+
+
+p(θ̂ν | ψj , Mj ) ∝ exp −0.5 θ̂ν − θν (ψj , Mj )
+
+′
+
+Vθ−1
+ν
+
+
+
+
+θ̂ν − θν (ψj , Mj ) .
+
+(B.3)
+
+Combining the prior together with the likelihood (B.3), we obtain the posterior for ψj conditional on model Mj and given the policy shock causal effect data θ̂ν :
+p(ψj | θ̂ν , Mj ) =
+and where
+
+p(θ̂ν | ψj , Mj )p(ψj | Mj )
+p(θ̂ν | Mj )
+
+,
+
+Z
+p(θ̂ν | Mj ) =
+
+p(θ̂ν | ψj , Mj )p(ψj | Mj )dψj
+
+27
+
+This claim works exactly in population as T, H → ∞. However, due to the finite horizon of the impulseresponse matching, the baseline assumed rule may matter due to truncation. In the models we consider, the
+matched impulse-response and inferred structural parameters are almost exactly the same under a variety
+of parameters for the assumed determinacy-inducing rule, consistent with the exact population result.
+
+56
+
+is the marginal density of θ̂ν given model Mj . The final step is to recover posterior model
+probabilities—i.e., the posterior distribution across the model space M. We have
+p(θ̂ν | Mj )p(Mj )
+.
+p(Mj | θ̂ν ) = PM
+p(
+θ̂
+|
+M
+)p(M
+)
+ν
+i
+i
+i=1
+
+(B.4)
+
+To actually compute these objects we use a standard Random Walk Metropolis Hastings
+algorithm, with a multivariate normal for the proposal distribution. The variance-covariance
+matrix is initially assumed to be equal to the prior variance-covariance matrix, scaled by a
+constant c21 .28 We use the first Na draws to estimate the variance-covariance matrix of
+the proposal distribution, updating the proposal variance-covariance matrix to the observed
+variance-covariance matrix of parameters in the first Na draws (scaled by c22 ). Once updated,
+we sample another Nb +Nc draws, burn the first Nb and keep the last Nc draws, which we use
+as our posterior distribution. We set Na = Nc = 100000, Nb = 50000, c1 = 0.8 and c2 = 0.6
+for all models. Our acceptance rates for all of the models considered range between 20 and
+30 percent. We store Nd = 1000 draws, selected as one draw out of each Nc /Nd = 100, to
+get draws that are closer to uncorrelated. Finally, given those posterior draws, we estimate
+the marginal likelihood using the harmonic mean estimator of Geweke (1999).29
+We have thus overall arrived at a posterior distribution over models and parameter vectors, p(ψj , Mj | θ̂ν ). Each parameterized model implies a policy transmission map
+Θν = Θν (ψj , Mj ).
+In order to actually implement our applications, we need to store these large transmission
+maps for each draw from the posterior; i.e., we need to store impulse response matrices of
+the outcomes of interest with respect to the full sequence of news shocks. Given that storing
+hundreds of thousands of draws of T × T matrices is very expensive in terms of memory, we
+store only the Tu × Tu top left elements, with Tu = 200.
+28
+
+For our HANK models, we in this step use a standard deviation of 0.1 for the informational stickiness
+parameter (instead of 0.2, see Table C.2), to avoid getting too many draws outside of the parameter support.
+29
+We set the truncation parameter such that we use only half of the sample. We use the full sample
+consisting of Nc draws to estimate the marginal likelihoods.
+
+57
+
+B.3
+
+Vulnerabilities of full-information structural approaches
+
+We provide some further details supplementing the discussion in Section 4.4, briefly elaborating on some well-known vulnerabilities of the standard full-information approach.
+Model misspecification and inference. Under standard full-information approaches
+to model estimation (like, e.g., Smets and Wouters, 2007), misspecification in one part of
+the model will affect inference for the other parts. The argument is straightforward, so our
+discussion here will be brief; we will furthermore focus our discussion on misspecification in
+shock processes, as such misspecification is particularly likely in practice (Chari et al., 2009).
+Analogous arguments apply to misspecification in policy rules.
+Suppose the true data-generating process is
+yt = Θ∗ (L)ξt
+
+(B.5)
+
+ξt = B ∗ (L)εt
+
+(B.6)
+
+where εt ∼ N (0, I). Relative to (1), the system (B.5) - (B.6) is written to explicitly separate
+the exogenous process (i.e., equation (B.6)) from the endogenous model propagation (i.e.,
+equation (B.5)). For example, εt could be an innovation to total factor productivity, while
+ξt is the exogenous TFP level itself. For future reference we define Ψ∗ (L) = Θ∗ (L)B ∗ (L).
+The researcher instead entertains models indexed by parameters ψ = (ψ1′ , ψ2′ )′ :
+yt = Θψ1 (L)ξt
+
+(B.7)
+
+ξt = Bψ2 (L)εt
+
+(B.8)
+
+where again εt ∼ N (0, I). We assume that there is no misspecification in the endogenous
+propagation part of the model: there is a (in fact unique) ψ1∗ such that Θψ1∗ (L) = Θ∗ (L).
+Shock propagation, however, is misspecified; for example, the researcher may assume that
+all shocks follow AR(1) processes, while in fact they follow richer ARMA(p,q) processes. For
+future reference we again write Ψψ (L) = Θψ1 (L)Bψ2 (L).
+Finally, to make our arguments as stark as possible, we suppose that there exists a unique
+ψ † such that
+Ψ∗ (e−iω )Ψ∗ (e−iω )′ = Ψψ† (e−iω )Ψψ† (e−iω )′
+
+∀ω ∈ [0, 2π].
+
+Thus, when evaluated at ψ † (and only then), the two processes (B.5) - (B.6) and (B.7) 58
+
+(B.8) imply the exact same second moments, so conventional likelihood-based estimation
+will asymptotically yield ψ = ψ † . But since B ∗ (L) ̸= Bψ† (L), we will generically have
+2
+Θ∗ (L) ̸= Θψ† (L)—i.e., misspecification in the endogenous shock propagation part, including
+1
+in particular the policy space Θν . Since our proposed approach to policy evaluation does
+not require the researcher to take any stance on the shock process part B(L), it is by design
+robust to such concerns.
+A concrete illustration of this abstract discussion is provided by the model of Smets and
+Wouters. In that model, the exogenous shocks driving inflation already induce hump shapes
+(they follow ARMA(1,1)’s), and so other shocks—like monetary shocks—induce much weaker
+hump shapes than observed in the data; we thank Simon Gilchrist for making this point.
+Weak identification. Standard full-information approaches to estimation of DSGE
+models are also often subject to concerns of weak identification (e.g., see Fernández-Villaverde
+et al., 2016). Our proposed limited-information approach is arguably less subject to this concern, simply because it only requires the researcher to partially specify the structural model,
+thus reducing the number of parameters that need to be identified. We here provide a simple
+example illustration of this insight.
+Consider the following two-variable, two-equation static model:
+1
+yt = − it + σd εdt ,
+γ
+it = ϕy yt + σm εm
+t ,
+where yt and it denote outcome variables (output and interest rates), and (εdt , εm
+t ) are shocks.
+Note that the solution is given as
+yt
+it
+
+!
+=
+
+1
+
+− γ1 σm
+
+σd
+
+1 + ϕγy
+|
+
+σm
+{z
+
+ϕy σd
+
+≡Θ
+
+!
+
+εm
+t
+εdt
+
+!
+
+}
+
+Consider first a researcher following our approach. The ratio of the impulse responses of
+interest rates and output to a monetary policy shock εm
+t point-identifies γ, and so the space
+of output and interest rate allocations implementable through policy, as required by our
+identification result. Now consider instead identification based on second moments; i.e., we
+
+59
+
+seek to find a tuple {γ, ϕy , σd , σm } such that
+Σ = Θ(γ, ϕy , σd , σm )Θ(γ, ϕy , σd , σm )′
+where Σ ≡ ΘΘ′ is the true variance-covariance matrix. It is straightforward to verify that
+these moment conditions are insufficient to point-identify the model, and in particular do
+not point-identify γ.30
+
+30
+
+To see this, start with some arbitrary γ > 0. Note that
+ϕ2y + ϕy γ
+Var(it ) + γ Cov(yt , it )
+=
+ϕ
+Var(yt ) + γ1 Cov(yt , it )
+1 + γy
+
+Solve this equation for ϕy , recover σd from Var(it ) + γ Cov(yt , it ), and finally get σm from Var(it ). The
+resulting parameter vector leads the model to correctly match the desired Σ.
+
+60
+
+C
+
+Monetary policy causal effects
+
+This appendix provides supplementary details on our analysis of monetary shock causal
+effects along the yield curve in Sections 3 and 4. We elaborate first on the empirical analysis
+in Appendix C.1, and then on model-based extrapolation in Appendices C.2 and C.3.
+
+C.1
+
+Empirical evidence
+
+We provide further details on how we construct our empirical estimates of monetary policy
+shock transmission at the short end of the yield curve.
+Data. We are interested in impulse responses of three outcome variables: the output gap,
+inflation, and the policy rate. These series are constructed as follows. Unless indicated
+otherwise, each series is transformed to stationarity following Hamilton (2018), and series
+names refer to FRED mnemonics.
+• Output gap. We take log output per capita from FRED (A939RX0Q048SBEA). We interpret the stationarity-transformed series as a measure of the output gap.
+• Inflation. We compute the log-differenced GDP deflator (GDPDEF), and then annualize,
+without further transformations.
+• Federal funds rate. We obtain the series FEDFUNDS, without further transformations.
+All series are quarterly, and we consider a sample period from 1969:Q1–2006:Q4, stopping
+before the Great Recession to capture a relatively stable monetary regime. Our measure of
+monetary policy shock series are obtained from the replication files of Aruoba and Drechsel
+(2024) (for their shock) and Ramey (2016) (for the Romer and Romer shock). We aggregate
+by averaging the monthly series, and we set all missing values of the monetary shock IVs to
+zero, as in Känzig (2021).
+Econometric implementation. We estimate a VAR in the two shock series together
+with our three outcome variables of interest. Following the recommendations of PlagborgMøller and Wolf (2021), we order the Aruoba and Drechsel (2024) shock first in a recursive
+identification of our VAR, thus delivering invertibility-robust estimates of the desired dynamic causal effects. The Romer and Romer (2004) shock we instead order after output and
+inflation (but before the policy instrument), consistent with the original implementation in
+61
+
+that paper. We include two lags, a linear time trend, and use a uniform-normal-inverseWishart distribution over the orthogonal reduced-form parameterization (as in Arias et al.,
+2018). Our estimation results are robust to these particular choices. This procedure yields
+draws of the monetary policy shock causal effect vector θ̂ν , which are then used to construct
+Vθν following the steps outlined in Appendix B.1.
+
+C.2
+
+Structural models of monetary policy transmission
+
+This section provides some supplementary details for our structural models of monetary
+transmission sketched in Section 4.2. We list all model equations; however, since the models
+are relatively standard, the derivations will be rather brief. Throughout this section, we use
+tildes to denote log-deviations from steady state.
+C.2.1
+
+RANK
+
+Households & unions. Households choose sequences of consumption ct and assets aH
+t to
+maximize lifetime utility, given by
+
+E0
+
+"∞
+X
+
+#
+β t [u (ct − hct−1 ) − v (ℓt )] ,
+
+(C.1)
+
+t=0
+
+subject to a standard no-Ponzi condition as well as the budget constraint
+ℓ
+H
+c t + aH
+t = wt (1 − τt )ℓt + dt − τt +
+
+n
+1 + rt−1
+aH ,
+1 + πt t−1
+
+(C.2)
+
+where wt is the real wage, τtℓ is the labor tax rate, dH
+t is real dividend income, τt is a transfer,
+1−γ
+rtn is the nominal interest rate, and πt is the price inflation rate. We assume that u(x) = x1−γ
+1+φ
+and v(x) = ν x1+φ . The Euler Equation in log-deviations from steady state is:
+λ̃t = Et [r̃t+1 + λ̃t+1 ]
+with r̃t+1 = r̃tn − πt+1 , PPt+1
+= exp(πt+1 ), and
+t
+λ̃t = −
+
+1
+1
+γ(c̃t − hc̃t−1 ) +
+βhγ(Et [c̃t+1 ] − hc̃t ).
+(1 − βh)(1 − h)
+(1 − βh)(1 − h)
+
+A detailed derivation of the wage Phillips curve—which summarizes the labor supply block—
+is deferred until Appendix C.2.3, given that the full information case is nested in the deriva62
+
+tion that includes cognitive discounting.
+Production and pricing. The production function for an intermediate good producer i is:
+Yt (i) = Ā(ut (i)kt−1 (i))α (ℓt (i))1−α
+where Ā denotes aggregate productivity, kt−1 (i) is capital stock of firm i, ut (i) is capacity
+utilization, and ℓt (i) denotes labor hired. All intermediate good producers are symmetric
+and so we drop the i subscript. Capital is purchased one period in advance. The intermediate
+good producer solves:31
+max E0
+
+ℓt ,kt ,ut
+
+"∞
+X
+
+#
+(Πtj=0 (1 + rj ))−1 [pIt Yt − wt ℓt − a(ut ) − qt (kt − (1 − δ)kt−1 )
+
+t=0
+
+where a(ut ) is an utility cost of adjusting capacity, and qt kt is the total cost of capital
+purchases for next period.32 The first-order conditions are:
+wt =
+′
+
+a (ut ) =
+
+pIt (1 − α)Ā
+
+ℓt
+ut kt−1
+1−α
+
+−α
+
+ℓt
+ut kt−1
+#!
+"
+1−α
+
+1
+ℓ
+t+1
++ (1 − δ)qt+1
+pI αĀ
+1 + rt+1 t+1
+ut+1 kt
+
+pIt αĀ
+
+qt = E t
+
+
+
+
+
+Log-linearizing around the steady state:
+ỹt = α(ũt + k̃t−1 ) + (1 − α)ℓ̃t
+w̃t = p̃It + α(ũt + k̃t−1 ) − αℓ̃t
+ζ ũt = p̃It + (α − 1)(ũt + k̃t−1 ) + (1 − α)ℓ̃t
+
+
+
+
+1−δ
+1−δ
+I
+q̃t = Et −r̃t+1 + 1 −
+(p̃t+1 + (α − 1)(k̃t + ũt+1 ) + (1 − α)ℓ̃t+1 ) +
+q̃t+1
+1 + r̄
+1 + r̄
+31
+
+We discount future pay-offs using the real rate of interest. Up to first order, this is equivalent to using
+the representative household’s implied stochastic discount factor.
+32
+The cost is written in terms of utility, so it does not enter the market-clearing condition.
+
+63
+
+where ζ = a′′ (1)/a′ (1) is the curvature parameter of the capacity utilization cost function.
+ψ
+and then use the same prior
+Following Smets and Wouters (2007), we parametrize ζ = 1−ψ
+on ψ as in that paper.
+Retail firms solve their dynamic pricing problem subject to Calvo frictions. Detailed
+derivations are deferred until Appendix C.2.3.
+Capital good producers solve
+"∞
+
+
+#
+X
+it
+t
+−1
+qt i t − S
+(Πj=0 (1 + rj ))
+max E0
+,
+it
+it−1
+t=0
+where it is the production of new capital goods (sold to the intermediate goods producers),
+and S(x) is the adjustment cost function. The first-order condition is given by:
+qt =
+
+1
+it−1
+
+S
+
+′
+
+
+
+it
+it−1
+
+
+
+
+− Et
+
+1
+S′
+1 + rt+1
+
+
+
+it+1
+it
+
+
+
+it+1
+i2t
+
+
+
+We assume that S(1) = S ′ (1) = 0 and κ = S ′′ (1) > 0. Log-linearizing around the steady
+state yields:
+κ
+qt = κ(ĩt − ĩt−1 ) −
+(ĩt+1 − ĩt )
+1 + r̄
+Finally, capital evolves according to kt = (1 − δ)kt−1 + it or in log-linearized terms:
+k̃t = (1 − δ)k̃t−1 + δ ĩt
+We note that therefore goods market-clearing implies that, to first order:
+ỹt = c̄c̃t + īĩt
+Policy. The government budget constraint is
+wt ℓt τtℓ + bt = (1 + rt )bt−1 + τt + gt
+where rt is the real return on government debt bt , τt denotes lump-sum transfers, τtℓ denotes
+distortionary labor taxes, and gt denotes government expenditure. Log-linearizing:
+w̄ℓ̄τ̄ ℓ (w̃t + ℓ̃t + τ̃tℓ ) + b̄b̃t = (1 + r̄)b̄(b̃t−1 + r̃t ) + τ̄ τ̃t + ḡg̃t
+
+64
+
+Second, the realized real return on government debt satisfies
+1 + rt =
+
+1 − η pt
+r̄ + η 1
++
+exp(πt ) pt−1 exp(πt ) pt−1
+
+where pt is the real relative price of government debt and η is the decay rate of the coupon,
+with η = 0 corresponding to perpetuities and η = 1 corresponding to one-period debt.
+Log-linearizing:
+1−η
+p̃t
+r̃t = −πt − p̃t−1 +
+1 + r̄
+The central bank sets the nominal rate on one-period government debt, which is in zero net
+supply. By perfect foresight arbitrage we have
+1 + rt =
+
+n
+1 + rt−1
+,
+exp(πt )
+
+t = 1, 2, . . .
+
+and so, in log-deviations
+n
+r̃t = r̃t−1
+− πt ,
+
+t = 1, 2, . . .
+
+or
+
+1−η
+Et [p̃t+1 ]
+1 + r̄
+It remains to determine how taxes are set. We assume:
+r̃tn = −p̃t +
+
+τ̃t = g̃t = 0
+w̄ℓ̄τ̃tℓ = b̄τbℓ b̃t−1
+That is, all the adjustment is done via distortionary taxes. The resulting law of motion for
+government debt is
+b̃t = (1 + r̄ − τ̄ ℓ τbℓ )b̃t−1 + (1 + r̄)r̃t .
+Policy rule for computation. For our numerical analysis, we close the model with a
+determinacy-inducing Taylor rule, as discussed in Appendix B.2:
+
+n
++ ϕπ πt + ϕy ỹt + ϕ∆y (ỹt − ỹt−1 )
+r̃tn = (1 − ρ) ρr̃t−1
+As emphasized throughout, our model estimation step and policy counterfactual applications
+do not depend on this choice of basis rule, simply because we allow for arbitrarily general
+policy shocks, allowing us to implement arbitrary paths of interest rates. For Figures 4 and 5,
+65
+
+we subject this rule to ten-quarter-ahead forward guidance shocks.
+Steady state. We normalize the level of disutility of labor such that ℓ̄ = 1. Given that
+assumption, the Euler equation pins down the real rate as 1 + r̄ = β −1 . We can then find k̄,
+which immediately yields ī, ȳ and w̄. We calibrate the level of outstanding government debt,
+labor taxes and transfers (see Appendix C.3), and pick the steady state level of government
+consumption such that the intertemporal government budget constraint holds.
+C.2.2
+
+HANK
+
+The only two differences relative to the RANK model are that: (i) we replace the representative agent with a heterogeneous agents block, as already described in the main text; (ii)
+we now need to specify how dividends are paid to the households.
+Household and unions. Households are subject to idiosyncratic income risk (with the risk
+process taken from Kaplan et al., 2018), and hours worked are intermediated by labor unions,
+as in the baseline representative-agent model.33 Households save in government bonds, while
+firm capital and equity is held by financial intermediaries; those intermediaries gradually pay
+out dividends to households in proportion to their productivity. Letting 1 − θ denote the
+probability that a household updates its information about aggregate conditions, and letting
+s denote the number of periods since the last update, the consumption-savings problem can
+be stated recursively as
+Vt (a, e, s) = max
+{u(c) − v(ℓt ) + βEt−s [θVt+1 (a′ , e′ , s + 1) + (1 − θ)Vt+1 (a′ , e′ , 0)]}
+′
+c,a
+
+subject to the budget constraint
+′
+
+c+a =
+
+(1 − τℓ,t )wt ℓt + dH
+t
+
+
+
+n
+1 + rt−1
+e+
+a + τt
+1 + πt
+
+and the borrowing constraint a′ ≥ a, and where e denotes idiosyncratic household productivity. The borrowing constraint a is set as in Kaplan et al. (2018). In order to compute the
+solution with informational rigidities, we follow Auclert et al. (2020): we first solve for the
+We assume that unions evaluate the marginal utility of income using c−γ where c is aggregate consumption. As the Phillips curves are then unchanged, this assumption limits the effects of inequality to the
+demand side of the model (as in McKay and Wolf, 2022).
+33
+
+66
+
+Jacobians of the household block under full information, and then transform them to obtain
+the solution under sticky information.
+Dividend distribution. Households receive dividends through a financial intermediary. Let
+aIt denote total assets held by the financial intermediary. Those assets evolve as
+aIt = (1 + rt )aIt−1 + (dt − dH
+t )
+where dt denotes dividends paid by firms to the intermediary and dH
+t denotes payments from
+the intermediary to the households. We assume the following distribution rule:
+I
+¯
+¯
+(dH
+t − d) = δ1 (dt − d) + δ2 (1 + rt )at−1
+
+Note that δ1 = 1 corresponds to the usual case of dividends paid out straight to households,
+with aIt = 0 always. The linearized relations are
+âIt = (1 − δ2 )(1 + r̄)âIt−1 + (1 − δ1 )d¯d˜t
+and
+I
+¯˜
+d¯d˜H
+t = δ1 ddt + δ2 (1 + r̄)ãt−1
+
+where x̂ = x − x̄. We linearize (instead of log-linearizing) with respect to aIt since āI = 0.
+Steady state. We proceed exactly as in the RANK case. Given a calibrated real interest
+rate, we pick β such that in equilibrium households want to hold the calibrated level of liquid
+assets, which are given by the outstanding stock of government debt. Apart from the value
+of β, the steady state is exactly the same as in the RANK case.
+C.2.3
+
+Adding behavioral frictions
+
+This subsection derives the price- and wage-NKPCs under cognitive discounting and price
+indexation. We derive the NPKCs under partial indexation and cognitive discounting, where
+ζ and ζw are the degrees of price indexation; ζ = ζw = 1 corresponds to the case considered
+in our main analysis.
+
+67
+
+Pricing. The problem of a retailer is to choose Pt∗ to maximize
+Et
+
+∞
+X
+
+τ −t
+
+(β̄θp )
+
+
+Mτ |t
+
+τ ≥t
+
+Pτ |t
+− µτ
+Pτ
+
+
+
+Pτ |t
+Pτ
+
+−ϵp
+Yτ ,
+
+1
+where β̄ = 1+r̄
+, Pτ |t is the price at date τ of a firm that last updated its price at t, µτ is
+the real marginal cost of producing at τ , Pτ is the aggregate price index, Yτ is aggregate
+demand, Mτ |t = uc (cτ )/uc (ct ), and 1 − θp is the probability of resetting the price. Due to
+price indexation, we have
+
+Pτ |t = Pt∗ exp (ζ(πt + πt+1 + · · · πτ −1 )) .
+|
+{z
+}
+≡Iτ |t
+
+The first-order condition of the price-setting problem is
+(ϵp − 1)Et
+
+∞
+X
+
+(β̄θp )
+
+τ −t
+
+
+Mτ |t
+
+τ ≥t
+
+Pτ |t
+Pτ
+
+−ϵp
+
+
+
+∞
+X
+Iτ |t
+Pτ |t −ϵp −1 Iτ |t
+τ −t
+Yτ
+= ϵp Et
+(β̄θp ) Mτ |t µτ
+Yτ
+.
+Pτ
+P
+P
+τ
+τ
+τ ≥t
+
+Log-linearizing both sides of this equation around a zero-inflation steady state we have
+∞
+h
+i
+X
+Et
+(β̄θp )τ −t µ̃τ − P̃τ |t + P̃τ = 0
+τ ≥t
+
+or
+
+"
+#
+∞
+τ
+X
+X
+τ −t
+∗
+Et
+(β̄θp )
+µ̃τ − P̃t −
+ζπs−1 + P̃τ = 0
+τ ≥t
+
+s=t+1
+
+and so
+P̃t∗ − P̃t = (1 − β̄θp )Et
+
+∞
+X
+
+"
+(β̄θp )
+
+τ −t
+
+µ̃τ −
+
+τ ≥t
+
+or
+P̃t∗ − P̃t = (1 − β̄θp )Et
+
+∞
+X
+
+#
+
+τ
+X
+
+ζπs−1 + P̃τ − P̃t
+
+s=t+1
+
+"
+(β̄θp )τ −t µ̃τ +
+
+τ ≥t
+
+τ
+X
+
+#
+(1 − ζL)πs
+
+s=t+1
+
+where L is the lag operator. We now apply cognitive discounting (as in Gabaix, 2020):
+P̃t∗ − P̃t = (1 − β̄θp )
+
+∞
+X
+
+"
+(β̄θp m)τ −t µ̃τ + Et
+
+τ ≥t
+
+τ
+X
+
+#
+(1 − ζL)πs
+
+s=t+1
+
+68
+
+(C.3)
+
+where m is the cognitive discount factor.
+The aggregate price index evolves as
+1/(1−ε)
+
+Pt = θp (Pt−1 (exp(ζπt−1 )))1−ε + (1 − θp )(Pt∗ )1−ε
+Solving this for Pt∗ :
+Pt∗ =
+
+
+
+Pt1−ε − θp (Pt−1 (exp(ζπt−1 ))1−ε
+1 − θp
+
+1/(1−ε)
+
+Dividing by Pt :
+
+1/(1−ε)
+1 − θp (exp(πt ))ε−1 (exp(ζπt−1 ))1−ε
+Pt∗
+=
+Pt
+1 − θp
+Re-arranging:
+
+(1 − θp )
+
+Pt∗
+Pt
+
+1−ε
+
+= 1 − θp (exp(πt ))ε−1 (exp(ζπt−1 ))1−ε
+
+Log-linearizing:
+πt
+(1 − ζL)πt
+
+
+1 − θp  ∗
+P̃t − P̃t + ζπt−1
+=
+θp
+
+1 − θp  ∗
+P̃t − P̃t
+=
+θp
+
+(C.4)
+
+Combining (C.3) and (C.4) we arrive at
+#
+"
+∞
+τ
+X
+(1 − θp )(1 − β̄θp ) X
+(1 − ζL)πt =
+(1 − ζL)πs .
+Et
+(β̄θp m)τ −t µ̃τ +
+θp
+s=t+1
+τ ≥t
+
+(C.5)
+
+Define π̌t = (1 − ζL)πt as the quasi-differenced rate of inflation. We can then rewrite the
+preceding equation as
+"∞
+#
+∞
+X
+X
+1
+(1 − θp )(1 − β̄θp )
+Et
+(β̄θp m)τ −t µ̃τ +
+(β̄θp m)τ −t π̌τ
+π̌t =
+θp
+1 − β̄θp m τ =t+1
+τ =t
+or
+
+"∞
+#
+
+
+X
+(1 − θp )(1 − β̄θp )
+π̌
+π̌
+τ
+t
+π̌t =
+Et
+(β̄θp m)τ −t µ̃τ +
+−
+θp
+1 − β̄θp m
+1 − β̄θp m
+τ
+=t
+|
+{z
+}
+κp
+
+69
+
+and so
+
+"∞
+
+
+#
+X
+π̌
+κp
+τ
+π̌t 1 +
+= κp
+(β̄θp m)τ −t µ̃τ +
+1 − β̄θp m
+1 − β̄θp m
+τ =t
+
+
+Differencing forward and re-arranging:
+
+
+κp
+1+
+1 − β̄θp m
+
+and so
+
+
+
+
+
+
+
+π̌t − β̄θp mEt π̌t+1 = κp
+
+π̌t
+µ̃t +
+1 − β̄θp m
+
+
+
+
+
+
+κp
+π̌t = κp µ̃t + β̄θp m 1 +
+Et π̌t+1
+1 − β̄θp m
+
+Replacing the definition of π̃t and noting that µ̃t = p̃It yields the price-NKPC:
+πt − πt−1 = κp pIt + β p Et [πt+1 − πt ]
+
+(C.6)
+
+Wage-setting. For tractability we assume that unions evaluate household utility at average
+consumption and hours worked (rather than averaging across individual household utilities),
+as in McKay and Wolf (2022). When a union does not update its wage, it adjusts it to
+Wj,t = Wj,t−1 (exp(ζw πt−1 )), where πt is price inflation. We will use the notation
+Wτ |t ≡ Wt∗ exp(ζw (πt + · · · + πτ −1 ))
+for the nominal wage at date τ for a union that set its wage at date t. As before we derive
+everything allowing for partial indexation, with our analysis in the main text corresponding
+to the special case of full indexation (ζw = 1). Real earnings for union j are
+Wτ |t
+ℓjτ =
+Pτ
+
+
+
+Wτ |t
+Pτ
+
+
+
+Wτ |t
+Wτ
+
+−ϵw
+
+
+Lτ =
+
+Wτ
+Pτ
+
+
+
+Wτ |t
+Wτ
+
+1−ϵw
+Lτ .
+
+Note that ℓj,t denotes hours worked for union j, ℓτ is total hours worked by the households,
+and Lτ is the effective aggregate labor supply. Wage dispersion implies Lτ ≤ ℓτ ; however,
+since we consider first-order approximations, we can proceed as if Lτ = ℓτ .
+The union’s problem is to choose the nominal reset wage Wt∗ to maximize
+"
+Et
+
+X
+τ ≥t
+
+β̄θw
+
+τ −t
+
+
+λt
+
+Wτ
+Pτ
+
+
+
+Wτ |t
+Wτ
+
+1−ϵw
+
+
+− v (ℓτ )
+
+Wτ |t
+Wτ
+
+−ϵw #
+Lτ
+
+where λt is the relevant aggregate marginal utility, and β̄ is the time discount factor used by
+70
+
+the union, assumed to equal the one used by the firm.34
+The first-order condition is
+Et
+
+X
+
+β̄θw
+
+τ −t
+
+νℓ (ℓτ ) ℓτ ϵw Wτϵw
+
+τ ≥t
+
+τ
+Y
+
+exp(ζw πs−1 )
+
+s=t+1
+
+= Et
+
+X
+
+β̄θw
+
+τ −t
+
+τ ≥t
+
+τ
+Wτ |t ϵw Y
+exp(ζw πs−1 ).
+uc (cτ )(ϵw − 1)
+Wτ ℓτ
+Pτ
+s=t+1
+
+Log-linearizing the first-order condition around a zero-inflation steady state:
+Et
+
+∞
+X
+
+
+
+(βθw )τ −t ϕℓ̃τ − W̃τ |t + p̃τ − λ̃τ = 0
+
+τ =t
+
+or
+Et
+
+∞
+X
+
+τ −t
+
+τ
+X
+
+ϕℓ̃τ − W̃t∗ −
+
+(βθw )
+
+τ =t
+
+!
+ζw πs−1 + p̃τ − λ̃τ
+
+= 0,
+
+s=t+1
+
+ℓ̄
+where ϕ ≡ ννℓℓℓ((ℓ̄)
+. Re-arranging
+ℓ̄)
+
+W̃t∗ − W̃t = (1 − β̄θw )Et
+
+X
+
+β̄θw
+
+τ −t
+
+ϕℓ̃τ − λ̃τ −
+
+τ ≥t
+
+τ
+X
+
+!
+ζw πs−1 − W̃t + p̃τ
+
+s=t+1
+
+and so
+W̃t∗ − W̃t = (1 − β̄θw )Et
+
+X
+
+β̄θw
+
+τ −t
+
+ϕℓ̃τ − λ̃τ +
+
+τ ≥t
+
+τ
+X
+
+!
+(πsw − ζw πs−1 ) − w̃τ
+
+,
+
+s=t+1
+
+where w̃τ ≡ W̃τ − p̃τ . We will define χτ = φℓ̃τ − λ̃τ − w̃τ to be the labor wedge. Recall
+that, under our assumptions, we in the HANK model have that λ̃t = −γc̃t where c̃t is
+log-deviations of aggregate consumption.
+From the definition of the wage index we have
+πtw =
+
+1 − θw
+(W̃t∗ − W̃t ) + ζw πt−1 .
+θw
+
+34
+
+In the case of RANK, λt is as discussed in Appendix C.2.1, and the firm and union discount factors are
+always identical. In the case of HANK, we use the marginal utility evaluated at aggregate consumption (i.e.,
+λt = c−γ
+t ), as in McKay and Wolf (2022), and we just set the discount factor for unions equal to the one for
+firms to keep the models as comparable as possible.
+
+71
+
+Combining these relations we get
+τ −t
+(1 − θw )(1 − βθw ) X
+πtw − ζw πt−1 =
+Et
+β̄θw
+θw
+τ ≥t
+
+τ
+X
+
+χτ +
+
+!
+(πsw − ζw πs−1 )
+
+s=t+1
+
+Applying cognitive discounting:
+τ
+X
+τ −t
+(1 − θw )(1 − β̄θw ) X
+w
+πt − ζw πt−1 =
+Et
+β̄θw m
+χτ +
+(πsw − ζw πs−1 )
+θw
+s=t+1
+τ ≥t
+
+!
+
+This expression has the same structure as (C.5). Operating exactly in the same way as
+before we obtain
+
+
+ w
+
+κw
+w
+Et πt+1
+πt − ζw πt−1 = κw χt + βθw m 1 +
+− ζw πt
+1 − βθw m
+With full wage indexation this gives the wage-NKPC used in our main analysis:
+ w
+
+πtw − πt−1 = κw χt + β w Et πt+1
+− πt
+
+C.3
+
+(C.7)
+
+Model calibration and estimation
+
+This section provides details on the parameterization of our estimated models of monetary
+transmission. We proceed in two steps—first the calibration part, and then the estimation.
+Calibration. For all four models, we calibrate the elasticity of intertemporal substitution
+and the Frisch elasticity to be 21 , which are standard values in the literature. For RANK,
+we set β = 0.99 (quarterly) in order to get a real interest rate of 4 percent annualized. For
+HANK, we pick β in order to match the same steady-state level of assets for all models. We
+calibrate the idiosyncratic income process for HANK from Kaplan et al. (2018).
+We set the capital share to α = 0.36 and depreciation rate to δ = 0.025 quarterly, which is
+consistent with the values used in Christiano et al. (2005). The dividend distribution process
+is parameterized by assuming δ1 = 0.2 and δ2 = 0.05, which ensures a gradual payment of
+dividends and therefore low consumption response from capital gains.35
+We follow Wolf (2023) for the steady state calibration of the fiscal side. We assume a
+labor tax rate τ̄ℓ of 0.3, and set transfers to be 5 percent of GDP. The steady state level of
+35
+
+As long as the pay-out is gradual, our results are not sensitive to the specific values used.
+
+72
+
+Parameter
+1/γ
+1/φ
+r̄
+α
+δ
+δ1 , δ2
+τ̄ℓ
+τ̄ /ȳ
+b̄/ȳ
+1/η
+τbℓ
+
+Description
+
+Value
+
+EIS
+0.5
+Frisch elasticity
+0.5
+Real interest rate (annual)
+0.04
+Capital share
+0.36
+Depreciation rate (annual)
+0.1
+Dividend pay-out process
+0.2, 0.05
+Labor tax rate
+0.3
+Transfers
+0.05
+Steady state liquid assets
+1.04
+Liquid assets duration (quarters)
+5
+Speed of fiscal adjustment
+0.15
+
+Target
+Standard
+Standard
+Real interest rate
+Christiano et al. (2005)
+Christiano et al. (2005)
+Capital Gains MPC
+Average Labor Tax
+Wolf (2023)
+Kaplan et al. (2018)
+Kaplan et al. (2018)
+Gradual fiscal adjustment
+
+Table C.1: Calibrated model parameters.
+
+nominal assets is set to 27 percent of annual GDP, as in Kaplan et al. (2018). Government
+debt maturity is calibrated to η = 0.2, which implies an average debt duration of 5 quarters.
+The steady-state level of government expenditure is set such that the budget constraint holds
+in steady state, which yields ȳḡ = 0.1395. We assume that all dynamic fiscal adjustment is
+done via labor taxes, with τbℓ = 0.15. This implies gradual fiscal adjustment, in line with the
+range considered in Auclert et al. (2020).
+A summary of the calibrated parameter values is provided in Table C.1.36
+Estimation. We estimate all models to ensure consistency with the empirical monetary
+policy shock impulse response targets θ̂ν . For the baseline RANK model we estimate five
+parameters: the strength of habits (h), the degrees of price as well as wage rigidity (θp
+and θw ), the curvature of investment adjustment costs (κ), and the curvature of capacity
+utilization costs (ζ). For the baseline HANK model, the household information stickiness
+parameter (θ) replaces the degree of habit formation (h). Finally, for the behavioral models,
+consider the case of m fixed and set to m = 0.65, at the lower end of the range considered
+by Gabaix (2020). We make this choice because our data are only weakly informative about
+m; posterior model odds after joint estimation of all models, as reported in previous versions
+of this paper, illustrate this point.
+Table C.2 summarizes the posterior distributions of all estimated parameters. We see
+36
+
+The baseline determinacy-induced monetary policy rule that we consider sets ρ = 0.85, ϕπ = 2, ϕy = 0.25,
+and ϕ∆y = 0.3. Recall that this choice of rule only matters for our illustrative results in Figures 4 and 5.
+
+73
+
+that, for h, κ and ψ, posterior distributions are relatively close to the prior. On the other
+hand, the distributions of θp , θw and θ are meaningfully affected. In the cases of θp and θw ,
+the level of price and wage stickiness required to fit the impulse responses is relatively large,
+especially for prices; this reflects the known mismatch between micro level and macro level
+estimates of price rigidity, with macro estimates pointing towards much stickier prices than
+micro evidence. For the case of θ, a higher degree of informational stickiness is required
+to fit the empirical impulse responses than the one encoded in the prior. The degree of
+information rigidity is close to the one inferred in Auclert et al. (2020).
+
+74
+
+Model
+RANK - RE
+
+75
+
+Parameter
+h
+θp
+θw
+κ
+ψ
+HANK - RE
+θ
+θp
+θw
+κ
+ψ
+RANK - CD
+h
+θp
+θw
+κ
+ψ
+HANK - CD
+θ
+θp
+θw
+κ
+ψ
+
+Dist.
+Beta
+Beta
+Beta
+Normal
+Beta
+Beta
+Beta
+Beta
+Normal
+Beta
+Beta
+Beta
+Beta
+Normal
+Beta
+Beta
+Beta
+Beta
+Normal
+Beta
+
+Prior
+Mean St. Dev
+0.70
+0.10
+0.67
+0.20
+0.67
+0.20
+5.00
+1.50
+0.50
+0.15
+0.70
+0.20
+0.67
+0.20
+0.67
+0.20
+5.00
+1.50
+0.50
+0.15
+0.70
+0.10
+0.67
+0.20
+0.67
+0.20
+5.00
+1.50
+0.50
+0.15
+0.70
+0.20
+0.67
+0.20
+0.67
+0.20
+5.00
+1.50
+0.50
+0.15
+
+Mode
+0.7656
+0.9244
+0.8795
+5.4630
+0.3865
+0.9812
+0.9424
+0.8534
+5.8763
+0.4509
+0.7589
+0.8596
+0.9460
+5.5686
+0.4945
+0.9787
+0.8499
+0.9498
+5.5916
+0.4994
+
+Mean
+0.7508
+0.9094
+0.7715
+5.7889
+0.4547
+0.9474
+0.9136
+0.7794
+5.8997
+0.4387
+0.7522
+0.8797
+0.7608
+5.8100
+0.4618
+0.9483
+0.8764
+0.7964
+5.9648
+0.4432
+
+Posterior
+Median 5 percent
+0.7585
+0.6005
+0.9288
+0.7820
+0.8353
+0.3803
+5.7591
+3.7038
+0.4516
+0.2167
+0.9589
+0.8613
+0.9360
+0.7733
+0.8340
+0.4160
+5.8594
+3.8234
+0.4331
+0.2085
+0.7599
+0.5971
+0.9092
+0.7138
+0.8205
+0.3760
+5.7563
+3.7332
+0.4600
+0.2246
+0.9600
+0.8623
+0.9036
+0.7114
+0.8668
+0.4251
+5.9323
+3.8650
+0.4396
+0.2122
+
+95 percent
+0.8769
+0.9710
+0.9623
+7.9633
+0.7043
+0.9946
+0.9763
+0.9635
+8.1150
+0.6949
+0.8793
+0.9619
+0.9611
+8.0054
+0.7078
+0.9949
+0.9667
+0.9627
+8.1611
+0.6889
+
+Table C.2: Prior and posterior distributions of structural parameters. RE denotes that the model assumes rational expectations
+(m = 1), whereas CD indicates that the model features cognitive discounting in price and wage setters (with m = 0.65).
+
+D
+
+Supplementary details for empirical applications
+
+This appendix contains supplementary results for our three monetary policy counterfactual
+applications in Section 5.
+
+D.1
+
+Reduced-form projections
+
+We provide supplementary details on how we construct the reduced-form projections for our
+three applications. We elaborate on data construction and econometric implementation, and
+also compare the implied forecasts with other approaches.
+Data. We consider the same ten observables yt as in Angeletos et al. (2020). The series are
+constructed as follows. Unless indicated otherwise, each series is transformed to stationarity
+following Hamilton (2018), and series names refer to FRED mnemonics.
+• Unemployment rate. We take the series UNRATE from FRED. We do not transform this
+series further.
+• Output gap. We take log output per capita from FRED (A939RX0Q048SBEA). We interpret the stationarity-transformed series as a measure of the output gap.
+• Investment. We compute log investment per capita, where investment is defined as
+the sum of durables and gross private domestic investment. We construct this series
+as (PCDG+GPDI)*A939RX0Q048SBEA/GDP.
+• Consumption. We compute log consumption per capita, where consumption is defined
+as the sum of nondurables and services. We construct this series as (PCND+PCESV) *
+A939RX0Q048SBEA/GDP.
+• Hours. We compute log hours worked, where total hours worked are constructed as
+PRS85006023 * CE16OV/CNP16OV.
+• Utilization-adjusted TFP. We compute the cumulative sum of the series DTFPu, from
+John Fernald’s webpage (https://www.johnfernald.net/TFP2023.03.07revision).
+• Labor productivity. We compute log labor productivity, where labor productivity is
+obtained as OPHNFB.
+• Labor share. We compute the log labor share, with PRS85006173 as the labor share.
+76
+
+• Inflation. We compute the log-differenced GDP deflator (GDPDEF), and then annualize,
+without further transformations.
+• Federal funds rate. We obtain the series FEDFUNDS, without further transformations.
+All series are quarterly. For the applications in Sections 5.2 and 5.3, we consider samples
+from 1960:Q1—2019:Q4. For the COVID inflation counterfactual in Section 5.4, we extend
+the sample to 2021:Q2, the contemplated forecasting date. Note that the output gap, inflation, and federal funds rate series are all constructed exactly as in Appendix C.1 for our
+empirical analysis of monetary policy shock propagation.
+Econometric implementation. We restrict attention to OLS point estimates. We always include a constant and a linear time trend. For the second-moment counterfactual in
+Section 5.2 we include four lags, to allow for an accurate fit of second moments. For the
+forecast-based counterfactuals in Sections 5.3 and 5.4, we include two lags. Our use of a
+reduced-form VAR for this purpose agrees with the findings in Li et al. (2023) who show
+that VARs tend to dominate other estimation methods in terms of mean-squared error and
+thus for point estimation.
+Comparison with alternative forecasts. We now perform two additional checks to
+demonstrate the good forecasting performance of our reduced-form VAR: we (i) check that
+the forecast accuracy is similar to that of the Survey of Professional Forecasters (SPF); and
+(ii) show that our 10-variable system contains nearly all of the information in the eight business cycle factors that Stock and Watson (2016) computed from a large set of macroeconomic
+and financial variables.
+1. Comparison with the SPF. We assess forecast accuracy starting in 1981:Q3 (when the
+SPF forecast for the T-Bill rate becomes available) and ending in 2007:Q3 (before the
+onset of the Great Recession and the ZLB period).37 Table D.1 shows the mean squared
+errors of the one- and four-quarter-ahead forecasts from our VAR and from the SPF, for
+our three main series of interest. Our VAR evidently performs well by this metric.
+37
+
+In order to allow an apples-to-apples comparison with the SPF, we need to slightly modify our VAR.
+Specifically, we use raw GDP data (not per capita) and the T-Bill rate in place of the federal funds rate, as
+those are the variables that appear in the SPF. As in the baseline VAR analysis, we detrend all non-stationary
+series, but to compare to the SPF we add the trends back to the VAR-implied forecasts.
+
+77
+
+Variable
+
+1-quarter ahead
+VAR
+SPF
+
+4-quarter ahead
+VAR
+SPF
+
+GDP
+Inflation
+T-Bill rate
+
+0.569
+0.357
+0.461
+
+2.76
+0.646
+1.66
+
+0.327
+0.934
+0.740
+
+2.97
+1.85
+3.17
+
+Table D.1: Mean squared error of 1- and 4-quarter ahead forecasts.
+
+Output gap
+Inflation
+Interest rate
+
+1-quarter ahead
+w/o f
+w/ f
+
+4-quarter ahead
+w/o f
+w/ f
+
+0.918
+0.826
+0.945
+
+0.648
+0.716
+0.759
+
+0.935
+0.838
+0.953
+
+0.774
+0.732
+0.781
+
+Table D.2: Assessing the incremental information content of the Stock-Watson factors: forecasting
+R2 with and without inclusion of factors in the VAR.
+
+2. Information content of the Stock and Watson factors. Stock and Watson (2016) estimate
+8 factors that drive the bulk of the variation in a database of 207 quarterly time series on
+the U.S. macro-economy and financial markets. We now ask whether adding these factors
+to the information set of our VAR would lead to a substantial improvement in forecasting
+performance. Specifically, let the variables in our VAR be represented by the vector yt
+and the 8 factors be represented by the vector ft . For horizon h ∈ {1, 4}, we consider a
+regression of the form
+yt+h = B0 yt + B1 yt−1 + Bf ft ,
+and then assess the implications of setting Bf = 0. Table D.2 shows the results for our
+core observables. We see that, with the exception of the 4-quarter-ahead forecast of the
+output gap, the increase in R2 from including the factors is quite small. We thus judge
+that including the Stock-Watson factors would not lead to materially different forecasts.
+
+D.2
+
+Further results for applications
+
+In this section we provide two sets of supplementary results for our “average business cycle”
+application in Section 5.2. First, in Figure D.1, we show a smoothed Kernel density estimate
+of the entire posterior distribution when drawing from the estimated rational-expectations
+RANK model (blue), together with posterior modes for all four models. As claimed in the
+78
+
+Figure D.1: Counterfactual unconditional volatilities of output, inflation, and the federal funds
+rate, under the policy rule that minimizes (10). Black dashed: data point estimate under observed
+policy. Blue: posterior Kernel density of counterfactual volatilities drawing from posterior for the
+baseline RANK model. Beige: posterior mode of counterfactual using RANK models (baseline and
+behavioral). Red: posterior mode of counterfactual using HANK models (baseline and behavioral).
+
+main text, we see that almost all posterior mass for output is concentrated far to the left of
+the in-sample volatility.38 Second, in Figure D.2, we show the same figure, with reduced-form
+forecasts obtained on a sample that only stretches to 2007:Q1. We see that the picture is
+essentially unchanged relative to Figure D.1: inflation and in particular output gap volatility
+reductions are feasible, at the cost of somewhat more volatile interest rates. This robustness
+is not surprising: the main business-cycle shock of Angeletos et al. (2020) meaningfully moves
+aggregate output even on pre-ZLB samples (while having rather little effect on inflation), so
+the same logic from our discussion in Section 5.2 continues to apply.
+
+38
+
+The analogous posterior densities for the other three models are very similar, consistent with the discussion in the main text, and available upon request.
+
+79
+
+Figure D.2: Counterfactual early-sample (1960:Q1 – 2007:Q1) average volatilities of output,
+inflation, and the federal funds rate, under the policy rule that minimizes (10). Black dashed: data
+point estimate under observed policy. Blue: posterior Kernel density of counterfactual volatilities
+drawing from posterior for the baseline RANK model. Beige: posterior mode of counterfactual
+using RANK models (baseline and behavioral). Red: posterior mode of counterfactual using HANK
+models (baseline and behavioral).
+
+80
+
+
